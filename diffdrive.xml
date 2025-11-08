@@ -1,0 +1,10 @@
+<library path="diffdrive">
+    <class name="diffdrive/DiffDriveHardware"
+        type="diffdrive::DiffDriveHardware"
+        base_class_type="hardware_interface::SystemInterface">
+        <description>
+            RAT3 differential drive hardware plugin for ROS2 Control.
+            Exposes velocity command and position+velocity state interfaces.
+        </description>
+    </class>
+</library>
