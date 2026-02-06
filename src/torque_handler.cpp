@@ -30,7 +30,7 @@ TorqueHandler::TorqueHandler(const char* canInterface){
         this->myMotors[i] = new ODriveWrapper(this->myController, MotorIDs[i], MotorDirs[i]);
         #endif
 
-        
+        printf("Init motor %i %i %i\n",i, MotorIDs[i], MotorDirs[i]);
         //Some modes require advanced filtering for their input
         // Set up a Mathematical Contoller for each motor, we switch between linear or PID given library config
 
@@ -45,6 +45,8 @@ TorqueHandler::TorqueHandler(const char* canInterface){
     //Default config
     this->actionFlag = MotorAction::CONTROL_LOOP;
     this->mode = TorqueDriveMode::UNLOCKED_VELOCITY;
+    
+    printf("Ready\n");
 
     //Start the control thread
     this->loopControlFlag = 1;

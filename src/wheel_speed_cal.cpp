@@ -1,8 +1,8 @@
 /*
-    RMIT Rover RAT3
+    RMIT Rover Equinox
     Author: Myie
     Date: 02/07/2025
-    Description: Wheel speed calculator for RAT3 differential drive
+    Description: Wheel speed calculator for Equinox differential drive
 */
 #include "wheel_speed_cal.hpp"
 
