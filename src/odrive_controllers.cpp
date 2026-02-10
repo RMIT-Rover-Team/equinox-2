@@ -79,6 +79,12 @@ ODriveController::~ODriveController()
 ODriveState ODriveController::getState(const uint8_t& id) const
 {
     std::lock_guard<std::mutex> lock(m_odrive_states);
+
+    auto it = odrive_states.find(id);
+    if (it == odrive_states.end()) {
+        return ODriveState{};   // all zeros
+    }
+
     return odrive_states.at(id);
 }
 
