@@ -82,6 +82,10 @@ int main(int argc, char** argv){
             myHandler->setSpeed(leftsp,rightsp);
 
         }
+
+        //Show current speeds
+        OdomReading myReading = myHandler->getOdom();
+        printf("Current Odom - Speed: %f %f Pos: %f %f\n",myReading.leftSpeed, myReading.rightSpeed, myReading.leftPos, myReading.rightPos);
     }
     setNonCanonicalMode(0);
 

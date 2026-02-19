@@ -28,5 +28,6 @@ $(EXEC): $(OBJS)
 clean:
 	rm -f $(OBJS) $(EXEC)
 
+
 # Phony targets
 .PHONY: all clean
