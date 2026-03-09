@@ -34,7 +34,7 @@ const int MotorIDs[MotorCount] = {1,2,3,4};
 const int LeftMotorIndexes[MotorsPerSide] = {0,1}; //These are indexes of the above motor IDs
 const int RightMotorIndexes[MotorsPerSide] = {2,3}; //These are indexes of the above motor IDs
 
-const int MotorDirs[MotorCount] = {-1,1,-1,1};
+const int MotorDirs[MotorCount] = {-1,1,1,-1};
 
 #define ControlLoopTimestep 0.1
 
