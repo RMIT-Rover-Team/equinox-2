@@ -17,6 +17,35 @@
 #include <math.h>
 #include "torque_handler.hpp"
 
+// Standard colors
+#define RESET       "\033[0m"
+#define BLACK       "\033[30m"
+#define RED         "\033[31m"
+#define GREEN       "\033[32m"
+#define YELLOW      "\033[33m"
+#define BLUE        "\033[34m"
+#define MAGENTA     "\033[35m"
+#define CYAN        "\033[36m"
+#define WHITE       "\033[37m"
+
+// Bold versions
+#define BOLD        "\033[1m"
+#define BOLD_RED    "\033[1;31m"
+#define BOLD_GREEN  "\033[1;32m"
+#define BOLD_YELLOW "\033[1;33m"
+#define BOLD_BLUE   "\033[1;34m"
+
+// Inverted (reverse video)
+#define INV_BLACK   "\033[7;30m"
+#define INV_RED     "\033[7;31m"
+#define INV_GREEN   "\033[7;32m"
+#define INV_YELLOW  "\033[7;33m"
+#define INV_BLUE    "\033[7;34m"
+#define INV_MAGENTA "\033[7;35m"
+#define INV_CYAN    "\033[7;36m"
+#define INV_WHITE   "\033[7;37m"
+
+
 #define IMU_ID 5
 #define MAX_BAZ 180
 #define MIN_BAZ 80
@@ -55,7 +84,7 @@ int main(int argc, char **argv){
     int upd = 0;
     int currentMode = 0;
 
-    printf("Awaiting Enable button......");
+    printf(INV_YELLOW "Awaiting Enable button......" RESET);
     while (true){
         myControl.tick();
 
@@ -65,9 +94,9 @@ int main(int argc, char **argv){
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-    printf("Enabling\n");
+    printf(INV_GREEN "Enabling\n" RESET);
     myHandler->enable();
-    printf("We are ready to drive\n");
+    printf(INV_GREEN "We are ready to drive\n" RESET);
 
     while (run){
         myControl.tick();
@@ -110,7 +139,7 @@ int main(int argc, char **argv){
             else {
                 myHandler->setSpeed(0,0);
                 //myMaster.ToggleState(IMU_ID, 0, 1);
-                printf("MOTION STOP - LED: SAFE\n");
+                printf(INV_CYAN "MOTION STOP - LED: SAFE\n" RESET);
             }
         }
         
@@ -127,13 +156,13 @@ int main(int argc, char **argv){
         //Enable/Disable
         if (myControl.buttonAvailable(2)){
             if (myControl.getButton(2)){
-                printf("Disabling...");
+                printf(INV_RED "Disabling..." RESET);
                 myHandler->disable();
             }
         }
         if (myControl.buttonAvailable(3)){
             if (myControl.getButton(3)){
-                printf("Enable and Clear Errors...");
+                printf(INV_GREEN "Enable and Clear Errors..." RESET);
                 myHandler->enable();
             }
         }
@@ -144,12 +173,12 @@ int main(int argc, char **argv){
         
                 if (currentMode){
                     currentMode = 0;
-                    printf("Switch to Unlocked Mode\n");
+                    printf(INV_MAGENTA "Switch to Unlocked Mode\n" RESET);
                     myHandler->setMode(TorqueDriveMode::UNLOCKED_VELOCITY);
                 }
                 else {
                     currentMode = 1;
-                    printf("Switch to LOCKED Mode\n");
+                    printf(INV_MAGENTA "Switch to LOCKED Mode\n" RESET);
                     myHandler->setMode(TorqueDriveMode::LOCKED_VELOCITY);
                 }   
             }
