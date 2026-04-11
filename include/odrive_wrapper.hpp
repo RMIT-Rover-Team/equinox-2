@@ -11,7 +11,7 @@ Authors:
 */
 
 
-class ODriveWrapper: public  MotorWrapper {
+class ODriveWrapper: public DriveMotorWrapper {
     private:
         ODriveController* myCont;
         int wheelID;

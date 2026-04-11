@@ -13,7 +13,7 @@ Authors:
 Calibrate -> Enable -> All others -> Clear Errors -> All Others 
 System must recalibrate after estop
 */
-class MotorWrapper {
+class DriveMotorWrapper {
     public:
         virtual void calibrate()  = 0;
         virtual void enable() = 0;

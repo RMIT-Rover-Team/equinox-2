@@ -10,7 +10,7 @@ Authors:
 */
 
 
-class FakeWrapper: public  MotorWrapper {
+class FakeWrapper: public  DriveMotorWrapper {
     private:
         int wheelID;
         float speed;

@@ -95,7 +95,7 @@ class TorqueHandler{
         std::thread controlThread;
 
         //The motors on the rover and their Mathematical Models
-        MotorWrapper* myMotors[MotorCount];
+        DriveMotorWrapper* myMotors[MotorCount];
         Control_Calc* myModels[MotorCount]; 
 
         //Flag for Async instructions
