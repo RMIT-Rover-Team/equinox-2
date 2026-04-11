@@ -1,6 +1,7 @@
 #include "camera_manager.hpp"
 #include <iostream>
 #include <gst/gst.h>
+#include <memory>
 
 namespace peel {
   template<>
@@ -67,30 +68,39 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
 /// @brief Adds a device to camera_registry.
 /// @param device Device to be added to camera_registry
 void CameraManager::handle_add(const RefPtr<Gst::Device>& device) {
-    if (!device) {
-      std::cout << "Ran into error with adding device, no device was found" << std::endl;
-      return;
-    }
-    auto device_properties = device->get_properties();
+  if (!device) {
+    std::cout << "Ran into error with adding device, no device was found" << std::endl;
+    return;
+  }
+  auto device_properties = device->get_properties();
+  
+  // std::cout << "Raw Structure: " << device_properties->to_string() << std::endl;  // check all properties
+  
+  std::string uid = device_properties->get_string("api.v4l2.cap.bus_info");
+  
+  std::string name = static_cast<std::string>(device->get_display_name());
+  
+  const char* path_val = device_properties->get_string("api.v4l2.path");
+  std::string path = path_val ? path_val : "unknown";
 
-    CameraHardware camera;
-    camera.uid = device_properties->get_string("api.v4l2.cap.bus_info");
+  ::GstDevice* raw_device = reinterpret_cast<::GstDevice*>(static_cast<Gst::Device*>(device));
+  ::GstCaps* raw_caps = gst_device_get_caps(raw_device);
+  if (!raw_caps) {
+    return;
+  }
+  auto caps = RefPtr<Gst::Caps>::adopt_ref(reinterpret_cast<Gst::Caps*>(raw_caps));
 
-    camera.name = device->get_display_name();
-    
-    const char* path_val = device_properties->get_string("api.v4l2.path");
-    camera.path = path_val ? path_val : "unknown";
+  const CameraHardware camera = {
+    uid,
+    name,
+    path,
+    device,
+    caps
+  };
 
-    camera.device = device;
-
-    ::GstDevice* raw_device = reinterpret_cast<::GstDevice*>(static_cast<Gst::Device*>(device));
-    ::GstCaps* raw_caps = gst_device_get_caps(raw_device);
-    if (raw_caps) {
-        camera.caps = RefPtr<Gst::Caps>::adopt_ref(reinterpret_cast<Gst::Caps*>(raw_caps));
-    }
-
-    std::cout << "Adding Camera: " << camera.uid << ", " << camera.name << ", " << camera.path << std::endl;
-    registry_map_.insert({camera.uid, std::move(camera)});
+  std::cout << "Adding Camera: " << camera.uid << ", " << camera.name << ", " << camera.path << std::endl;
+  
+  registry_map_[camera.uid] = std::move(camera);
 }
 
 /// @brief Setups device monitor
@@ -107,4 +117,20 @@ RefPtr<Gst::DeviceMonitor> CameraManager::setup_device_monitor() {
   gst_bus_add_watch(reinterpret_cast<GstBus*>(&*bus), bus_callback, this);
 
   return monitor;
+}
+
+/// @brief Create stream instance within the streams_ map. 
+/// @param camera 
+void CameraManager::create_stream(CameraHardware camera) {
+  auto src = camera.device->create_element("source");
+  auto pipeline = Gst::Pipeline::create(camera.name.c_str());
+  
+  pipeline->add(std::move(src));
+  
+  auto stream = std::make_shared<StreamInstance>();;
+  stream->uid = camera.uid;
+  stream->pipeline = pipeline;
+  stream->source = src;
+
+  streams_[stream->uid] = stream;
 }

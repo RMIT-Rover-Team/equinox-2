@@ -8,6 +8,7 @@
 #include <peel/Gst/Pipeline.h>
 #include <peel/Gst/DeviceMonitor.h>
 #include <map>
+#include <memory>
 
 struct CameraHardware {
   std::string uid;  // camera serial
@@ -15,6 +16,12 @@ struct CameraHardware {
   std::string path;  // camera path
   peel::RefPtr<peel::Gst::Device> device;
   peel::RefPtr<peel::Gst::Caps> caps;
+};
+
+struct StreamInstance {
+  std::string uid;
+  peel::RefPtr<peel::Gst::Pipeline> pipeline;
+  peel::RefPtr<peel::Gst::Element> source;
 };
 
 class CameraManager {
@@ -38,8 +45,9 @@ private:
 
   static gboolean bus_callback(GstBus* bus, GstMessage* msg, gpointer data);
 
+  void create_stream(CameraHardware device);
   
   peel::RefPtr<peel::Gst::DeviceMonitor> monitor_;
-  std::map<std::string, peel::RefPtr<peel::Gst::Pipeline>> active_streams_;
+  std::map<std::string, std::shared_ptr<StreamInstance>> streams_;
   std::map<std::string, CameraHardware> registry_map_;
 };
