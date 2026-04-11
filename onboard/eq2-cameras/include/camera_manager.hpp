@@ -7,6 +7,7 @@
 #include <peel/Gst/Caps.h>
 #include <peel/Gst/Pipeline.h>
 #include <peel/Gst/DeviceMonitor.h>
+#include <map>
 
 struct CameraHardware {
   std::string uid;  // camera serial
@@ -27,7 +28,7 @@ public:
   void start_monitoring();
   void stop_monitoring();
   
-  const std::vector<CameraHardware>& get_cameras() const { return registry_; }
+  const std::map<std::string, CameraHardware>& get_cameras() const { return registry_map_; }
 
 private:
   peel::RefPtr<peel::Gst::DeviceMonitor> setup_device_monitor();
@@ -37,7 +38,8 @@ private:
 
   static gboolean bus_callback(GstBus* bus, GstMessage* msg, gpointer data);
 
-  peel::RefPtr<peel::Gst::Pipeline> pipeline_;
+  
   peel::RefPtr<peel::Gst::DeviceMonitor> monitor_;
-  std::vector<CameraHardware> registry_;
+  std::map<std::string, peel::RefPtr<peel::Gst::Pipeline>> active_streams_;
+  std::map<std::string, CameraHardware> registry_map_;
 };

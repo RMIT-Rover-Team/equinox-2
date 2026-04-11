@@ -16,9 +16,7 @@ namespace peel {
 
 using namespace peel;
 
-CameraManager::CameraManager() {
-  pipeline_ = Gst::Pipeline::create("camera-pipeline");
-}
+CameraManager::CameraManager() {}
 
 CameraManager::~CameraManager() {
   stop_monitoring();
@@ -92,7 +90,7 @@ void CameraManager::handle_add(const RefPtr<Gst::Device>& device) {
     }
 
     std::cout << "Adding Camera: " << camera.uid << ", " << camera.name << ", " << camera.path << std::endl;
-    registry_.push_back(std::move(camera));
+    registry_map_.insert({camera.uid, std::move(camera)});
 }
 
 /// @brief Setups device monitor
