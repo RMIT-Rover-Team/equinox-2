@@ -28,13 +28,19 @@ pkg_check_modules(GST REQUIRED IMPORTED_TARGET gstreamer-1.0 gstreamer-video-1.0
 find_package(Drogon REQUIRED)
 find_package(GTest REQUIRED)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+set(SOURCES
+  src/main.cpp
+  src/device_manager.cpp
+  include/device_manager.hpp
+)
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_compile_options(${PROJECT_NAME} PRIVATE -fpermissive)
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
     "${CMAKE_CURRENT_BINARY_DIR}/peel-generated"
     "${CMAKE_CURRENT_SOURCE_DIR}/peel/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
