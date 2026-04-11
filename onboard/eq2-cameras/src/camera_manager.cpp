@@ -120,17 +120,18 @@ RefPtr<Gst::DeviceMonitor> CameraManager::setup_device_monitor() {
 }
 
 /// @brief Create stream instance within the streams_ map. 
-/// @param camera 
+/// @param camera camera to create stream with
 void CameraManager::create_stream(CameraHardware camera) {
-  auto src = camera.device->create_element("source");
+  auto src_float_ptr = camera.device->create_element("source");
   auto pipeline = Gst::Pipeline::create(camera.name.c_str());
   
-  pipeline->add(std::move(src));
+  peel::RefPtr<peel::Gst::Element> src_ref_ptr = src_float_ptr;  // make ref so we can assign it to stream
+  pipeline->add(std::move(src_float_ptr));
   
-  auto stream = std::make_shared<StreamInstance>();;
+  auto stream = std::make_shared<StreamInstance>();
   stream->uid = camera.uid;
   stream->pipeline = pipeline;
-  stream->source = src;
+  stream->source = src_ref_ptr; 
 
   streams_[stream->uid] = stream;
 }
