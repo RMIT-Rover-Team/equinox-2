@@ -25,8 +25,17 @@ CameraManager::~CameraManager() {
 
 /// @brief Start device monitor
 void CameraManager::start_monitoring() {
-  monitor_ = setup_device_monitor();
-  if (monitor_) monitor_->start();
+  auto result = setup_device_monitor();
+  if (result) {
+    monitor_ = *result;
+    if (!monitor_->start()) {
+      std::cerr << "Monitor found but failed to start hardware scan" << std::endl;
+    } else {
+      std::cout << "Started main monitor successfully" << std::endl;
+    }
+  } else {
+    std::cerr << "Failed to intialize device monitor: " << static_cast<int>(result.error()) << std::endl;
+  }
 }
 
 
@@ -60,9 +69,7 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
         auto props = device->get_properties();
         const char* bus_info = props->get_string("api.v4l2.cap.bus_info");
         
-        if (bus_info) {
-          self->handle_device_remove(bus_info);
-        }
+        if (bus_info) { self->handle_device_remove(bus_info); }
       }
       break;
     default:
@@ -133,9 +140,9 @@ void CameraManager::handle_device_remove(const std::string& uid) {
 
 /// @brief Setups device monitor
 /// @return Setup device monitor.
-RefPtr<Gst::DeviceMonitor> CameraManager::setup_device_monitor() {
+tl::expected<RefPtr<Gst::DeviceMonitor>, CamError> CameraManager::setup_device_monitor() {
   auto monitor = Gst::DeviceMonitor::create();
-  if (!monitor) { return nullptr; }
+  if (!monitor) { return tl::make_unexpected(CamError::MonitorCreationFailed); }
 
   auto* c_caps = gst_caps_new_empty_simple("video/x-raw");  // new_empty_simple is not accepted yet, so cast
   monitor->add_filter("Video/Source", reinterpret_cast<Gst::Caps*>(c_caps));

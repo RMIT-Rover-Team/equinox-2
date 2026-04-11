@@ -15,7 +15,8 @@ enum class CamError {
   SourceCreationFailed,
   PipelineCreationFailed,
   AdditionToPipelineFailed,
-  DeviceNotFound
+  DeviceNotFound,
+  MonitorCreationFailed,
 };
 
 struct CameraHardware {
@@ -46,7 +47,7 @@ public:
   const std::map<std::string, CameraHardware>& get_cameras() const { return registry_map_; }
 
 private:
-  peel::RefPtr<peel::Gst::DeviceMonitor> setup_device_monitor();
+  tl::expected<peel::RefPtr<peel::Gst::DeviceMonitor>, CamError> setup_device_monitor();
 
   void handle_device_add(const peel::RefPtr<peel::Gst::Device>&);
   void handle_device_remove(const std::string&);
