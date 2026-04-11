@@ -1,7 +1,5 @@
 #include "camera_manager.hpp"
 #include <iostream>
-#include <gst/gst.h>
-#include <memory>
 
 namespace peel {
   template<>
@@ -14,20 +12,23 @@ namespace peel {
     static void sink(Gst::Caps* ptr) { }
   };
 }
-
 using namespace peel;
 
+
 CameraManager::CameraManager() {}
+
 
 CameraManager::~CameraManager() {
   stop_monitoring();
 }
+
 
 /// @brief Start device monitor
 void CameraManager::start_monitoring() {
   monitor_ = setup_device_monitor();
   if (monitor_) monitor_->start();
 }
+
 
 /// @brief Stop device monitor
 void CameraManager::stop_monitoring() {
@@ -36,6 +37,7 @@ void CameraManager::stop_monitoring() {
     monitor_ = nullptr;
   }
 }
+
 
 /// @brief Called every time the device monitor's bus sends a message (device added and device removed).
 /// @param bus The device monitor's bus for message handling.
@@ -50,12 +52,17 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
   switch (m->type) {
     case Gst::Message::Type::DEVICE_ADDED:
       m->parse_device_added(&device);
-      self->handle_add(device);
+      self->handle_device_add(device);
       break;
     case Gst::Message::Type::DEVICE_REMOVED:
       m->parse_device_removed(&device);
       if (device) {
-          std::cout << "Device removed: " << device->get_display_name() << std::endl;
+        auto props = device->get_properties();
+        const char* bus_info = props->get_string("api.v4l2.cap.bus_info");
+        
+        if (bus_info) {
+          self->handle_device_remove(bus_info);
+        }
       }
       break;
     default:
@@ -65,9 +72,10 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
   return G_SOURCE_CONTINUE;
 }
 
+
 /// @brief Adds a device to camera_registry.
-/// @param device Device to be added to camera_registry
-void CameraManager::handle_add(const RefPtr<Gst::Device>& device) {
+/// @param device Device to be added to camera_registry.
+void CameraManager::handle_device_add(const RefPtr<Gst::Device>& device) {
   if (!device) {
     std::cout << "Ran into error with adding device, no device was found" << std::endl;
     return;
@@ -76,13 +84,20 @@ void CameraManager::handle_add(const RefPtr<Gst::Device>& device) {
   
   // std::cout << "Raw Structure: " << device_properties->to_string() << std::endl;  // check all properties
   
-  std::string uid = device_properties->get_string("api.v4l2.cap.bus_info");
-  
+  // uid
+  std::string uid; 
+  const char* bus_info = device_properties->get_string("api.v4l2.cap.bus_info");
+  const char * dev_path = device_properties->get_string("api.v4l2.path");
+  if (bus_info) uid = bus_info;  // set uid to bus info
+  else if (dev_path) uid = dev_path;  // if that doesn't exist, set it to /dev/video*
+
+  // name
   std::string name = static_cast<std::string>(device->get_display_name());
   
-  const char* path_val = device_properties->get_string("api.v4l2.path");
-  std::string path = path_val ? path_val : "unknown";
+  // path
+  std::string path = dev_path ? dev_path : "unknown";
 
+  // caps
   ::GstDevice* raw_device = reinterpret_cast<::GstDevice*>(static_cast<Gst::Device*>(device));
   ::GstCaps* raw_caps = gst_device_get_caps(raw_device);
   if (!raw_caps) {
@@ -98,10 +113,23 @@ void CameraManager::handle_add(const RefPtr<Gst::Device>& device) {
     caps
   };
 
-  std::cout << "Adding Camera: " << camera.uid << ", " << camera.name << ", " << camera.path << std::endl;
+  std::cout << "Adding Camera to registry: " << camera.uid << ", " << camera.name << ", " << camera.path << std::endl;
   
   registry_map_[camera.uid] = std::move(camera);
 }
+
+
+/// @brief Removes a device from camera registry and kills streams associated with it
+/// @param uid uid of the camera to remove.
+void CameraManager::handle_device_remove(const std::string& uid) {
+  if (streams_.count(uid)) {
+    std::cout << "Cleaning up active stream for unplugged device: " << uid << std::endl;
+    streams_[uid]->pipeline->set_state(Gst::State::NULL_);
+    streams_.erase(uid);
+  }
+  registry_map_.erase(uid);
+}
+
 
 /// @brief Setups device monitor
 /// @return Setup device monitor.
@@ -119,19 +147,43 @@ RefPtr<Gst::DeviceMonitor> CameraManager::setup_device_monitor() {
   return monitor;
 }
 
+
 /// @brief Create stream instance within the streams_ map. 
 /// @param camera camera to create stream with
-void CameraManager::create_stream(CameraHardware camera) {
+/// @return Returns a sharedptr stream instance, or the CamError
+tl::expected<std::shared_ptr<StreamInstance>, CamError>
+CameraManager::create_stream(CameraHardware camera) {
   auto src_float_ptr = camera.device->create_element("source");
+  if (!src_float_ptr) return tl::make_unexpected(CamError::SourceCreationFailed);
+
   auto pipeline = Gst::Pipeline::create(camera.name.c_str());
+  if (!pipeline) return tl::make_unexpected(CamError::PipelineCreationFailed);
   
   peel::RefPtr<peel::Gst::Element> src_ref_ptr = src_float_ptr;  // make ref so we can assign it to stream
-  pipeline->add(std::move(src_float_ptr));
-  
+  if (!pipeline->add(std::move(src_float_ptr))) return tl::make_unexpected(CamError::AdditionToPipelineFailed);
+
   auto stream = std::make_shared<StreamInstance>();
   stream->uid = camera.uid;
   stream->pipeline = pipeline;
   stream->source = src_ref_ptr; 
 
   streams_[stream->uid] = stream;
+  return stream;
+}
+
+tl::expected<std::shared_ptr<StreamInstance>, CamError> 
+CameraManager::request_stream(const std::string& uid) {
+  // find device
+  auto it = registry_map_.find(uid);
+  if (it == registry_map_.end()) {
+      return tl::make_unexpected(CamError::DeviceNotFound);
+  }
+
+  // if active stream, return
+  if (streams_.count(uid)) {
+      return streams_[uid];
+  }
+
+  // if not active stream, create stream
+  return create_stream(it->second);
 }

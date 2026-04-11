@@ -8,11 +8,11 @@ project(Eq2Cameras VERSION 1.0
                   LANGUAGES CXX)
 
 set(version "0.1.0") 
-set(includedir "${CMAKE_CURRENT_SOURCE_DIR}/peel/include")
-set(peel_gen_path "${CMAKE_CURRENT_SOURCE_DIR}/peel/peel-gen.py")
+set(includedir "${CMAKE_CURRENT_SOURCE_DIR}/external/peel/include")
+set(peel_gen_path "${CMAKE_CURRENT_SOURCE_DIR}/external/peel/peel-gen.py")
 
 configure_file(
-  "peel/cmake/peel-config.cmake.in" 
+  "external/peel/cmake/peel-config.cmake.in" 
   "${CMAKE_CURRENT_BINARY_DIR}/peelConfig.cmake"
   @ONLY
 )
@@ -39,7 +39,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE -fpermissive)
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
     "${CMAKE_CURRENT_BINARY_DIR}/peel-generated"
-    "${CMAKE_CURRENT_SOURCE_DIR}/peel/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/external/peel/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/external"
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
 )
 

@@ -9,6 +9,14 @@
 #include <peel/Gst/DeviceMonitor.h>
 #include <map>
 #include <memory>
+#include <tl/expected.hpp>
+
+enum class CamError {
+  SourceCreationFailed,
+  PipelineCreationFailed,
+  AdditionToPipelineFailed,
+  DeviceNotFound
+};
 
 struct CameraHardware {
   std::string uid;  // camera serial
@@ -40,13 +48,14 @@ public:
 private:
   peel::RefPtr<peel::Gst::DeviceMonitor> setup_device_monitor();
 
-  void handle_add(const peel::RefPtr<peel::Gst::Device>& device);
-  void handle_remove(const peel::RefPtr<peel::Gst::Device>& device);
+  void handle_device_add(const peel::RefPtr<peel::Gst::Device>&);
+  void handle_device_remove(const std::string&);
 
-  static gboolean bus_callback(GstBus* bus, GstMessage* msg, gpointer data);
+  static gboolean bus_callback(GstBus*, GstMessage*, gpointer);
 
-  void create_stream(CameraHardware device);
-  
+  tl::expected<std::shared_ptr<StreamInstance>, CamError> create_stream(CameraHardware);
+  tl::expected<std::shared_ptr<StreamInstance>, CamError> request_stream(const std::string&);
+
   peel::RefPtr<peel::Gst::DeviceMonitor> monitor_;
   std::map<std::string, std::shared_ptr<StreamInstance>> streams_;
   std::map<std::string, CameraHardware> registry_map_;
