@@ -19,11 +19,11 @@ using namespace peel;
 RefPtr<Gst::Pipeline> g_pipeline;
 std::vector<CameraHardware> camera_registry;
 
-/// @brief Called every time the device monitor's bus sends a message.
+/// @brief Called every time the device monitor's bus sends a message (device added and device removed).
 /// @param bus The device monitor's bus for message handling.
 /// @param message The message delivered through the bus.
 /// @param user_data Unrelated data to be passed in.
-/// @return G_SOURCE_CONTINUE or G_SOURCE_REMOVE to continue or remove the main loop.
+/// @return G_SOURCE_CONTINUE or G_SOURCE_REMOVE to continue or break the main loop.
 static gboolean device_bus_function(GstBus *bus, GstMessage *message, gpointer user_data) {
   RefPtr<Gst::Device> device;
   auto* m = reinterpret_cast<Gst::Message*>(message);
@@ -31,36 +31,12 @@ static gboolean device_bus_function(GstBus *bus, GstMessage *message, gpointer u
   switch (m->type) {
     case Gst::Message::Type::DEVICE_ADDED:
       m->parse_device_added(&device);
-      if (device) {
-        CameraHardware camera;
-        camera.name = device->get_display_name();
-        
-        auto device_properties = device->get_properties();
-        const char* path_val = device_properties->get_string("api.v4l2.path");
-        camera.path = path_val ? path_val : "unknown";
-        
-        camera.device = device;
-        
-        Gst::Device* wrapped_ptr = device; 
-        ::GstDevice* raw_device = reinterpret_cast<::GstDevice*>(wrapped_ptr);
-        ::GstCaps* raw_caps = gst_device_get_caps(raw_device);
-        if (raw_caps) {
-          Gst::Caps* wrapped_caps = reinterpret_cast<Gst::Caps*>(raw_caps);
-          camera.caps = RefPtr<Gst::Caps>::adopt_ref(wrapped_caps);
-        }
-        
-        camera_registry.push_back(std::move(camera));
-      }
+      handle_add_camera(device);
       break;
     case Gst::Message::Type::DEVICE_REMOVED:
       m->parse_device_removed(&device);
       if (device) {
           std::cout << "Device removed: " << device->get_display_name() << std::endl;
-      }
-      if (g_pipeline) {
-          g_pipeline->set_state(Gst::State::NULL_);
-          g_pipeline = nullptr;
-          std::cout << "Stopped streaming." << std::endl;
       }
       break;
     default:
@@ -68,6 +44,33 @@ static gboolean device_bus_function(GstBus *bus, GstMessage *message, gpointer u
   }
 
   return G_SOURCE_CONTINUE;
+}
+
+/// @brief Adds a device to camera_registry.
+/// @param device Device to be added to camera_registry
+void handle_add_camera(const RefPtr<Gst::Device>& device) {
+    if (!device) {
+      std::cout << "Ran into error with adding device, no device was found" << std::endl;
+      return;
+    }
+
+    CameraHardware camera;
+    camera.name = device->get_display_name();
+    
+    auto device_properties = device->get_properties();
+    const char* path_val = device_properties->get_string("api.v4l2.path");
+    camera.path = path_val ? path_val : "unknown";
+
+    camera.device = device;
+
+    ::GstDevice* raw_device = reinterpret_cast<::GstDevice*>(static_cast<Gst::Device*>(device));
+    ::GstCaps* raw_caps = gst_device_get_caps(raw_device);
+    if (raw_caps) {
+        camera.caps = RefPtr<Gst::Caps>::adopt_ref(reinterpret_cast<Gst::Caps*>(raw_caps));
+    }
+
+    std::cout << "Adding Camera: " << camera.name << ", " << camera.path << std::endl;
+    camera_registry.push_back(std::move(camera));
 }
 
 /// @brief Setups device monitor

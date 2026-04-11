@@ -14,8 +14,8 @@ struct CameraHardware {
   peel::RefPtr<peel::Gst::Caps> caps;
 };
 
-// Use full peel::Gst namespace here
 extern peel::RefPtr<peel::Gst::Pipeline> g_pipeline;
 extern std::vector<CameraHardware> camera_registry;
 
 peel::RefPtr<peel::Gst::DeviceMonitor> setup_device_monitor();
+void handle_add_camera(const peel::RefPtr<peel::Gst::Device>&);
