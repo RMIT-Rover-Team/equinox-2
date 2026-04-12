@@ -14,8 +14,11 @@
 #include "spdlog/spdlog.h"
 
 #define MAKE_CAM_ERROR(code, msg) \
-    tl::make_unexpected(CamErrorDetails{code, msg, __FILE__, __LINE__})
+  CamErrorDetails{code, msg, __FILE__, __LINE__}
     
+#define MAKE_CAM_ERROR_EXPECTED(code, msg) \
+  tl::make_unexpected(CamErrorDetails{code, msg, __FILE__, __LINE__})
+
 namespace peel {
   template<>
   struct RefTraits<Gst::Caps> { // finish ref and unref for caps cause its unimplemented
@@ -32,6 +35,8 @@ enum class CamError {
   MonitorCreationFailed,   // The monitor object couldn't be built
   CapsCreationFailed,      // The hardware filter (caps) couldn't be built
   BusWatchFailed,          // The main loop couldn't listen to the bus
+  DeviceDestructionFailed, // The device couldn't be removed from the registry
+  StreamDestructionFailed, // The stream couldn't be killed fully
 
   // Discovery / System (Components/States)
   MonitorBusNotFound,      // monitor->get_bus() returned null (Better than 'Error')
@@ -40,7 +45,6 @@ enum class CamError {
   // Hardware Registry (States)
   DeviceNotFound,          // UID isn't in the map
   HardwareInUse,           // The camera is locked by another app
-
   // Pipeline / Streaming (Actions)
   SourceCreationFailed,    // The v4l2src/pipewiresrc couldn't be built
   PipelineCreationFailed,  // The Gst::Pipeline couldn't be built
@@ -96,7 +100,7 @@ private:
   tl::expected<peel::RefPtr<peel::Gst::DeviceMonitor>, CamErrorDetails> setup_device_monitor();
 
   tl::expected<void, CamErrorDetails> handle_device_add(const peel::RefPtr<peel::Gst::Device>&);
-  void handle_device_remove(const std::string&);
+  tl::expected<void, CamErrorDetails> handle_device_remove(const std::string&);
 
   static gboolean bus_callback(GstBus*, GstMessage*, gpointer);
 

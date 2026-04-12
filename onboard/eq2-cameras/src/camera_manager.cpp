@@ -1,3 +1,5 @@
+// to do: add proper mutex to add and remove cameras
+
 #include "camera_manager.hpp"
 #include <fstream>
 #include <filesystem>
@@ -20,7 +22,7 @@ tl::expected<void, CamErrorDetails> CameraManager::start_monitoring() {
   if (!result.has_value()) return tl::make_unexpected(result.error());
   
   monitor_ = *result;
-  if (!monitor_->start()) return MAKE_CAM_ERROR(CamError::MonitorStartFailed, "Device Monitor created but failed to start hardware scan");
+  if (!monitor_->start()) return MAKE_CAM_ERROR_EXPECTED(CamError::MonitorStartFailed, "Device Monitor created but failed to start hardware scan.");
 
   spdlog::info("Started main monitor successfully");
   return {};
@@ -62,13 +64,20 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
       if (device) {
         auto props = device->get_properties();
         const char* bus_info = props->get_string("api.v4l2.cap.bus_info");
-        
-        if (bus_info) { self->handle_device_remove(bus_info); }
+        if (!bus_info) {
+          spdlog::error(MAKE_CAM_ERROR(CamError::DevicePropertyNotFound, "Could not find device property bus_info.").to_string());
+          break;
+        }
+
+        auto result = self->handle_device_remove(bus_info);
+        if (!result.has_value()) spdlog::error(result.error().to_string());
       }
       break;
     }
     default:
+    {
       break;
+    }
   }
 
   return G_SOURCE_CONTINUE;
@@ -78,29 +87,29 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
 /// @brief Adds a device to camera_registry.
 /// @param device Device to be added to camera_registry.
 tl::expected<void, CamErrorDetails> CameraManager::handle_device_add(const RefPtr<Gst::Device>& device) {
-  if (!device) return MAKE_CAM_ERROR(CamError::DeviceNotFound, "GStreamer bus delivered a null device pointer.");
+  if (!device) return MAKE_CAM_ERROR_EXPECTED(CamError::DeviceNotFound, "GStreamer bus delivered a null device pointer.");
   auto device_properties = device->get_properties();
   
   // std::cout << "Raw Structure: " << device_properties->to_string() << std::endl;  // check all properties
   
   // index by serial later?
   const char* bus_info = device_properties->get_string("api.v4l2.cap.bus_info");
-  if (!bus_info) return MAKE_CAM_ERROR(CamError::DevicePropertyNotFound, "Could not find device property bus_info.");
+  if (!bus_info) return MAKE_CAM_ERROR_EXPECTED(CamError::DevicePropertyNotFound, "Could not find device property bus_info.");
   std::string uid = bus_info;
   
   // name
   const std::string name = static_cast<std::string>(device->get_display_name());
-  if (name.empty()) return MAKE_CAM_ERROR(CamError::DevicePropertyNotFound, "Could not find device property display_name.");
+  if (name.empty()) return MAKE_CAM_ERROR_EXPECTED(CamError::DevicePropertyNotFound, "Could not find device property display_name.");
 
   // path
   const char * dev_path = device_properties->get_string("api.v4l2.path");
-  if (!dev_path) return MAKE_CAM_ERROR(CamError::DevicePropertyNotFound, "Could not find device property device path.");
+  if (!dev_path) return MAKE_CAM_ERROR_EXPECTED(CamError::DevicePropertyNotFound, "Could not find device property device path.");
   std::string path = dev_path ? dev_path : "unknown";
 
   // caps
   ::GstDevice* raw_device = reinterpret_cast<::GstDevice*>(static_cast<Gst::Device*>(device));
   ::GstCaps* raw_caps = gst_device_get_caps(raw_device);
-  if (!raw_caps) return MAKE_CAM_ERROR(CamError::CapsCreationFailed, "Failed to create caps.");
+  if (!raw_caps) return MAKE_CAM_ERROR_EXPECTED(CamError::CapsCreationFailed, "Failed to create caps.");
   auto caps = RefPtr<Gst::Caps>::adopt_ref(reinterpret_cast<Gst::Caps*>(raw_caps));
 
   const CameraHardware camera = {
@@ -121,13 +130,25 @@ tl::expected<void, CamErrorDetails> CameraManager::handle_device_add(const RefPt
 
 /// @brief Removes a device from camera registry and kills streams associated with it
 /// @param uid uid of the camera to remove.
-void CameraManager::handle_device_remove(const std::string& uid) {
+tl::expected<void, CamErrorDetails> CameraManager::handle_device_remove(const std::string& uid) {
   if (streams_.count(uid)) {
-    spdlog::info("Cleaning up active stream for unplugged device: " + uid);
-    streams_[uid]->pipeline->set_state(Gst::State::NULL_);
+    spdlog::info("Cleaning up active stream for unplugged device " + uid + ".");
+
+    streams_[uid]->pipeline->set_state(Gst::State::NULL_);  // synchronous so no need to check but be careful of blocking bus
     streams_.erase(uid);
+
+    spdlog::info("Stream successfully destroyed");
+  } else {
+    spdlog::warn("Attempted to clean up stream for unplugged device " + uid + " but there were no active stream running.");
   }
-  registry_map_.erase(uid);
+
+  if (registry_map_.erase(uid) == 0) {
+    return MAKE_CAM_ERROR_EXPECTED(CamError::DeviceNotFound, 
+      "Could not find unplugged device " + uid + " in registry");
+  }
+
+  spdlog::info("Camera {} successfully removed from registry", uid);
+  return {};
 }
 
 
@@ -135,14 +156,14 @@ void CameraManager::handle_device_remove(const std::string& uid) {
 /// @return Setup device monitor.
 tl::expected<RefPtr<Gst::DeviceMonitor>, CamErrorDetails> CameraManager::setup_device_monitor() {
   auto monitor = Gst::DeviceMonitor::create();
-  if (!monitor) { return MAKE_CAM_ERROR(CamError::MonitorCreationFailed, "Failed to create device monitor."); }
+  if (!monitor) { return MAKE_CAM_ERROR_EXPECTED(CamError::MonitorCreationFailed, "Failed to create device monitor."); }
 
   auto caps = RefPtr<Gst::Caps>::adopt_ref(reinterpret_cast<Gst::Caps*>(gst_caps_new_empty_simple("video/x-raw")));
-  if (!caps) return MAKE_CAM_ERROR(CamError::CapsCreationFailed, "Failed to create caps.");
+  if (!caps) return MAKE_CAM_ERROR_EXPECTED(CamError::CapsCreationFailed, "Failed to create caps.");
   monitor->add_filter("Video/Source", caps);
 
   auto bus = monitor->get_bus();
-  if (!bus) return MAKE_CAM_ERROR(CamError::BusWatchFailed, "Failed to get device monitor bus");
+  if (!bus) return MAKE_CAM_ERROR_EXPECTED(CamError::BusWatchFailed, "Failed to get device monitor bus");
   gst_bus_add_watch(reinterpret_cast<GstBus*>(&*bus), bus_callback, this);
 
   return monitor;
@@ -155,13 +176,13 @@ tl::expected<RefPtr<Gst::DeviceMonitor>, CamErrorDetails> CameraManager::setup_d
 tl::expected<std::shared_ptr<StreamInstance>, CamErrorDetails>
 CameraManager::create_stream(const CameraHardware& camera) {
   auto src_float_ptr = camera.device->create_element("source");
-  if (!src_float_ptr) return MAKE_CAM_ERROR(CamError::SourceCreationFailed, "Failed to create source from device.");
+  if (!src_float_ptr) return MAKE_CAM_ERROR_EXPECTED(CamError::SourceCreationFailed, "Failed to create source from device.");
 
   auto pipeline = Gst::Pipeline::create(camera.name.c_str());
-  if (!pipeline) return MAKE_CAM_ERROR(CamError::PipelineCreationFailed, "Failed to create pipeline.");
+  if (!pipeline) return MAKE_CAM_ERROR_EXPECTED(CamError::PipelineCreationFailed, "Failed to create pipeline.");
   
   peel::RefPtr<peel::Gst::Element> src_ref_ptr = src_float_ptr;  // make ref so we can assign it to stream
-  if (!pipeline->add(std::move(src_float_ptr))) return MAKE_CAM_ERROR(CamError::AdditionFailed, "Failed to add source element to pipeline.");;
+  if (!pipeline->add(std::move(src_float_ptr))) return MAKE_CAM_ERROR_EXPECTED(CamError::AdditionFailed, "Failed to add source element to pipeline.");;
 
   auto stream = std::make_shared<StreamInstance>();
 
@@ -178,7 +199,7 @@ CameraManager::request_stream(const std::string& uid) {
   // find device
   auto it = registry_map_.find(uid);
   if (it == registry_map_.end()) {
-    return MAKE_CAM_ERROR(CamError::DeviceNotFound, "Could not find device in registry.");
+    return MAKE_CAM_ERROR_EXPECTED(CamError::DeviceNotFound, "Could not find device in registry.");
   }
 
   // if active stream, return
