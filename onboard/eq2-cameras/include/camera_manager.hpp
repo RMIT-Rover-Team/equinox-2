@@ -81,6 +81,13 @@ struct StreamInstance {
   peel::RefPtr<peel::Gst::Element> source;
 };
 
+/**
+ * @class CameraManager
+ * @brief Manages hardware camera discovery and active GStreamer stream instances.
+ * 
+ * This class monitors the system for V4L2 devices and maintains a registry.
+ * It allows users to request streams by UID and handles hot-plugging automatically.
+ */
 class CameraManager {
 public:
   CameraManager();
@@ -89,21 +96,42 @@ public:
   CameraManager(const CameraManager&) = delete;  // only have one instance
   CameraManager& operator=(const CameraManager&) = delete;
   
+  /// @brief Start device monitor
   tl::expected<void, CamErrorDetails>  start_monitoring();
+
+  /// @brief Stop device monitor
   tl::expected<void, CamErrorDetails> stop_monitoring();
   
+  /// @brief Request a stream based off a device uid. If it doesn't exist, create it with the uid. 
+  /// @param uid Device uid you would like to be streamed
+  /// @return A pointer to the StreamInstance on success, on failure error message. 
   tl::expected<std::shared_ptr<StreamInstance>, CamErrorDetails> request_stream(const std::string&);
 
   const std::map<std::string, CameraHardware>& get_cameras() const { return registry_map_; }
 
 private:
+  /// @brief Setups device monitor
+  /// @return Setup device monitor.
   tl::expected<peel::RefPtr<peel::Gst::DeviceMonitor>, CamErrorDetails> setup_device_monitor();
 
+  /// @brief Adds a device to camera_registry.
+  /// @param device Device to be added to camera_registry.
   tl::expected<void, CamErrorDetails> handle_device_add(const peel::RefPtr<peel::Gst::Device>&);
+  
+  /// @brief Removes a device from camera registry and kills streams associated with it
+  /// @param uid uid of the camera to remove.
   tl::expected<void, CamErrorDetails> handle_device_remove(const std::string&);
 
+  /// @brief Called every time the device monitor's bus sends a message (device added and device removed).
+  /// @param bus The device monitor's bus for message handling.
+  /// @param message The message delivered through the bus.
+  /// @param user_data Unrelated data to be passed in.
+  /// @return G_SOURCE_CONTINUE or G_SOURCE_REMOVE to continue or break the main loop.
   static gboolean bus_callback(GstBus*, GstMessage*, gpointer);
 
+  /// @brief Create stream instance within the streams_ map. 
+  /// @param camera camera to create stream with
+  /// @return Returns a sharedptr stream instance, or the CamError
   tl::expected<std::shared_ptr<StreamInstance>, CamErrorDetails> create_stream(const CameraHardware&);
 
   peel::RefPtr<peel::Gst::DeviceMonitor> monitor_;

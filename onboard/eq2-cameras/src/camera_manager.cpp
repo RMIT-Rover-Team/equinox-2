@@ -1,5 +1,6 @@
 // to do: add proper mutex to add and remove cameras
 // adding and removing cameras should probably be multithreaded as to not block the bus from detecting new shit 
+// update the doxygen comments
 
 #include "camera_manager.hpp"
 #include <fstream>
@@ -11,14 +12,11 @@ using namespace peel;
 
 CameraManager::CameraManager() {}
 
-
 CameraManager::~CameraManager() {
   auto result = stop_monitoring();
   if (!result.has_value()) spdlog::error(result.error().to_string()); 
 }
 
-
-/// @brief Start device monitor
 tl::expected<void, CamErrorDetails> CameraManager::start_monitoring() {
   auto result = setup_device_monitor();
   if (!result.has_value()) return tl::make_unexpected(result.error());
@@ -30,8 +28,6 @@ tl::expected<void, CamErrorDetails> CameraManager::start_monitoring() {
   return {};
 }
 
-
-/// @brief Stop device monitor
 tl::expected<void, CamErrorDetails> CameraManager::stop_monitoring() {
   if (monitor_) {
     auto bus = monitor_->get_bus();
@@ -45,12 +41,6 @@ tl::expected<void, CamErrorDetails> CameraManager::stop_monitoring() {
   return {};
 }
 
-
-/// @brief Called every time the device monitor's bus sends a message (device added and device removed).
-/// @param bus The device monitor's bus for message handling.
-/// @param message The message delivered through the bus.
-/// @param user_data Unrelated data to be passed in.
-/// @return G_SOURCE_CONTINUE or G_SOURCE_REMOVE to continue or break the main loop.
 gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer user_data) {
   auto* self = static_cast<CameraManager*>(user_data);
   auto* m = reinterpret_cast<Gst::Message*>(message);
@@ -89,9 +79,6 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
   return G_SOURCE_CONTINUE;
 }
 
-
-/// @brief Adds a device to camera_registry.
-/// @param device Device to be added to camera_registry.
 tl::expected<void, CamErrorDetails> CameraManager::handle_device_add(const RefPtr<Gst::Device>& device) {
   if (!device) return MAKE_CAM_ERROR_EXPECTED(CamError::DeviceNotFound, "GStreamer bus delivered a null device pointer.");
   auto device_properties = device->get_properties();
@@ -133,9 +120,6 @@ tl::expected<void, CamErrorDetails> CameraManager::handle_device_add(const RefPt
   return {};
 }
 
-
-/// @brief Removes a device from camera registry and kills streams associated with it
-/// @param uid uid of the camera to remove.
 tl::expected<void, CamErrorDetails> CameraManager::handle_device_remove(const std::string& uid) {
   if (streams_.count(uid)) {
     spdlog::info("Cleaning up active stream for unplugged device " + uid + ".");
@@ -157,9 +141,6 @@ tl::expected<void, CamErrorDetails> CameraManager::handle_device_remove(const st
   return {};
 }
 
-
-/// @brief Setups device monitor
-/// @return Setup device monitor.
 tl::expected<RefPtr<Gst::DeviceMonitor>, CamErrorDetails> CameraManager::setup_device_monitor() {
   auto monitor = Gst::DeviceMonitor::create();
   if (!monitor) { return MAKE_CAM_ERROR_EXPECTED(CamError::MonitorCreationFailed, "Failed to create device monitor."); }
@@ -175,10 +156,6 @@ tl::expected<RefPtr<Gst::DeviceMonitor>, CamErrorDetails> CameraManager::setup_d
   return monitor;
 }
 
-
-/// @brief Create stream instance within the streams_ map. 
-/// @param camera camera to create stream with
-/// @return Returns a sharedptr stream instance, or the CamError
 tl::expected<std::shared_ptr<StreamInstance>, CamErrorDetails>
 CameraManager::create_stream(const CameraHardware& camera) {
   auto src_float_ptr = camera.device->create_element("source");
