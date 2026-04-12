@@ -42,13 +42,14 @@ int main(int argc, char *argv[]) {
   }
   CameraManager manager;
 
-  auto result = manager.start_monitoring();
-  if (!result.has_value()) spdlog::error(result.error().to_string());
+  auto start_monitor_result = manager.start_monitoring();
+  if (!start_monitor_result.has_value()) spdlog::error(start_monitor_result.error().to_string());
   
   auto loop = GLib::MainLoop::create(nullptr, false);
   loop->run();
 
-  manager.stop_monitoring();
+  auto stop_monitor_result = manager.stop_monitoring();
+  if (!stop_monitor_result.has_value()) spdlog::error(stop_monitor_result.error().to_string());
 
   spdlog::shutdown(); 
   return 0;

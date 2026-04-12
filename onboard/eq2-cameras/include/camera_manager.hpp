@@ -39,7 +39,7 @@ enum class CamError {
   StreamDestructionFailed, // The stream couldn't be killed fully
 
   // Discovery / System (Components/States)
-  MonitorBusNotFound,      // monitor->get_bus() returned null (Better than 'Error')
+  MonitorBusNotFound,      // monitor->get_bus() returned null
   DevicePropertyNotFound,  // device property returned null
 
   // Hardware Registry (States)
@@ -90,7 +90,7 @@ public:
   CameraManager& operator=(const CameraManager&) = delete;
   
   tl::expected<void, CamErrorDetails>  start_monitoring();
-  void stop_monitoring();
+  tl::expected<void, CamErrorDetails> stop_monitoring();
   
   tl::expected<std::shared_ptr<StreamInstance>, CamErrorDetails> request_stream(const std::string&);
 

@@ -1,4 +1,5 @@
 // to do: add proper mutex to add and remove cameras
+// adding and removing cameras should probably be multithreaded as to not block the bus from detecting new shit 
 
 #include "camera_manager.hpp"
 #include <fstream>
@@ -12,7 +13,8 @@ CameraManager::CameraManager() {}
 
 
 CameraManager::~CameraManager() {
-  stop_monitoring();
+  auto result = stop_monitoring();
+  if (!result.has_value()) spdlog::error(result.error().to_string()); 
 }
 
 
@@ -30,13 +32,17 @@ tl::expected<void, CamErrorDetails> CameraManager::start_monitoring() {
 
 
 /// @brief Stop device monitor
-void CameraManager::stop_monitoring() {
+tl::expected<void, CamErrorDetails> CameraManager::stop_monitoring() {
   if (monitor_) {
     auto bus = monitor_->get_bus();
+    if (!bus) return MAKE_CAM_ERROR_EXPECTED(CamError::MonitorBusNotFound, "monitor->get_bus() returned null");
     bus->remove_watch();
     monitor_->stop();
     monitor_ = nullptr;
+    return {};
   }
+  spdlog::warn("Failed to close monitor as monitor is not up.");
+  return {};
 }
 
 
