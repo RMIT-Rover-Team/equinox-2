@@ -25,7 +25,7 @@ void CameraManager::start_monitoring() {
       spdlog::info("Started main monitor successfully");
     }
   } else {
-    std::cout << result.error().to_string() << std::endl;
+    spdlog::error(result.error().to_string());
   }
 }
 
@@ -103,7 +103,7 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
     {
       m->parse_device_added(&device);
       auto result = self->handle_device_add(device);
-      if (!result.has_value()) std::cout << result.error().to_string() << std::endl;
+      if (!result.has_value()) spdlog::error(result.error().to_string());
       break;
     }
     case Gst::Message::Type::DEVICE_REMOVED:
@@ -171,7 +171,7 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
 /// @param uid uid of the camera to remove.
 void CameraManager::handle_device_remove(const std::string& uid) {
   if (streams_.count(uid)) {
-    std::cout << "Cleaning up active stream for unplugged device: " << uid << std::endl;
+    spdlog::info("Cleaning up active stream for unplugged device: " + uid);
     streams_[uid]->pipeline->set_state(Gst::State::NULL_);
     streams_.erase(uid);
   }
