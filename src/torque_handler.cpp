@@ -15,11 +15,11 @@ Authors:
 TorqueHandler::TorqueHandler(const char* canInterface){
     //Initialise the communication handlers
     #ifndef TorqueHandler_TestMode
-        #ifdef MotorType == ODrive
+        #ifdef USE_ODrive
             this->myController = new ODriveController(canInterface);
         #endif
-        #ifdef MotorType == MyActuator
-            this->myCan = new GenericCan(canInterface);
+        #ifdef USE_MyActuator
+            this->myCan = new WrappedCANBus(canInterface);
         #endif
     #endif
 
@@ -31,11 +31,11 @@ TorqueHandler::TorqueHandler(const char* canInterface){
         #ifdef TorqueHandler_TestMode
             this->myMotors[i] = new FakeWrapper(MotorIDs[i]);
         #else
-            #ifdef MotorType == ODrive
+            #ifdef USE_ODrive
                 this->myMotors[i] = new ODriveWrapper(this->myController, MotorIDs[i], MotorDirs[i]);
             #endif
-            #ifdef MotorType == MyActuator
-                this->myMotors[i] = new MyActuatorMotor(MotorIDs[i], MotorDirs[i], this->myCan);
+            #ifdef USE_MyActuator
+                this->myMotors[i] = new MyActuatorMotor(this->myCan, MotorIDs[i], MotorDirs[i]);
             #endif
         #endif
 
@@ -283,10 +283,10 @@ TorqueHandler::~TorqueHandler(){
 
     //Clean up
     #ifndef TorqueHandler_TestMode
-        #ifdef MotorType == ODrive
+        #ifdef USE_ODrive
             delete this->myController;
         #endif
-        #ifdef MotorType == MyActuator
+        #ifdef USE_MyActuator
             delete this->myCan;
         #endif
     #endif

@@ -5,7 +5,7 @@ CXX = g++
 CXXFLAGS = -std=c++11 -I ../../include/
 
 # Source files
-SRCS = simplecontroller/RemoteController.cpp simplecontroller/TCPstreams.cpp main.cpp RoverCanMaster.cpp SocketCanWrapper.cpp CommandUtils.cpp ../../src/fake_wrapper.cpp ../../src/odrive_controllers.cpp ../../src/odrive_wrapper.cpp ../../src/linear_calc.cpp ../../src/torque_handler.cpp ../../src/pid_calc.cpp 
+SRCS = simplecontroller/RemoteController.cpp ../../src/MyActuator_wrapper.cpp ../../src/SocketCanWrapper.cpp simplecontroller/TCPstreams.cpp main.cpp RoverCanMaster.cpp SocketCanWrapper.cpp CommandUtils.cpp ../../src/fake_wrapper.cpp ../../src/odrive_controllers.cpp ../../src/odrive_wrapper.cpp ../../src/linear_calc.cpp ../../src/torque_handler.cpp ../../src/pid_calc.cpp 
  
 
 # Object files

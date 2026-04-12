@@ -13,13 +13,13 @@ Authors:
 
 //Function Flags
 // IN TestMode, Myactuator or ODrive motors are replaced with FakeMotor objects that print the output of each operation. No CANBUs communications occur
-#define TorqueHandler_TestMode 1
+//#define TorqueHandler_TestMode 1
 
 
 //Define the type of motor
 #ifndef TorqueHandler_TestMode
-//#define MotorType ODrive
-#define MotorType MyActuator
+//#define USE_ODrive
+#define USE_MyActuator
 #endif
 
 
@@ -65,12 +65,12 @@ typedef struct
 #ifdef TorqueHandler_TestMode
     #include "Motors/fake_wrapper.hpp"
 #else
-    #ifdef MotorType == ODrive
+    #ifdef USE_ODrive
         #include "Motors/odrive_wrapper.hpp"
         #include "Motors/odrive_control.hpp"
     #endif
-    #ifdef MotorType == MyActuator
-        #include "Motors/MyActuatorMotor.hpp"
+    #ifdef USE_MyActuator
+        #include "Motors/MyActuator_wrapper.hpp"
         #include "CanComms/GenericCan.h"
         #include "CanComms/SocketCanWrapper.h"
     #endif
@@ -97,11 +97,11 @@ class TorqueHandler{
         //The communication handlers
         #ifndef TorqueHandler_TestMode
             //The unified controller for Odrive motors
-            #ifdef MotorType == ODrive
+            #ifdef USE_ODrive
                 ODriveController* myController;
             #endif
             //The unified controller for the MyActuator motors
-            #ifdef MotorType == MyActuator
+            #ifdef USE_MyActuator
                 GenericCan* myCan;
             #endif
         #endif

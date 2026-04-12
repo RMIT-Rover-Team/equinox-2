@@ -13,7 +13,7 @@ void __dbg_dump(char* input, int length) {
     //printf("\n");
 }
 
-MyActuatorMotor::MyActuatorMotor(int targetID, int dir, GenericCan* can) {
+MyActuatorMotor::MyActuatorMotor(GenericCan* can, int targetID, int dir ) {
   //ctor
   this->myID = targetID;
   this->myCan = can;
@@ -47,7 +47,7 @@ void MyActuatorMotor::calibrate() {
 
 
 
-double MyActuatorMotor::getPos() {
+float MyActuatorMotor::getPos() {
     //Get the position of the motor
 
     //Clear Historic Values
@@ -94,7 +94,7 @@ double MyActuatorMotor::getPos() {
 }
 
 
-double MyActuatorMotor::getSpeed() {
+float MyActuatorMotor::getSpeed() {
     // Clear historic values
     while (myCan->availableFrom(myID + SingleMotorReplyIDOffset, MASK_ALL)) {
         myCan->readMSGFrom(myID + SingleMotorReplyIDOffset, MASK_ALL);
@@ -176,7 +176,7 @@ void MyActuatorMotor::setSpeed(float value) {
 
     myMsg.command = 0xA2;
     myMsg.torqueMax = MaxTorque;
-    myMsg.speed = (int32_t)(vel*100 * this->dir);
+    myMsg.speed = (int32_t)(value*100 * this->dir);
 
     //send the message
     __dbg_dump((char*)&myMsg, sizeof(myMsg));
