@@ -15,18 +15,15 @@ CameraManager::~CameraManager() {
 
 
 /// @brief Start device monitor
-void CameraManager::start_monitoring() {
+tl::expected<void, CamErrorDetails> CameraManager::start_monitoring() {
   auto result = setup_device_monitor();
-  if (result.has_value()) {
-    monitor_ = *result;
-    if (!monitor_->start()) {
-      spdlog::error("Monitor found but failed to start hardware scan");
-    } else {
-      spdlog::info("Started main monitor successfully");
-    }
-  } else {
-    spdlog::error(result.error().to_string());
-  }
+  if (!result.has_value()) return tl::make_unexpected(result.error());
+  
+  monitor_ = *result;
+  if (!monitor_->start()) return MAKE_CAM_ERROR(CamError::MonitorStartFailed, "Device Monitor created but failed to start hardware scan");
+
+  spdlog::info("Started main monitor successfully");
+  return {};
 }
 
 
@@ -40,53 +37,6 @@ void CameraManager::stop_monitoring() {
   }
 }
 
-// std::string get_sysfs_value(const std::filesystem::path& path) {
-//   std::ifstream file(path);
-//   if (!file.is_open()) return "";
-  
-//   std::string value;
-//   std::getline(file, value);
-  
-//   // Trim potential trailing whitespace/newlines
-//   value.erase(value.find_last_not_of(" \n\r\t") + 1);
-//   return value;
-// }
-
-// std::string find_camera_serial(std::string device_path) {
-//   // 1. Get the leaf name (e.g., /dev/video0 -> video0)
-//   std::filesystem::path p(device_path);
-//   std::string video_name = p.filename().string();
-
-//   // 2. Construct the sysfs path to the video device
-//   std::filesystem::path base_path = "/sys/class/video4linux" / std::filesystem::path(video_name) / "device";
-
-//   if (!std::filesystem::exists(base_path)) {
-//     return "Device not found in sysfs";
-//   }
-
-//   // 3. Move up to the parent USB device level
-//   // Most UVC cameras have the serial at the parent level of the interface
-//   std::filesystem::path serial_path = base_path.parent_path() / "device/../serial";
-  
-//   std::cout << serial_path << std::endl;
-//   // Some kernels/drivers might require an extra level depending on the topology
-//   // so we check if serial exists, if not, try one more level up
-//   if (!std::filesystem::exists(serial_path)) {
-//     serial_path = base_path.parent_path() / "device/../../serial";
-//   }
-
-//   std::string serial = get_sysfs_value(serial_path);
-
-//   if (serial.empty()) {
-//     // Fallback: Try to get Vendor/Product IDs if Serial is missing
-//     std::string vid = get_sysfs_value(base_path.parent_path() / "device/../idVendor");
-//     std::string pid = get_sysfs_value(base_path.parent_path() / "device/../idProduct");
-//     if(!vid.empty()) return "SN-MISSING-" + vid + ":" + pid;
-//     return "No Serial Available";
-//   }
-
-//   return serial;
-// }
 
 /// @brief Called every time the device monitor's bus sends a message (device added and device removed).
 /// @param bus The device monitor's bus for message handling.
@@ -115,8 +65,8 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
         
         if (bus_info) { self->handle_device_remove(bus_info); }
       }
-    }
       break;
+    }
     default:
       break;
   }
@@ -127,12 +77,13 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
 
 /// @brief Adds a device to camera_registry.
 /// @param device Device to be added to camera_registry.
-[[nodiscard]] tl::expected<CameraHardware, CamErrorDetails> CameraManager::handle_device_add(const RefPtr<Gst::Device>& device) {
-  if (!device) MAKE_CAM_ERROR(CamError::DeviceNotFound, "GStreamer bus delivered a null device pointer.");
+tl::expected<void, CamErrorDetails> CameraManager::handle_device_add(const RefPtr<Gst::Device>& device) {
+  if (!device) return MAKE_CAM_ERROR(CamError::DeviceNotFound, "GStreamer bus delivered a null device pointer.");
   auto device_properties = device->get_properties();
   
   // std::cout << "Raw Structure: " << device_properties->to_string() << std::endl;  // check all properties
   
+  // index by serial later?
   const char* bus_info = device_properties->get_string("api.v4l2.cap.bus_info");
   if (!bus_info) return MAKE_CAM_ERROR(CamError::DevicePropertyNotFound, "Could not find device property bus_info.");
   std::string uid = bus_info;
@@ -162,8 +113,9 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
 
   spdlog::info("Adding Camera to registry: " + camera.uid + ", " + camera.name + ", " + camera.path);
   
-  auto [iterator, inserted] = registry_map_.insert_or_assign(uid, std::move(camera));
-  return iterator->second;
+  registry_map_.insert_or_assign(uid, std::move(camera));
+
+  return {};
 }
 
 
@@ -181,7 +133,7 @@ void CameraManager::handle_device_remove(const std::string& uid) {
 
 /// @brief Setups device monitor
 /// @return Setup device monitor.
-[[nodiscard]] tl::expected<RefPtr<Gst::DeviceMonitor>, CamErrorDetails> CameraManager::setup_device_monitor() {
+tl::expected<RefPtr<Gst::DeviceMonitor>, CamErrorDetails> CameraManager::setup_device_monitor() {
   auto monitor = Gst::DeviceMonitor::create();
   if (!monitor) { return MAKE_CAM_ERROR(CamError::MonitorCreationFailed, "Failed to create device monitor."); }
 
@@ -200,7 +152,7 @@ void CameraManager::handle_device_remove(const std::string& uid) {
 /// @brief Create stream instance within the streams_ map. 
 /// @param camera camera to create stream with
 /// @return Returns a sharedptr stream instance, or the CamError
-[[nodiscard]] tl::expected<std::shared_ptr<StreamInstance>, CamErrorDetails>
+tl::expected<std::shared_ptr<StreamInstance>, CamErrorDetails>
 CameraManager::create_stream(const CameraHardware& camera) {
   auto src_float_ptr = camera.device->create_element("source");
   if (!src_float_ptr) return MAKE_CAM_ERROR(CamError::SourceCreationFailed, "Failed to create source from device.");
@@ -215,7 +167,7 @@ CameraManager::create_stream(const CameraHardware& camera) {
 
   stream->uid = camera.uid;
   stream->pipeline = pipeline;
-  stream->source = src_ref_ptr; 
+  stream->source = src_ref_ptr;
 
   streams_[stream->uid] = stream;
   return stream;
@@ -226,12 +178,12 @@ CameraManager::request_stream(const std::string& uid) {
   // find device
   auto it = registry_map_.find(uid);
   if (it == registry_map_.end()) {
-      return MAKE_CAM_ERROR(CamError::DeviceNotFound, "Could not find device in registry.");
+    return MAKE_CAM_ERROR(CamError::DeviceNotFound, "Could not find device in registry.");
   }
 
   // if active stream, return
   if (streams_.count(uid)) {
-      return streams_[uid];
+    return streams_[uid];
   }
 
   // if not active stream, create stream

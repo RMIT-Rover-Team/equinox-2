@@ -46,7 +46,8 @@ enum class CamError {
   PipelineCreationFailed,  // The Gst::Pipeline couldn't be built
   AdditionFailed,          // Element couldn't be added to the pipeline
   LinkFailed,              // Elements can't link (caps mismatch)
-  StateChangeFailed        // State went to FAILURE (unplugged or driver crash)
+  StateChangeFailed,        // State went to FAILURE (unplugged or driver crash)
+  MonitorStartFailed       // Monitor object wouldn't start up
 };
 
 struct CamErrorDetails {
@@ -84,7 +85,7 @@ public:
   CameraManager(const CameraManager&) = delete;  // only have one instance
   CameraManager& operator=(const CameraManager&) = delete;
   
-  void start_monitoring();
+  tl::expected<void, CamErrorDetails>  start_monitoring();
   void stop_monitoring();
   
   tl::expected<std::shared_ptr<StreamInstance>, CamErrorDetails> request_stream(const std::string&);
@@ -94,7 +95,7 @@ public:
 private:
   tl::expected<peel::RefPtr<peel::Gst::DeviceMonitor>, CamErrorDetails> setup_device_monitor();
 
-  tl::expected<CameraHardware, CamErrorDetails> handle_device_add(const peel::RefPtr<peel::Gst::Device>&);
+  tl::expected<void, CamErrorDetails> handle_device_add(const peel::RefPtr<peel::Gst::Device>&);
   void handle_device_remove(const std::string&);
 
   static gboolean bus_callback(GstBus*, GstMessage*, gpointer);
