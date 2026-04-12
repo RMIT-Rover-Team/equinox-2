@@ -4,7 +4,7 @@
     Date: 02/07/2025
     Description: Wheel speed calculator for Equinox differential drive
 */
-#include "wheel_speed_cal.hpp"
+#include "MathModels/wheel_speed_cal.hpp"
 
 WheelSpeedCalculator::WheelSpeedCalculator(double r_wheel, double x_offset){
     this -> r_wheel = r_wheel;

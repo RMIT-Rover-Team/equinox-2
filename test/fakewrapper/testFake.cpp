@@ -1,10 +1,10 @@
-#include "motor_wrapper.hpp"
-#include "fake_wrapper.hpp"
+#include "Motors/drive_motor_wrapper.hpp"
+#include "Motors/fake_wrapper.hpp"
 #include <iostream>
 
 
 int main(){
-    MotorWrapper* myWrap = new FakeWrapper(10);
+    DriveMotorWrapper* myWrap = new FakeWrapper(10);
     myWrap->calibrate();
     myWrap->enable();
     myWrap->setTorque(0.5);

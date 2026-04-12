@@ -1,5 +1,5 @@
-#include "GenericMotor.h"
-#include "MyActuator_wrapper.hpp"
+#include "Motors/drive_motor_wrapper.hpp"
+#include "Motors/MyActuator_wrapper.hpp"
 #include "CanComms/GenericCan.h"
 #include <stdint.h>
 #include <cstring>
@@ -13,10 +13,11 @@ void __dbg_dump(char* input, int length) {
     //printf("\n");
 }
 
-MyActuatorMotor::MyActuatorMotor(int targetID, GenericCan* can) {
+MyActuatorMotor::MyActuatorMotor(int targetID, int dir, GenericCan* can) {
   //ctor
   this->myID = targetID;
   this->myCan = can;
+  this->dir = dir;
 
 
   //Init the motor
@@ -89,8 +90,49 @@ double MyActuatorMotor::getPos() {
     __dbg_dump((char*)&recv.data, sizeof(recv.data));
     memcpy(&result, recv.data + 4, sizeof(int32_t));
     //This is even worse
-    return (double)result * 0.01;
+    return (double)result * 0.01 * this->dir;
 }
+
+
+double MyActuatorMotor::getSpeed() {
+    // Clear historic values
+    while (myCan->availableFrom(myID + SingleMotorReplyIDOffset, MASK_ALL)) {
+        myCan->readMSGFrom(myID + SingleMotorReplyIDOffset, MASK_ALL);
+    }
+
+    // Build request message
+    struct __attribute__((packed)) CAN_Message {
+        uint8_t command;
+        uint8_t padding[7];
+    } msg = {0};
+
+    msg.command = 0xA2;   // Speed request command
+
+    // Send request
+    myCan->writeMSG(myID + SingleMotorMsgIDOffset, (char*)&msg, sizeof(msg));
+
+    // Await response
+    CANFrame recv;
+    while (true) {
+        recv = myCan->readMSGFrom(myID + SingleMotorReplyIDOffset, MASK_ALL, 2000);
+
+        if (recv.can_dlc == 0) {
+            continue; // timeout or empty frame, keep waiting
+        }
+
+        if ((uint8_t)recv.data[0] == 0xA2) {
+            break; // correct response
+        }
+    }
+
+    // Decode speed (int32 at bytes 4–7)
+    int32_t rawSpeed = 0;
+    memcpy(&rawSpeed, recv.data + 4, sizeof(int32_t));
+
+    // Convert to real-world units
+    return (double)rawSpeed * 0.01 * this->dir;  // rpm * direction
+}
+
 
 
 void MyActuatorMotor::stop() {
@@ -122,7 +164,7 @@ void MyActuatorMotor::estop() {
 }
 
 
-void MyActuatorMotor::setVelocity(double vel) {
+void MyActuatorMotor::setSpeed(float value) {
     //Set the motor to velocity mode
     //This is disgusting
     struct __attribute__((packed)) CAN_Message {
@@ -134,7 +176,7 @@ void MyActuatorMotor::setVelocity(double vel) {
 
     myMsg.command = 0xA2;
     myMsg.torqueMax = MaxTorque;
-    myMsg.speed = (int32_t)(vel*100);
+    myMsg.speed = (int32_t)(vel*100 * this->dir);
 
     //send the message
     __dbg_dump((char*)&myMsg, sizeof(myMsg));
@@ -154,7 +196,7 @@ void MyActuatorMotor::setPos(double pos) {
 
     myMsg.command = 0xA4;
     myMsg.speedLimit = SpeedLimit;
-    myMsg.position = (int32_t)(pos*100);
+    myMsg.position = (int32_t)(pos*100 * this->dir);
 
     //send the message
     __dbg_dump((char*)&myMsg, sizeof(myMsg));

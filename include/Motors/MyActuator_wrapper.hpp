@@ -15,15 +15,15 @@ enum DriveMode {
 
 class MyActuatorMotor: public DriveMotorWrapper {
   public:
-    MyActuatorMotor(int targetID, GenericCan* can);
+    MyActuatorMotor(int targetID, int dir, GenericCan* can);
 
     void calibrate() override;
-    double getPos() override;
+    float getPos() override;
     void setPos(double pos);
     void estop() override;
     void stop();
     void tick();
-    void setSpeed(double vel) override;
+    void setSpeed(float value) override;
     void getSpeed() override;
 
     
@@ -39,5 +39,6 @@ class MyActuatorMotor: public DriveMotorWrapper {
   private:
     int myID;
     GenericCan* myCan;
+    int dir;
 
 };

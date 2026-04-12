@@ -1,5 +1,5 @@
-#include "pid_calc.hpp"
-#include "linear_calc.hpp"
+#include "MathModels/pid_calc.hpp"
+#include "MathModels/linear_calc.hpp"
 #include <iostream>
 
 //This function simulates the feedback

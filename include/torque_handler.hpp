@@ -1,5 +1,5 @@
 #pragma once
-#include "motor_wrapper.hpp"
+#include "Motors/drive_motor_wrapper.hpp"
 #include <thread>
 
 /* 
@@ -12,10 +12,8 @@ Authors:
 
 
 //Function Flags
-// IN TestMode, ODrive motors are replaced with FakeMotor objects that print the output of each operation. No CANBUs communications occur
-//#define TorqueHandler_TestMode 1
-//When 1, A linear math model is used, when undefined a PID model is used
-//#define TorqueHandler_LinearMathOrPID 1
+// IN TestMode, Myactuator or ODrive motors are replaced with FakeMotor objects that print the output of each operation. No CANBUs communications occur
+#define TorqueHandler_TestMode 1
 
 
 //Define the type of motor
@@ -24,15 +22,6 @@ Authors:
 #define MotorType MyActuator
 #endif
 
-//Config for the math files
-#define TorqueHandler_PID_Kp 0.0001
-#define TorqueHandler_PID_Kd 0.00000
-#define TorqueHandler_PID_Ki 0.01
-
-#define TorqueHandler_MinTorque -2
-#define TorqueHandler_MaxTorque 2
-
-#define TorqueHandler_LinearResponse 0.01
 
 //Motor Definitions
 #define MotorCount 4
@@ -49,7 +38,7 @@ const int MotorDirs[MotorCount] = {-1,1,1,-1};
 enum TorqueDriveMode : int
 {
     UNLOCKED_VELOCITY = 0x0, // Independent wheels (Regular driving) - Direct Drive
-    UNLOCKED_TORQUE   = 0x1, // Independent wheels with torque modulation (Tug of War)
+    UNLOCKED_TORQUE   = 0x1, // Deprecated do not use
     LOCKED_VELOCITY   = 0x2, // Traction control in velocity mode, wheels are matched to slowest, best for sand / uneven terrain
 };
 
@@ -74,14 +63,14 @@ typedef struct
 
 
 #ifdef TorqueHandler_TestMode
-    #include "fake_wrapper.hpp"
+    #include "Motors/fake_wrapper.hpp"
 #else
     #ifdef MotorType == ODrive
-        #include "odrive_wrapper.hpp"
-        #include "odrive_control.hpp"
+        #include "Motors/odrive_wrapper.hpp"
+        #include "Motors/odrive_control.hpp"
     #endif
     #ifdef MotorType == MyActuator
-        #include "MyActuatorMotor.hpp"
+        #include "Motors/MyActuatorMotor.hpp"
         #include "CanComms/GenericCan.h"
         #include "CanComms/SocketCanWrapper.h"
     #endif
