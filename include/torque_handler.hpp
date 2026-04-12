@@ -17,6 +17,13 @@ Authors:
 //When 1, A linear math model is used, when undefined a PID model is used
 //#define TorqueHandler_LinearMathOrPID 1
 
+
+//Define the type of motor
+#ifndef TorqueHandler_TestMode
+//#define MotorType ODrive
+#define MotorType MyActuator
+#endif
+
 //Config for the math files
 #define TorqueHandler_PID_Kp 0.0001
 #define TorqueHandler_PID_Kd 0.00000
@@ -41,8 +48,8 @@ const int MotorDirs[MotorCount] = {-1,1,1,-1};
 
 enum TorqueDriveMode : int
 {
-    UNLOCKED_VELOCITY = 0x0, // Independent wheels (Regular driving) - Just like BOB
-    UNLOCKED_TORQUE   = 0x1, // Independent wheels with torque modulation (Offroad)
+    UNLOCKED_VELOCITY = 0x0, // Independent wheels (Regular driving) - Direct Drive
+    UNLOCKED_TORQUE   = 0x1, // Independent wheels with torque modulation (Tug of War)
     LOCKED_VELOCITY   = 0x2, // Traction control in velocity mode, wheels are matched to slowest, best for sand / uneven terrain
 };
 
@@ -69,46 +76,19 @@ typedef struct
 #ifdef TorqueHandler_TestMode
     #include "fake_wrapper.hpp"
 #else
-    #include "odrive_wrapper.hpp"
-    #include "odrive_control.hpp"
-#endif
-
-#ifdef TorqueHandler_EnableTorqueMode
-
-#endif
-
-#include "control_calc.hpp"
-#ifdef TorqueHandler_LinearMathOrPID
-#include "linear_calc.hpp"
-#else
-#include "pid_calc.hpp"
+    #ifdef MotorType == ODrive
+        #include "odrive_wrapper.hpp"
+        #include "odrive_control.hpp"
+    #endif
+    #ifdef MotorType == MyActuator
+        #include "MyActuatorMotor.hpp"
+        #include "CanComms/GenericCan.h"
+        #include "CanComms/SocketCanWrapper.h"
+    #endif
+    
 #endif
 
 class TorqueHandler{
-    private:
-        #ifndef TorqueHandler_TestMode
-            ODriveController* myController;
-        #endif
-        volatile float leftSpeed, rightSpeed;
-
-        //Async handler for PID
-        std::thread controlThread;
-
-        //The motors on the rover and their Mathematical Models
-        DriveMotorWrapper* myMotors[MotorCount];
-        Control_Calc* myModels[MotorCount]; 
-
-        //Flag for Async instructions
-        volatile int actionFlag;
-
-        //The drive mode
-        TorqueDriveMode mode;
-
-        //The private control loop stuff
-        void controlLoop();
-        void handlePID();
-        int loopControlFlag;
-
     public:
         TorqueHandler(const char* canInterface);
 
@@ -123,4 +103,37 @@ class TorqueHandler{
         OdomReading getOdom();
 
         ~TorqueHandler();
+
+    private:
+        //The communication handlers
+        #ifndef TorqueHandler_TestMode
+            //The unified controller for Odrive motors
+            #ifdef MotorType == ODrive
+                ODriveController* myController;
+            #endif
+            //The unified controller for the MyActuator motors
+            #ifdef MotorType == MyActuator
+                GenericCan* myCan;
+            #endif
+        #endif
+
+        //Target Speeds
+        volatile float leftSpeed, rightSpeed;
+
+        //Async handler for PID
+        std::thread controlThread;
+
+        //The motors on the rover and their Mathematical Models
+        DriveMotorWrapper* myMotors[MotorCount];
+        
+        //Flag for Async instructions
+        volatile int actionFlag;
+
+        //The drive mode
+        TorqueDriveMode mode;
+
+        //The private control loop stuff
+        void controlLoop();
+        void handlePID();
+        int loopControlFlag;
 };

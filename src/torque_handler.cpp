@@ -12,11 +12,15 @@ Authors:
 * [Electrical] Kaelan Grainger
 
 */
-
-
 TorqueHandler::TorqueHandler(const char* canInterface){
+    //Initialise the communication handlers
     #ifndef TorqueHandler_TestMode
-    this->myController = new ODriveController(canInterface);
+        #ifdef MotorType == ODrive
+            this->myController = new ODriveController(canInterface);
+        #endif
+        #ifdef MotorType == MyActuator
+            this->myCan = new GenericCan(canInterface);
+        #endif
     #endif
 
     //Set up all the motors
@@ -25,9 +29,14 @@ TorqueHandler::TorqueHandler(const char* canInterface){
 
         //Handle the test case - if we are in test mode we create a virtual motor, otherwise we create an actual odrive
         #ifdef TorqueHandler_TestMode
-        this->myMotors[i] = new FakeWrapper(MotorIDs[i]);
+            this->myMotors[i] = new FakeWrapper(MotorIDs[i]);
         #else
-        this->myMotors[i] = new ODriveWrapper(this->myController, MotorIDs[i], MotorDirs[i]);
+            #ifdef MotorType == ODrive
+                this->myMotors[i] = new ODriveWrapper(this->myController, MotorIDs[i], MotorDirs[i]);
+            #endif
+            #ifdef MotorType == MyActuator
+                this->myMotors[i] = new MyActuatorWrapper(this->myCan, MotorIDs[i], MotorDirs[i]);
+            #endif
         #endif
 
         printf("Init motor %i %i %i\n",i, MotorIDs[i], MotorDirs[i]);

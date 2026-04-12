@@ -1,5 +1,6 @@
 #pragma once
-#include "motor_wrapper.hpp"
+#include "odrive_control.hpp"
+#include "drive_motor_wrapper.hpp"
 
 /* 
 RMIT Rover
@@ -10,17 +11,19 @@ Authors:
 */
 
 
-class FakeWrapper: public  DriveMotorWrapper {
+class ODriveWrapper: public DriveMotorWrapper {
     private:
+        ODriveController* myCont;
         int wheelID;
-        float speed;
-        float pos;
+        int direction;
+
+        int torqueMode;
+        int posOffset;
 
     public:
         //We need to share the controller with other instances
-        FakeWrapper(int wheelID);
-
-
+        ODriveWrapper(ODriveController* mainController, int wheelID, int direction);
+        
         void enable() override;
         void disable() override;
         void calibrate() override;
@@ -30,4 +33,5 @@ class FakeWrapper: public  DriveMotorWrapper {
         void estop() override;
         float getSpeed() override;
         float getPos() override;
+        int getWheelID() const { return wheelID; }
 };

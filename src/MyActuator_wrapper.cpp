@@ -1,5 +1,5 @@
 #include "GenericMotor.h"
-#include "MyActuatorMotor.hpp"
+#include "MyActuator_wrapper.hpp"
 #include "CanComms/GenericCan.h"
 #include <stdint.h>
 #include <cstring>
@@ -142,7 +142,7 @@ void MyActuatorMotor::setVelocity(double vel) {
 }
 
 
-void MyActuatorMotor::setPosition(double pos) {
+void MyActuatorMotor::setPos(double pos) {
     //Set the position of the motor
     //This is disgusting
     struct __attribute__((packed)) CAN_Message {
@@ -172,3 +172,18 @@ MyActuatorMotor::~MyActuatorMotor() {
 }
 
 //Dummy functions
+void MyActuatorMotor::disable() {
+    this->stop();
+}
+
+void MyActuatorMotor::enable() {
+    this->calibrate();
+}
+
+void MyActuatorMotor::setTorque(float torque) {
+    //Do Nothing
+}
+
+void MyActuatorMotor::clearErrors() {
+    this->calibrate();
+}

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GenericMotor.h"
+#include "drive_motor_wrapper.hpp"
 #include "CanComms/GenericCan.h"
 
 #define SingleMotorMsgIDOffset 0x140
@@ -29,7 +29,6 @@ class MyActuatorMotor: public DriveMotorWrapper {
     
 
     //Dummy functions
-    void estop() override;
     void enable() override;
     void disable() override;
     void setTorque(float value) override;
