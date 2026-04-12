@@ -11,6 +11,8 @@ set(version "0.1.0")
 set(includedir "${CMAKE_CURRENT_SOURCE_DIR}/external/peel/include")
 set(peel_gen_path "${CMAKE_CURRENT_SOURCE_DIR}/external/peel/peel-gen.py")
 
+add_subdirectory(external/spdlog)
+
 configure_file(
   "external/peel/cmake/peel-config.cmake.in" 
   "${CMAKE_CURRENT_BINARY_DIR}/peelConfig.cmake"
@@ -50,4 +52,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   peel::GstApp
   PkgConfig::GST 
   Drogon::Drogon
+  spdlog::spdlog
 )

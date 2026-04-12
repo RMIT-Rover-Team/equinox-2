@@ -20,9 +20,9 @@ void CameraManager::start_monitoring() {
   if (result.has_value()) {
     monitor_ = *result;
     if (!monitor_->start()) {
-      std::cerr << "Monitor found but failed to start hardware scan" << std::endl;
+      spdlog::error("Monitor found but failed to start hardware scan");
     } else {
-      std::cout << "Started main monitor successfully" << std::endl;
+      spdlog::info("Started main monitor successfully");
     }
   } else {
     std::cout << result.error().to_string() << std::endl;
@@ -160,7 +160,7 @@ gboolean CameraManager::bus_callback(GstBus *bus, GstMessage *message, gpointer 
     caps
   };
 
-  std::cout << "Adding Camera to registry: " << camera.uid << ", " << camera.name << ", " << camera.path << std::endl;
+  spdlog::info("Adding Camera to registry: " + camera.uid + ", " + camera.name + ", " + camera.path);
   
   auto [iterator, inserted] = registry_map_.insert_or_assign(uid, std::move(camera));
   return iterator->second;

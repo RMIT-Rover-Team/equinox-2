@@ -11,6 +11,7 @@
 #include <map>
 #include <memory>
 #include <tl/expected.hpp>
+#include "spdlog/spdlog.h"
 
 #define MAKE_CAM_ERROR(code, msg) \
     tl::make_unexpected(CamErrorDetails{code, msg, __FILE__, __LINE__})
