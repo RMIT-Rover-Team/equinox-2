@@ -1,0 +1,18 @@
+:root {
+    /* Your base red color */
+	--ui-red: 0, 68.5%, 49.8%; /* Just the values */
+
+	/* Starlight uses these to build the UI */
+	--sl-color-accent-low: hsl(0, 50%, 15%);
+	--sl-color-accent: hsl(var(--ui-red));
+	--sl-color-accent-high: hsl(0, 80%, 75%);
+}
+
+/* This ensures the text on the red background stays readable */
+:root[data-theme='dark'] {
+	--sl-color-text-accent: var(--sl-color-accent-high);
+}
+
+:root[data-theme='light'] {
+	--sl-color-text-accent: var(--sl-color-accent);
+}
