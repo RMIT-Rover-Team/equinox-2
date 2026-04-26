@@ -2,7 +2,9 @@
 title: ROS2 Workshop
 description: Learn ROS 2!
 ---
+import { Steps } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { FileTree } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
 ### Learning goals
@@ -58,13 +60,14 @@ Run the script by Kaelan, which can be found in the Software chat. This will aut
 Alternatively refer to [the installation guide](https://docs.ros.org/en/humble/Installation.html) to manually install it.
 
 Next, to setup the ROS2 environment:
+<Steps>
 1. Open up your Ubuntu 22 environment.
 2. Open a terminal.
 3. In your root directory (`~/` in the terminal), make a new directory called `eq2`. This can be done by running `mkdir -p eq2`.
 4. Enter the now created folder by running `cd eq2`.
 5. You are now in your new folder called eq2. Git clone the contents of the ROS tutorial repository into your new folder (`git clone <link_of_github_repository>`).
 6. You have now setup your ROS2 directory!
-
+</Steps>
 ### Downloading Zenoh
 This year, we are using Zenoh as the middleware for ROS2. What this means is that ROS will communicate within each other with Zenoh:
 ```sh
@@ -221,13 +224,13 @@ With the previous dependency example, it would look something like:
 ament_target_dependencies(publisher memory string)
 ```
 
-Finally, CMake has all the knowledge to generate the executable file. To generate this file, run:
+Finally, CMake has all the knowledge to generate the executable file. To generate this file, add to the `CMakesList.txt`:
 ```cmake
 install(TARGETS
 	<node_name>
 	DESTINATION lib/${PROJECT_NAME})
 ```
-This will build your project! If your CMake was flawless, it should return no errors. To run your newly built ROS node, run ``ros2 run <package_name> <node_name>``, and it should start printing shit! if you fucked it up, it probably won't even build... Figure out the dependencies, then we can reconvene in 10 minutes.
+Running `colcon build` after this will build your project! If your CMake was flawless, it should return no errors. To run your newly built ROS node, run ``ros2 run <package_name> <node_name>``, and it should start printing shit! if you fucked it up, it probably won't even build... Figure out the dependencies, then we can reconvene in 10 minutes.
 
 ### Writing your second node!
 Now you have a node that publishes information into the ROS network. However, you are currently doing nothing with that information. Let's get a subscriber to do something with that information.
@@ -239,6 +242,21 @@ wget -O subscriber_lambda_function.cpp https://raw.githubusercontent.com/ros2/ex
 If you were following with the publisher node, you should also be able to understand this node, as a lot of the logic is the same, just with a "subscriber" node instead of a "publisher" node.
 
 A lot of the logic is also shared for dependencies and publishers, so try to get that working.
+
+After implementing this, you should have a file tree that looks like:
+<FileTree>
+
+- build/
+- include/
+- install/
+- log/
+- src
+	- publisher_lambda_function.cpp
+	- subscriber_lambda_function.cpp
+- CMakeLists.txt
+- package.xml
+
+</FileTree>
 
 ### Running both of your nodes!
 Now that you have both nodes setup, run each one in a separate terminal, with:

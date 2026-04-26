@@ -1,0 +1,105 @@
+---
+title: Git Standards
+description: Git Standards for Equinox 2
+---
+This page will outline the standards for Git usage within the team.
+## Repository Structure
+We use a monorepo that contains all rover software, including:
+- Onboard systems
+- Base station
+- Autonomy stack
+- Shared libraries and tools
+
+All development work is tracked through GitHub Issues and Sub-Issues.
+
+## Issues & Task Management 
+- Every piece of work must be linked to a GitHub Issue or Sub-Issue 
+- Before starting work: 
+- Assign yourself to the issue 
+- Ensure the scope is clear 
+- Break large tasks into sub-issues where possible 
+
+Rule: No work should be done without a corresponding issue 
+
+## Branching Strategy 
+- Each feature or fix must have its own branch 
+- Branch naming convention: 
+```
+feature/<feature-name>
+fix/<bug-name> 
+chore/<task-name>
+```
+For exmaple: 
+``` sh
+git branch feature/unity-simulation 
+git checkout -B fix/camera-timeout 
+git branch chore/update-dependencies 
+```
+Always branch off main.
+
+## Commits
+Commit Standards 
+- Write clear, meaningful commit messages 
+- Reference the issue in commits 
+
+Format:
+```
+[type]: short description (#issue-number)
+```
+Examples:
+```sh
+git commit -m "feat: add waypoint navigation (#42)
+git commit -m "fix: resolve CAN message overflow (#87)""
+```
+Commit Guidelines
+- Keep commits small and focused 
+- Avoid committing broken code to shared branches 
+- Do not commit: 
+    - Build files 
+    - Secrets or credentials 
+    - Large unnecessary binaries 
+
+## Pull Requests (PRs) 
+Before Opening a PR 
+- Ensure your branch is up to date with main 
+- Test your changes locally 
+- Link the relevant issue 
+
+PR Requirements 
+- Clear title and description 
+- Reference issue: 
+```
+Closes #<issue_number>
+```
+Explain: 
+- What was done 
+- Why it was done 
+- How it was tested 
+
+## Code Review Process
+- At least one peer review is required before leadership review 
+- Reviewers should check: 
+    - Code quality and readability 
+    - Logic and correctness 
+    - Consistency with architecture 
+    - Edge cases and failure handling 
+
+Expectations
+- Be constructive and respectful
+- Don't approve PRs you haven't properly reviewed
+- Address all comments before merging
+
+## Merging Rules
+- Only merge via Pull Requests (no direct pushes to main) 
+- PR must: 
+    - Pass reviews 
+    - Pass CI checks 
+- Use:
+    - Squash or Merge (preferred for clean history)
+
+## Testing and Validation
+- Test all features before submitting PRs
+- Where applicable:
+    - Include unit/integration tests
+    - Validate with rover hardware or simulation
+- Clearly state testing steps in PR description.
