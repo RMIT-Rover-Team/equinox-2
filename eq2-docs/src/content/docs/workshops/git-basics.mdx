@@ -1,0 +1,109 @@
+---
+title: Git Basics Workshop
+description: Learn Git!
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+{/* todo: run through SSH keys, add all the users to organization */}
+This page will run through the git workshop for Software.
+
+By completing this exercise, you will: 
+- Be added to the github organization
+- Create an SSH key so your computer can access repositories
+- Clone a repo 
+- Create and assign yourself to a task 
+- Work on a feature branch 
+- Make commits linked to an issue 
+- Open a Pull Request (PR) 
+
+## Workshop Start
+Firstly, what is Git?
+
+Git is an open source version control software system. It allows users to collaborate effectively on projects and maintain version history. We use Git to manage responsibilities (through Github Projects), automatically deploy our documentation (through Github Actions) and keep everyone up to date with the latest version of projects.
+
+## Setup Github
+To get started, we first need to add you to the Github repository. Within the appropriate thread in [#software](https://discord.com/channels/891173197951696957/891175415090130984) (in the discord server), add your Github username.  
+![Gif navigating to the thread on Discord](assets/Git-DiscordThread.gif)
+
+You will also need to install `git`. How this is done depends on your operating system.
+
+<Tabs>
+    <TabItem label="Linux (Ubuntu)">
+        1. Run the comand:
+            ```sh
+            sudo apt install git
+            ```
+    </TabItem>
+    <TabItem label="Windows">
+        1. Download the [Git installer](https://git-scm.com/install/windows)
+        2. Run the installer.
+        3. Bob is your uncle.
+    </TabItem>
+    <TabItem label="Mac">
+        1. Vika you might want to do this one...    
+    </TabItem>
+</Tabs>
+
+After this, your Git should be installed. You can confirm this by running:
+```sh
+git --version
+```
+
+Now we need to make an SSH key and link it with GitHub. Here's da [link](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent), have fun!
+The pages you'll need to do are:
+- "Generating new SSH key"
+- "Add a new SSH key"
+- "Test your SSH connection"
+These three will link an SSH key with your github account, allowing you to do git stuff through the terminal.
+## Making your first(?) commit
+
+1. Clone the main repo.
+
+```sh
+git clone <repo-url> 
+```
+
+2. Create / Assign Yourself to a Task 
+    - Go to GitHub → Projects → Git workshop project
+    - Find the onboarding parent issue ("Update README.md to include new members") 
+    - Create a sub-issue under it titled: 
+        ```
+            Add `<your-name>` to contributors in README.md
+        ``` 
+    - Assign the issue to yourself. Apply the appropriate type and label.
+
+3. Create a new branch for your task: 
+```sh
+git checkout -b feature/add-<your-name>-readme 
+```
+4. Make a change to Readme
+    - Open the README.md file
+    - Add your name to the file
+    - Commit your change
+
+5. Stage and commit your changes 
+
+```sh
+git add .  # This adds every file that has been modified by you to the commit.
+git commit -m "feat: add <your-name> to readme (#123)"   # This makes a "local" commit, along with a message.
+```
+(Replace #123 with your actual issue number) 
+
+Push your branch 
+
+```sh
+git push origin feature/add-<your-name>-readme 
+```
+6. Open a pull request 
+
+Go to GitHub → Open a PR 
+
+Title: 
+
+```sh
+Add <your-name> to readme 
+```
+Description: 
+```
+Closes <issues_name>
+```
