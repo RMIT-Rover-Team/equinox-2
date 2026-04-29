@@ -9,6 +9,11 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Equinox 2",
+      logo: {
+        light: "./public/equinox-logo-light.png",
+        dark: "./public/equinox-logo-dark.png",
+        replacesTitle: true,
+      },
       social: [
         {
           icon: "github",
@@ -19,15 +24,14 @@ export default defineConfig({
       sidebar: [
         {
           label: "Standards",
-          items: [
-            { label: "Git standards", slug: "standards/git"}
-          ],
+          items: [{ label: "Git standards", slug: "standards/git" }],
         },
         {
-          label: "Guides",
+          label: "Workshops",
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: "ROS2 Workshop", slug: "guides/ros2" },
+            { label: "Git Basics Workshop", slug: "workshops/git-basics" },
+            { label: "ROS2 Workshop", slug: "workshops/ros2" },
           ],
         },
         {
