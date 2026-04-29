@@ -1,18 +1,59 @@
+/* For more info regarding css styling, refer to:
+starlight css docs: https://starlight.astro.build/guides/css-and-tailwind/
+editable props: https://github.com/withastro/starlight/blob/main/packages/starlight/style/props.css
+*/
 :root {
-    /* Your base red color */
-	--ui-red: 0, 68.5%, 49.8%; /* Just the values */
+	--ui-red: 0, 68.5%, 49.8%;
+	--ui-red-low: 0, 50%, 15%;
+	--ui-red-high: 0, 80%, 75%;
 
-	/* Starlight uses these to build the UI */
-	--sl-color-accent-low: hsl(0, 50%, 15%);
+	--sl-color-accent-low: hsl(var(--ui-red-low));
 	--sl-color-accent: hsl(var(--ui-red));
-	--sl-color-accent-high: hsl(0, 80%, 75%);
+	--sl-color-accent-high: hsl(var(--ui-red-high));
 }
 
-/* This ensures the text on the red background stays readable */
 :root[data-theme='dark'] {
 	--sl-color-text-accent: var(--sl-color-accent-high);
 }
 
 :root[data-theme='light'] {
 	--sl-color-text-accent: var(--sl-color-accent);
+	--sl-color-white: #1d1715;
+	--sl-color-gray-1: #302321;
+	--sl-color-gray-2: #423432;
+	--sl-color-gray-3: #635451;
+	--sl-color-gray-4: #978784;
+	--sl-color-gray-5: #c8c0be;
+	--sl-color-gray-6: #f3ecea;
+	--sl-color-gray-7: #f9f5f5;
+	--sl-color-black: #ffffff;
 }
+/* Dark mode colors. */
+/* :root {
+	--sl-color-accent-low: #460b05;
+	--sl-color-accent: #c60e00;
+	--sl-color-accent-high: #feb3a6;
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #f3ecea;
+	--sl-color-gray-2: #c8c0be;
+	--sl-color-gray-3: #978784;
+	--sl-color-gray-4: #635451;
+	--sl-color-gray-5: #423432;
+	--sl-color-gray-6: #302321;
+	--sl-color-black: #1d1715;
+}
+/* Light mode colors. */
+/* :root[data-theme='light'] {
+	--sl-color-accent-low: #ffc8be;
+	--sl-color-accent: #c90e00;
+	--sl-color-accent-high: #640300;
+	--sl-color-white: #1d1715;
+	--sl-color-gray-1: #302321;
+	--sl-color-gray-2: #423432;
+	--sl-color-gray-3: #635451;
+	--sl-color-gray-4: #978784;
+	--sl-color-gray-5: #c8c0be;
+	--sl-color-gray-6: #f3ecea;
+	--sl-color-gray-7: #f9f5f5;
+	--sl-color-black: #ffffff;
+} */
