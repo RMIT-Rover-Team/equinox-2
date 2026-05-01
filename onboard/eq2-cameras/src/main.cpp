@@ -1,6 +1,7 @@
 #include <iostream>
 #include <peel/GLib/MainLoop.h>
-#include <camera_manager.hpp>
+#include <device_discovery.hpp>
+#include <device_registry.hpp>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
@@ -40,9 +41,11 @@ int main(int argc, char *argv[]) {
     std::cerr << "Log initialization failed: " << ex.what() << std::endl;
       return 1;
   }
-  CameraManager manager;
+  DeviceDiscovery manager;
+  DeviceRegistry registry;
 
-  auto start_monitor_result = manager.start_monitoring();
+  auto start_monitor_result = manager.start_monitoring(&registry);
+
   if (!start_monitor_result.has_value()) spdlog::error(start_monitor_result.error().to_string());
   
   auto loop = GLib::MainLoop::create(nullptr, false);

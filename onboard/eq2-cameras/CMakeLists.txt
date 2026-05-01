@@ -32,8 +32,11 @@ find_package(GTest REQUIRED)
 
 set(SOURCES
   src/main.cpp
-  src/camera_manager.cpp
-  include/camera_manager.hpp
+  src/device_discovery.cpp
+  src/device_registry.cpp
+  include/device_discovery.hpp
+  include/device_registry.hpp
+  include/camera_types.hpp
 )
 add_executable(${PROJECT_NAME} ${SOURCES})
 
