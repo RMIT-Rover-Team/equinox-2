@@ -9,7 +9,8 @@
 
 using namespace peel;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   Gst::init(&argc, &argv);
 
   auto now = std::chrono::system_clock::now();
@@ -21,7 +22,8 @@ int main(int argc, char *argv[]) {
   std::string path = oss.str();
 
   // setup logger
-  try {
+  try
+  {
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     console_sink->set_level(spdlog::level::info);
     console_sink->set_pattern("[%^%l%$] %v");

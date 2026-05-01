@@ -1,3 +1,9 @@
+// look into if device monitor is asynchronous and run on a separate thread, and can remove worker threads
+// it DOES help that device register is on a separate thread tho.
+// There's a lot of reinterpret_cast here, which I know sounds bad,
+// but if you think about it they're both meant to be the same object anyway, just
+// in different languages, so chill
+
 #include "device_discovery.hpp"
 
 using namespace peel;
