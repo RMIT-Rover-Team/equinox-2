@@ -63,10 +63,10 @@ namespace equinox::camera
     StreamDestructionFailed, // The stream couldn't be killed fully
 
     // Discovery / System (Components/States)
-    MonitorBusNotFound,      // monitor->get_bus() returned null
-    DevicePropertyNotFound,  // device property returned null
+    MonitorBusNotFound,       // monitor->get_bus() returned null
+    DevicePropertyNotFound,   // device property returned null
     DeviceRegistryNotFound,   // device registry returned null
-
+    StreamNotFound,           // Stream was not found
     // Hardware Registry (States)
     DeviceNotFound,          // UID isn't in the map
     HardwareInUse,           // The camera is locked by another app

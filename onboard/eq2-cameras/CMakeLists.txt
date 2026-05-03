@@ -34,9 +34,11 @@ set(SOURCES
   src/main.cpp
   src/device_discovery.cpp
   src/device_registry.cpp
+  src/stream_registry.cpp
   include/device_discovery.hpp
   include/device_registry.hpp
   include/camera_types.hpp
+  include/stream_registry.hpp
 )
 add_executable(${PROJECT_NAME} ${SOURCES})
 

@@ -8,7 +8,6 @@
 #include <tl/expected.hpp>
 #include <gst/gst.h>
 #include <spdlog/spdlog.h>
-#include <tl/expected.hpp>
 
 class DeviceRegistry
 {
