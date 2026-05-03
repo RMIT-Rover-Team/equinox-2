@@ -23,6 +23,15 @@ export default defineConfig({
       ],
       sidebar: [
         {
+          label: "Start Here",
+          items: [
+            {
+              label: "Getting started",
+              slug: "start-here/getting-started",
+            },
+          ],
+        },
+        {
           label: "Standards",
           items: [{ label: "Git standards", slug: "standards/git" }],
         },
