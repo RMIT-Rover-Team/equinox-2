@@ -1,6 +1,23 @@
 ---
-title: Equinox 2 Documentation
+title: RMIT Rover Team's Documentation
 description: Index page for Equinox 2's documentation.
 hero:
-  tagline: The documentation for RMIT Rover's Equninox 2 Rover!
+  title: 'RMIT Rover Team <br> EQUINOX 2'
+  tagline: Welcome to the RMIT Rover Team's documentation site!
+  image:
+    alt: The RMIT Rover Team logo
+    file: assets/rover-logo.png
+pagefind: false
+tableOfContents: false
 ---
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+
+This site will host all Software documentation (excluding system engineering). On it, you'll find documentation related to the **software** side of the Rover, including but not limited to workshops, standards and actual documentation (auto-generated and not).
+
+## Architecture Overview
+Our codebase is currently a mono-repo, split up into two separate sub-sections, being on-board codebase and base-station codebase. The reason for choosing a mono-repo was that it simiplified dependencies between different projects and ensured consistent versioning, along with making GitHub actions easier to work with. When using repositories outside of the mono-repo, Git modules can be used.
+
+The current Linux distribution used is Ubuntu 22.04. This has been chosen because autonomy currently runs ROS Humble as a middleware, with no current plans to upgrade to Jazzy. The middleware for ROS will be Zenoh, as FastDDS and CycloneDDS have demonstrated unreliability, sometimes crashing and going down.
+
+For terminal management, Zellij is the likely candidate to be used for the 2026-2027 cycle.
+##
