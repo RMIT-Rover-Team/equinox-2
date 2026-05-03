@@ -27,7 +27,7 @@ Furthermore, a lot of the stuff is referenced from the ROS 2 documentation tutor
 Finally, if you have any more questions, feel free to ask your Software leads / deputy leads! 
 ## Understanding!
 ### What is ROS?
-ROS, or Robotics Operating System for short, is a robotics library for building robots. 
+The Robotic Operating System, or ROS for short, is a robotics library for building robots. 
 At its core, it’s just a messaging library, to send one message from one place to another. 
 However, it's main benefits are the large ecosystem of tooling and libraries surrounding ROS, and the fact that everyone already uses it. 
 
@@ -37,25 +37,25 @@ While ROS may or may not be used on our Rover this year, the fundamentals of ROS
 A ROS node is a process that takes data in, works on it, then outputs data in laymans terms. As stated by the ROS documentation, “Each node in ROS should be responsible for a single, modular purpose, e.g. controlling the wheel motors or publishing the sensor data from a laser rangefinder. Each node can send and receive data from other nodes via topics, services, actions, or parameters.” To contextualize this with the rover, there would be a node for the wheel motors, which would manage wheel speeds. 
 ![A gif of data moving from a node, through a topic and into another node.](./assets/Nodes-TopicandService.gif)
 ### Sending messages with nodes 
-ROS nodes will need to communicate with each other. You can do that through two ways, topics, services, and actions!  
+ROS nodes will need to communicate with each other. You can do that three different ways - topics, services, and actions!  
 
-Topics are used for continuous, one-way communication. A publisher can publish a message to a topic, so that all subscribers listening to that topic will receive that message.  
+**Topics** are used for continuous, one-way communication. A publisher can publish a message to a topic, so that all subscribers listening to that topic will receive that message.  
 
 For example, we could have a node for wheels and a node for the base-station computer. The node for wheels would continuously send wheel positions to the base station via the topic. As communication is one way, if the base station wants to send data back to the wheels, another topic would be required, which the base station would publish to, and the wheels would subscribe to.
 ![A gif of data moving from a node, through a topic and into another node.](./assets/Topic-MultiplePublisherandMultipleSubscriber.gif)
 
-Services and clients are used for non-continuous, call and response communication. To compare to ‘topics’, services only provide data when they are specifically called by a client, as opposed to topics which continuously stream data.
+**Services and clients** are used for non-continuous, call and response communication. Unlike 'topics' which continuously stream data, services only provide data when they are specifically called by a client.
 ![A gif of data moving from a service to a client, then back.](./assets/Service-MultipleServiceClient.gif)
 These two are the two main ways to communicate between nodes and are the ones you will be using most (assuming we will be using ROS this year). 
 
-Actions use a mix of both services and topics. To put things simply, an action involves a client sending a request to “take an action”. The server will acknowledge this request. While the server node is taking that action, it will continuously return data through its feedback topic. When it’s done, it responds with a result. Actions are also cancelable
+**Actions** use a mix of both services and topics. To put things simply, an action involves a client sending a request to “take an action”. The server will acknowledge this request. While the server node is taking that action, it will continuously return data through its feedback topic. When it’s done, it responds with a result. Actions are also cancelable
 ![A gif of an action taking place](./assets/Action-SingleActionClient.gif)
 
-This type of messaging is usually the least used in our rover, as currently none of our ROS stuff is automated (at least in anything that isn’t autonomy) and / or is out of scope (the position-based electronics we have don’t have the appropriate encoders to support returning a result, and the velocity-based ones obviously are not based off a goal, but continuous set velocity). Is like leageu of elegensds (image provided) 
+This type of messaging is usually the least used in our rover, as currently none of our ROS stuff is automated (at least in anything that isn’t autonomy) and / or is out of scope (the position-based electronics we have don’t have the appropriate encoders to support returning a result, and the velocity-based ones obviously are not based off a goal, but continuous set velocity).
 ## Setup!
 ### Setting up your ROS2 environment
 To install ROS2:
-Run the script by Kaelan, which can be found in the Software chat. This will automatically install ROS2, and source it every time a new terminal is opened (by modifying `~/.bashrc`, a script run every time a terminal is opened). 
+Run the script by Kaelan, which can be found in the Discord Software chat. This will automatically install ROS2, and source it every time a new terminal is opened (by modifying `~/.bashrc`, a script run every time a terminal is opened). 
 
 Alternatively refer to [the installation guide](https://docs.ros.org/en/humble/Installation.html) to manually install it.
 
@@ -69,7 +69,7 @@ Next, to setup the ROS2 environment:
 6. You have now setup your ROS2 directory!
 </Steps>
 ### Downloading Zenoh
-This year, we are using Zenoh as the middleware for ROS2. What this means is that ROS will communicate within each other with Zenoh:
+This year, we are using Zenoh as the middleware for ROS2. In practice, this means that all ROS 2 nodes communicate with each other via Zenoh, replacing the default DDS communication layer:
 ```sh
 sudo apt install ros-humble-rmw-zenoh-cpp
 ```
