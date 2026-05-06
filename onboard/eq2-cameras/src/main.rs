@@ -1,4 +1,4 @@
-#![warn(missing_docs)]
+// #![warn(missing_docs)]
 
 use gstreamer as gst;
 use std::sync::Arc;

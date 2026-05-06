@@ -13,3 +13,4 @@ gstreamer-webrtc = "0.25.0"
 log = "0.4.29"
 parking_lot = "0.12.5"
 thiserror = "2.0.18"
+tracing = { version = "0.1", features = ["attributes"] }
