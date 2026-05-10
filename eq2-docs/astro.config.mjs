@@ -41,11 +41,14 @@ export default defineConfig({
             // Each item here is one entry in the navigation menu.
             { label: "Git Basics Workshop", slug: "workshops/git-basics" },
             { label: "ROS2 Workshop", slug: "workshops/ros2" },
+            { label: "CAN Bus Workshop", slug: "workshops/canbus-basics"}
           ],
         },
         {
           label: "Reference",
-          autogenerate: { directory: "reference" },
+          items: [
+            { autogenerate: { directory: "reference" } }
+          ],
         },
       ],
       customCss: ["./src/styles/custom.css"],

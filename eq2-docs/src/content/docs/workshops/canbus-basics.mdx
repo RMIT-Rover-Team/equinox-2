@@ -1,0 +1,51 @@
+---
+title: Canbus Basics Workshop
+description: Learn the basics of Canbus!
+---
+
+CAN Bus is a standard that allows messages to be sent between embedded software, or in our case, our rover computer and the embedded software. There's a lot more to CAN Bus but for the purposes of Software it is out of scope.
+
+## Physical Layer
+To get CAN operational, you need two things on every device:
+- CAN Controller: The "brain" that formats the messages (often built into microcontrollers).
+- CAN Transceiver: The "translator" that turns digital signals into the electrical voltages for the wires.
+
+## Software side of CAN
+CAN isn't a serial port (like /dev/ttyUSB0), but is instead a network interface, inside the kernel. This is called SocketCAN. Every hardware device on the network is a node. Since it's a network interface, multiple programs can read and write to the same CAN bus simultaneously, with the kernel handling queueing and collision detection.
+
+### Key Tools (can-utils):
+If you have a CAN interface up (even a virtual one), you use these CLI tools:
+- candump can0: Like tcpdump. Displays every packet hitting the bus.
+- cansend can0 123#DEADBEEF: Sends a packet with ID 0x123 and 4 bytes of hex data.
+- cangen can0: Generates random can packets for stress testing.
+
+## The CAN "Packet" (Frame)
+As a dev, you only care about three fields in the struct:
+- Arbitration ID (11-bit or 29-bit): The "Address."
+    - Software view: This is the Topic. It identifies what the data is (e.g., MOTOR_LEFT_SPEED).
+    - Priority: Lower IDs have higher priority in the kernel's transmit queue.
+- DLC (Data Length Code): How many bytes are in the payload (0–8).
+- Payload (0–8 bytes): The actual data.
+- he Constraint: You only get 8 bytes. If you need to send a 12-byte string, you either have to split it into two packets or use a transport protocol like ISO-TP.
+
+## Data Packing & Endianness
+
+Since you only have 8 bytes, you can't just send JSON. You have to pack data into bits.
+
+The Software Challenge:
+How do you fit a 16-bit motor velocity, an 8-bit temperature, and 4 boolean flags into 8 bytes?
+
+Intel Format (Little Endian): Least significant byte first.
+
+Motorola Format (Big Endian): Most significant byte first (common in automotive).
+
+The Solution: DBC Files
+A .dbc file is essentially a Protobuf schema for CAN. It tells your code: "Message ID 0x123 contains a 12-bit Signal called 'Speed' starting at bit 0."
+
+## The "Software Only" Troubleshooting List
+
+When things don't work, and you've ruled out the hardware "magic," check these:
+- Bitrate Mismatch: If the kernel is set to 500k but the motor is 1M, you will see Input/output error or a flood of error frames in candump.
+- Interface State: Is the interface UP? Check ip link show can0.
+- ID Filtering: If your code isn't seeing messages, check if you accidentally applied a CAN Filter that is dropping everything except specific IDs.
+- Byte Order: Is your 500.0 RPM showing up as 128000.0? You swapped Big/Little Endian in your packing logic.
