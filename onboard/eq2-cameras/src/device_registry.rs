@@ -29,9 +29,8 @@ impl DeviceRegistry {
         }
     }
 
-    /// Returns the amount of devices within the registry
-    pub fn get_device_count(&self) -> usize {
-        self.registry.len()
+    pub fn get_device(&self, uid: &str) -> Option<gst::Device> {
+        self.registry.get(uid).map(|hw| hw.device.clone())
     }
 
     /// Adds device to registry
@@ -47,11 +46,11 @@ impl DeviceRegistry {
     /// All devices should come with a uid, due to it currently being linked to the USB Input, but in future if cameras
     /// are to be specced with hardware identifiers, we should opt to use those instead.
     ///
-    pub fn handle_device_add(&mut self, device: &gst::Device) -> Result<(), CamError> {
+    pub fn handle_device_add(&mut self, device: &gst::Device) -> Result<String, CamError> {
         let props = device.properties().ok_or_else(|| {
             CamError::PropertyNotFound("Device has no properties".to_string())
         })?;
-
+        
         let uid: String = props.get("api.v4l2.cap.bus_info")
             .map_err(|_| CamError::PropertyNotFound("api.v4l2.cap.bus_info".into()))?;
         
@@ -67,20 +66,20 @@ impl DeviceRegistry {
         
         self.device_to_uid.insert(device.clone(), uid.clone());
         self.registry.insert(uid.clone(), CameraHardware { 
-            uid, name, path, device: device.clone(), caps 
+            uid: uid.clone(), name, path, device: device.clone(), caps 
         });
         
-        Ok(())
+        Ok(uid)
     }
 
     /// Removes device from registry
     /// 
     /// Removes a device from the registry map, based off the camera device.
-    pub fn handle_device_remove(&mut self, device: &gst::Device) -> Result<(), CamError> {
+    pub fn handle_device_remove(&mut self, device: &gst::Device) -> Result<String, CamError> {
         if let Some(uid) = self.device_to_uid.remove(device) {
             self.registry.remove(&uid);
             log::info!("Removed camera: {}", uid);
-            Ok(())
+            Ok(uid)
         } else {
             Err(CamError::DeviceNotFound("Device handle not in registry".into()))
         }

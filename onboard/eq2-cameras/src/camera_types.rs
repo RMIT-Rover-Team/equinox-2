@@ -29,3 +29,8 @@ pub struct StreamInstance {
     pub pipeline: gst::Pipeline,
     pub source: gst::Element,
 }
+
+pub enum DiscoveryEvent {
+    Added(String),   // The UID of the added device
+    Removed(String), // The UID of the removed device
+}

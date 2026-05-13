@@ -1,5 +1,6 @@
 use gstreamer as gst;
 use gstreamer::prelude::*;
+
 use std::collections::HashMap;
 use crate::camera_types::{CamError, StreamInstance};
 
@@ -7,6 +8,7 @@ pub struct StreamRegistry {
     streams: HashMap<String, StreamInstance>,
 }
 
+// paused is equivilant to play for streams. either be null, ready or playing.
 impl StreamRegistry {
     pub fn new() -> Self {
         Self { streams: HashMap::new() }
@@ -33,5 +35,18 @@ impl StreamRegistry {
             let _ = instance.pipeline.set_state(gst::State::Null);
             log::info!("Stream {} stopped and removed", uid);
         }
+    }
+
+    pub fn setup_stream(&mut self, uid: &str) -> Result<(), CamError> {
+        Ok(())
+    }
+
+    /// Starts stream based off uid
+    pub fn start_stream(&mut self, uid: &str) -> Result<(), CamError> {
+        let instance = self.streams.get(uid)
+            .ok_or_else(|| CamError::DeviceNotFound(format!("Stream not found for UID: {}", uid)))?; 
+            
+        instance.pipeline.set_state(gst::State::Playing);
+        Ok(())
     }
 }

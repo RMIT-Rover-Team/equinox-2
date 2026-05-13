@@ -8,8 +8,8 @@ use gstreamer::prelude::*;
 use std::sync::Arc;
 use parking_lot::Mutex;
 use crate::camera_types::CamError;
+use crate::camera_types::DiscoveryEvent;
 use crate::device_registry::DeviceRegistry;
-use tracing::{info, warn, error, instrument};
 
 /// Manages the lifecycle of the GStreamer `DeviceMonitor`.
 /// 
@@ -33,18 +33,18 @@ impl DeviceDiscovery {
     /// Starts the background monitoring process.
     ///
     /// This function attaches a listener to the GStreamer bus. Whenever a device 
-    /// event occurs, the provided `on_changed` callback is triggered.
+    /// event occurs, the provided `on_event` callback is triggered.
     ///
     /// # Arguments
-    /// * `on_changed` - A closure that receives the updated device count: `Fn(usize)`.
+    /// * `on_event` - A closure that receives the updated device count: `Fn(usize)`.
     ///
     /// # Errors
     /// Returns [`CamError::MonitorError`] if the GStreamer bus watch cannot be initialized
     /// or if the monitor fails to start.
-    #[instrument(skip(self, on_changed), level = "info")]
-    pub fn start<F>(&mut self, on_changed: impl Into<Option<F>>) -> Result<(), CamError> 
+    // #[instrument(skip(self, on_event), level = "info")]
+    pub fn start<F>(&mut self, on_event: impl Into<Option<F>>) -> Result<(), CamError> 
     where 
-        F: Fn(usize) + Send + Sync + 'static 
+        F: Fn(DiscoveryEvent) + Send + Sync + 'static   
     {
         let monitor = gst::DeviceMonitor::new();
         let caps = gst::Caps::builder("video/x-raw").build();
@@ -53,36 +53,31 @@ impl DeviceDiscovery {
         let bus = monitor.bus();
         let registry_clone = self.registry.clone();
 
-        let on_changed_opt: Option<F> = on_changed.into();
-        let on_changed = Arc::new(on_changed_opt);
+        let on_event_opt: Option<F> = on_event.into();
+        let on_event = Arc::new(on_event_opt);
 
         let watch = bus.add_watch(move |_, msg| {
             use gst::MessageView;
-            let mut changed = false;
+            let mut event = None;
 
             match msg.view() {
                 MessageView::DeviceAdded(device_msg) => {
-                    let device = device_msg.device();
                     let mut reg = registry_clone.lock();
-                    if reg.handle_device_add(&device).is_ok() {
-                        changed = true;
+                    if let Ok(uid) = reg.handle_device_add(&device_msg.device()) {
+                        event = Some(DiscoveryEvent::Added(uid));
                     }
                 }
                 MessageView::DeviceRemoved(device_msg) => {
-                    let device = device_msg.device();
                     let mut reg = registry_clone.lock();
-                    if reg.handle_device_remove(&device).is_ok() {
-                        changed = true;
+                    if let Ok(uid) = reg.handle_device_remove(&device_msg.device()) {
+                        event = Some(DiscoveryEvent::Removed(uid));
                     }
                 }
                 _ => (),
             }
 
-            if changed { // callback for bus updates
-                let count = registry_clone.lock().get_device_count();
-                if let Some(ref callback) = *on_changed {
-                    callback(count);
-                }
+            if let (Some(ev), Some(callback)) = (event, &*on_event) {
+                callback(ev);
             }
 
             glib::ControlFlow::Continue
