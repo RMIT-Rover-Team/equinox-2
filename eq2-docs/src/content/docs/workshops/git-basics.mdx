@@ -61,13 +61,16 @@ After this, your Git should be installed. You can confirm this by running:
 git --version
 ```
 
-Now we need to make an SSH key and link it with GitHub. Follow the [GitHub tutorial](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) on how to do this.
+Now we need to make an SSH key and link it with GitHub. Follow the [GitHub tutorial](https://docs.github.com/en/authentication/connecting-to-github-with-ssh) on how to do this.
 The pages you'll need to follow are:
-- "Generating new SSH key"
-- "Add a new SSH key"
-- "Test your SSH connection"
+- ["Generating new SSH key"](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+- ["Add a new SSH key"](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+- ["Test your SSH connection"](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection)
 
 These three will link an SSH key with your github account, allowing you to do Git stuff through the terminal.
+If you got any problems refer to ["Troubleshooting SSH"](https://docs.github.com/en/authentication/troubleshooting-ssh)
+
+If all this works, you should now be able to run git commands on private repositories within the [GitHub Organization](https://github.com/RMIT-Rover-Team).
 
 ## Explaining Git (Cloning, Branching, Project Structure)
 #### Repositories
@@ -135,7 +138,6 @@ When working on anything, you should always have an issue for it. If it doesn't 
 It's time to make your first commits!
 <Steps>
 1. Clone the tutorial repository.
-
     ```sh
     git clone git@github.com:RMIT-Rover-Team/workshop-git.git
     ```
@@ -152,7 +154,8 @@ It's time to make your first commits!
 3. Create a new branch for your task: 
     ```sh
     git checkout -b feature/add-<your-name>-readme 
-    ``` 
+    ```
+
 4. Make a change to Readme
     - Open the README.md file
     - Add your name to the file

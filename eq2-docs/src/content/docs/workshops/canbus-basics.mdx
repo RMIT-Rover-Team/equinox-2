@@ -10,14 +10,29 @@ To get CAN operational, you need two things on every device:
 - CAN Controller: The "brain" that formats the messages (often built into microcontrollers).
 - CAN Transceiver: The "translator" that turns digital signals into the electrical voltages for the wires.
 
-## Software side of CAN
-CAN isn't a serial port (like /dev/ttyUSB0), but is instead a network interface, inside the kernel. This is called SocketCAN. Every hardware device on the network is a node. Since it's a network interface, multiple programs can read and write to the same CAN bus simultaneously, with the kernel handling queueing and collision detection.
+The reason why you need to know this is because sometimes somethings just won't have support for CAN Bus, as it does not have the required Controller or Transceiver. But it's a little out of Software's control.
 
-### Key Tools (can-utils):
-If you have a CAN interface up (even a virtual one), you use these CLI tools:
-- candump can0: Like tcpdump. Displays every packet hitting the bus.
-- cansend can0 123#DEADBEEF: Sends a packet with ID 0x123 and 4 bytes of hex data.
-- cangen can0: Generates random can packets for stress testing.
+## Software side of CAN
+Linux does not treat CAN like a serial port (like /dev/ttyUSB0), but instead like a network interface, inside the kernel. This network interface is called SocketCAN. Each CAN Bus network has an interface name, typically being `can<number>` (for example, `can0` or `can1`). Every hardware device on the network is a node. Since it's a network interface, multiple programs can read and write to the same CAN Bus simultaneously, with the kernel handling queueing and collision detection.
+
+## Key Tools (can-utils):
+If you have a CAN interface up, you will need these CLI tools to debug. They are part of can-utils, which you can obtain by running:
+```sh
+sudo apt install can-utils
+```
+- `candump can0`: Like tcpdump. Displays every packet hitting the bus.
+- `cansend can0` 123#DEADBEEF: Sends a packet with ID 0x123 and 4 bytes of hex data.
+- `cangen can0`: Generates random can packets for stress testing.
+
+## Testing without hardware
+Sometimes you won't have the hardware to test CAN Bus; that is to say, you only have your trusty laptop. So how will you test CANBus? You can set up virtual CAN Bus, or vcan. To use vcan, the only difference you need to make in the code is to change your interface name to virtual can's name (generally it will be `vcan0`).
+
+To set up a virtual CAN interface, run the following commands:
+```sh
+sudo modprobe vcan
+sudo ip link add dev vcan0 type vcan
+sudo ip link set up vcan0
+```
 
 ## The CAN "Packet" (Frame)
 As a dev, you only care about three fields in the struct:
@@ -26,24 +41,9 @@ As a dev, you only care about three fields in the struct:
     - Priority: Lower IDs have higher priority in the kernel's transmit queue.
 - DLC (Data Length Code): How many bytes are in the payload (0–8).
 - Payload (0–8 bytes): The actual data.
-- he Constraint: You only get 8 bytes. If you need to send a 12-byte string, you either have to split it into two packets or use a transport protocol like ISO-TP.
-
-## Data Packing & Endianness
-
-Since you only have 8 bytes, you can't just send JSON. You have to pack data into bits.
-
-The Software Challenge:
-How do you fit a 16-bit motor velocity, an 8-bit temperature, and 4 boolean flags into 8 bytes?
-
-Intel Format (Little Endian): Least significant byte first.
-
-Motorola Format (Big Endian): Most significant byte first (common in automotive).
-
-The Solution: DBC Files
-A .dbc file is essentially a Protobuf schema for CAN. It tells your code: "Message ID 0x123 contains a 12-bit Signal called 'Speed' starting at bit 0."
-
+    - Since the payload is only 8 bytes, if you needed to send a 12-byte string, you'd need to split it up into two packets. In other words, try to keep it within 8 bytes.
+ 
 ## The "Software Only" Troubleshooting List
-
 When things don't work, and you've ruled out the hardware "magic," check these:
 - Bitrate Mismatch: If the kernel is set to 500k but the motor is 1M, you will see Input/output error or a flood of error frames in candump.
 - Interface State: Is the interface UP? Check ip link show can0.
