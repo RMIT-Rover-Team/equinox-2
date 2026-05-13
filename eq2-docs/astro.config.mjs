@@ -41,8 +41,8 @@ export default defineConfig({
             // Each item here is one entry in the navigation menu.
             { label: "Git Basics Workshop", slug: "workshops/git-basics" },
             { label: "ROS2 Workshop", slug: "workshops/ros2" },
-            { label: "CAN Bus Workshop", slug: "workshops/canbus-basics"}
-          ],
+            { label: "CAN Bus Guide", slug: "workshops/canbus-basics"},
+            { label: "Packing and Unpacking", slug: "workshops/pack-and-unpack"},          ],
         },
         {
           label: "Reference",

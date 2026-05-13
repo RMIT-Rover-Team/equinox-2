@@ -1,0 +1,15 @@
+---
+title: Efficient message sending.
+description: Learn how to pack and unpack deez nuts
+---
+
+You will need to understand packing and unpacking in order to do anything related to sending small data.
+## What does it mean to pack?
+Packing and unpacking is basically encoding and decoding. Packing is encoding your data into binary, to a specific data standard that your code should adhere to, and unpacking is likewise the opposite, decoding your data from binary into variables your code can interpret. As it is beneficial to decrease payload sizes, most of the data packets being sent on the rover will be packed into a specific format, save for Protobuf, JSON, HTTPs requests, and ROS, which automatically do them.
+
+## Why should I pack and unpack?
+Of course, you add complexity by working with bytes, but it makes performance faster, reduces output for messages as oppoosed to traditional messaging such as JSON.
+
+## How do I start?
+First you have to define your message structure. This depends on what protocol you're using and the use-case for it. For example, if I were to make messages within the CAN Bus protocol, I would have to define it with a 11-bit or 29-bit arbitration-id, and then have another 8 bytes for the payload.
+
