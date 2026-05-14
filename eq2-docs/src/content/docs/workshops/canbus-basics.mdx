@@ -39,13 +39,17 @@ As a dev, you only care about three fields in the struct:
 - Arbitration ID (11-bit or 29-bit): The "Address."
     - Software view: This is the Topic. It identifies what the data is (e.g., MOTOR_LEFT_SPEED).
     - Priority: Lower IDs have higher priority in the kernel's transmit queue.
-- DLC (Data Length Code): How many bytes are in the payload (0–8).
-- Payload (0–8 bytes): The actual data.
+- DLC (Data Length Code): How many bytes are in the payload (0-8).
+- Payload (0-8 bytes): The actual data.
     - Since the payload is only 8 bytes, if you needed to send a 12-byte string, you'd need to split it up into two packets. In other words, try to keep it within 8 bytes.
  
-## The "Software Only" Troubleshooting List
-When things don't work, and you've ruled out the hardware "magic," check these:
+![Image of Standard CAN frame structure](assets/CANBus-CANFrame.png)
+In Software, you only need to worry about ID (Arbitration ID) and Data. <br/> Image Sourced from [csselectronics](https://www.csselectronics.com/pages/can-bus-simple-intro-tutorial).
+
+## Troubleshooting List
+When you can't figure stuff out check these:
 - Bitrate Mismatch: If the kernel is set to 500k but the motor is 1M, you will see Input/output error or a flood of error frames in candump.
-- Interface State: Is the interface UP? Check ip link show can0.
+- Interface State: Is the interface UP? Check `ip link show can0`.
 - ID Filtering: If your code isn't seeing messages, check if you accidentally applied a CAN Filter that is dropping everything except specific IDs.
 - Byte Order: Is your 500.0 RPM showing up as 128000.0? You swapped Big/Little Endian in your packing logic.
+- TX queue length: If you are getting the error `no buffer space available`, you need to increase TX Queue Length, which is a flag when setting up ip link.
