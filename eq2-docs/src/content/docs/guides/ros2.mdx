@@ -112,7 +112,10 @@ The command syntax for creating a new package in ROS 2 is:
 ```sh
 ros2 pkg create --build-type ament_cmake --license Apache-2.0 <package_name>
 ```
-What this does is create an empty baseline package to start working on, depending on whether it's a C++ package or Python package. The `<package_name>` is to be replaced by the package name. Optionally, the --node-name flag can be defined is optional so a node does not need to be defined:
+What this does is create an empty baseline package to start working on, depending on whether it's a C++ package or Python package. The `<package_name>` is to be replaced by the package name.
+:::note
+Optionally, the `--node-name` flag can be defined is optional so a node does not need to be defined:
+:::
 
 ```sh
 ros2 pkg create --build-type ament_cmake --license Apache-2.0 --node-name <node_name> <package_name>
@@ -200,8 +203,11 @@ What dependencies do we need? You can currently find what libraries we need in o
 
 To find the dependencies, modifications will need to be made in both `package.xml` and `CMakeLists.txt`.
 #### package.xml
-For each dependency, a line needs t be placed called
-`<depend><dependency_name></depend>`` (yeah i know this looks confusing deal with it).
+For each dependency, a line needs to be placed, being:
+```xml
+<depend><dependency_name></depend> <!--i know this looks confusing deal with it.-->
+
+```
 So, for example, if I had two dependencies, being `memory` and `string` the `package.xml` would have:
 ```xml
 <depend>memory</depend>

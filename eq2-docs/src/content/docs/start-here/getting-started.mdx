@@ -1,0 +1,44 @@
+---
+title: Getting Started
+description: Setup your computer
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Steps } from '@astrojs/starlight/components';
+
+This article will guide you through setting up your computer. This includes installing Ubuntu 22.04 and ROS Humble.
+## Installing Ubuntu 22.04 (Humble)
+There are multiple ways to install Ubuntu 22.04. The recommended approach would be to dual-boot, allowing yourself to run your current system and another OS, but understandably not everyone can do that, so there are alternative ways to setup Ubuntu 22.04
+<Tabs>
+    <TabItem label="Dual-booting Ubuntu 22.04">
+        Requirements:
+        - USB Stick
+        - Space on your SSD(s) for Ubuntu 22.04
+        :::note
+            These multiple partitions include
+            - efi partitions
+            - two windows partitions, one for c and one for recovery
+            - one partition for Linux for /.
+            - one NTFS partition accessible to all.
+            
+            You don't need to worry too hard about partitioning, just know that by dualbooting it creates "partitions" to separate your different Operating Systems and the logic used to boot them up.
+        :::
+
+        <Steps>
+            1. [Download Ubuntu 22.04](https://releases.ubuntu.com/jammy/ubuntu-22.04.5-desktop-amd64.iso)
+            2. [Download Ventoy](https://www.ventoy.net/en/index.html)
+            3. Open Ventoy, choose your USB stick and add the Ubuntu 22.04 flash to Ventoy
+            4. 
+        </Steps>
+    </TabItem>
+    <TabItem label="WSL">
+        <Steps>
+        1. Download the [Git installer](https://git-scm.com/install/windows)
+        2. Run the installer.
+        </Steps>
+    </TabItem>
+    <TabItem label="VIKA FILL THIS OUT">
+        <Steps>
+        1. Vika you might want to do this one...  
+        </Steps>  
+    </TabItem>
+</Tabs>
