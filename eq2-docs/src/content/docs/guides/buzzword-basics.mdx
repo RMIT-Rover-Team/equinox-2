@@ -13,10 +13,14 @@ Basically just tank turning on a Rover. The current drive mode we use. [Attached
 #### Pivot Steering
 The wheels rotate (pivot) so that the rover can turn on the spot smoothly. [Attached](https://www.youtube.com/live/MWcUxFiwad8?t=23907s) is a video of pivot steering by Legendary Rover Team in their Autonomy task. This is generally seen as better than differential driving as it does not dig the rover into the sand and also looks super clean (subjective). A majority of teams use pivot steering, althouhg differential steering is still used.
 
-#### Rocker-Bogie
+#### Rocker-Bogie Suspension
 A passive suspension system (used by NASA's Mars rovers) that allows the rover to climb over obstacles much larger than its wheel size while keeping all six wheels on the ground. Not currently used with the Equinox, but was used with the RAT series rovers.
 ![Gif of Rocker-Bogie in action](assets/Buzzword-RockerBogie.gif)
 
+#### Rocker Suspension
+Rocker-Bogie Suspension without the Bogie. It's essentially what you see on the current Rover. "The rocker part of Rocker-Bogie is the "rocking" aspect of the larger body-mounted linkage on each side of the rover." [1](https://en.wikipedia.org/wiki/Rocker-bogie)
+
+You don't really need to know this as Software but it's here anyway.
 ## Arm
 #### End Effector
 The "hand" or tool at the very end of the arm. On our rover, it's a claw.
@@ -28,12 +32,13 @@ The number of independent ways the arm can move. A 6-DoF arm can move and rotate
 The math used to calculate exactly what angle every joint needs to be at to reach a specific coordinate in space. Instead of moving each joint manually, you tell the arm "go to (x, y, z)" and IK does the rest. Our current arm implementation does not and has not implemented inverse kinematics, but optimally it is implemented.
 
 #### Actuator
-The motor or component that actually moves the joint.
+The motor or component that actually moves the joint. There are four motor actuators currently to control our 6-DoF arm.
 
+![Image of Arm](assets/Buzzword-Arm.png)
 ## Science
 ### Detection Task
 #### Spectrometer
-A piece of hardware that measures the properties of light over the electromagnetic spectrum. We use this to identify minerals like **Ilmenite** or detect water in the regolith (sand).
+A piece of hardware that measures the properties of light over the electromagnetic spectrum. We use this to identify minerals like Ilmenite or detect water in the regolith (sand).
 
 ### Material Extraction Task
 #### Auger
@@ -45,9 +50,12 @@ A passive tube that moves heat from one part of the rover to another. It's used 
 #### Peltier Device
 A solid-state "heat pump" that uses electricity to move heat from one side to the other. It's used as a cooler to condense water from the heated up sand.
 
+![Image of Science](assets/Buzzword-Science.png)
 ## Excavator
 ### Pavers
 The pavers are blocks that are used as a sort of floor for the rover to rest on. The pavers are meant to be designed by us to be deployed at the competition.
+
+![Image of Excavator](assets/Buzzword-Excavator.png)
 
 ## Autonomy
 ### Navigation Hardware
@@ -67,10 +75,14 @@ The process of a rover building a map of an unknown area while simultaneously ke
 #### Waypoints
 Specific GPS or local coordinates that the rover is "ordered" to drive to.
 
+#### Pointcloud
+3d model made of thousands of data points. Generated through LiDAR and depth cameras (Stereo Vision).
+![Image of Science Payload](assets/Buzzword-Pointcloud.png)
+
 #### Cost Map
 A 2D grid of the ground where every "square" is given a score. Flat ground is "low cost" (safe), while big rocks or steep pits are "high cost" (dangerous). The autonomy system looks for the path with the lowest total cost.
-
-#### Path Planning
+![Image of Costmap](assets/Buzzword-CostMap.png)
+In the image provided, you can see a generated costmap based off the obstacles detected.
 The "brain" work of calculating the safest and most efficient route from the rover's current position to a waypoint.
 
 #### Loop Closure
