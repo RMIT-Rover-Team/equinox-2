@@ -36,6 +36,13 @@ export default defineConfig({
           items: [{ label: "Git standards", slug: "standards/git" }],
         },
         {
+          label: "Cheatsheets",
+          items: [
+            { label: "Git cheatsheet", slug: "guides/linux-commands"},
+            { label: "Linux cheatsheet", slug: "guides/linux-commands"}
+          ],
+        },
+        {
           label: "Guides",
           items: [
             // Each item here is one entry in the navigation menu.
