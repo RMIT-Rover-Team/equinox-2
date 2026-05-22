@@ -38,7 +38,7 @@ export default defineConfig({
         {
           label: "Cheatsheets",
           items: [
-            { label: "Git cheatsheet", slug: "guides/linux-commands"},
+            { label: "Git cheatsheet", slug: "guides/git-commands"},
             { label: "Linux cheatsheet", slug: "guides/linux-commands"}
           ],
         },
