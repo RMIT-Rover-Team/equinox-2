@@ -33,12 +33,15 @@ export default defineConfig({
         },
         {
           label: "Standards",
-          items: [{ label: "Git standards", slug: "standards/git" }],
+          items: [
+            { label: "Git standards", slug: "standards/git" },
+            { label: "CAN Bus", slug: "standards/canbus" },
+          ],
         },
         {
           label: "Cheatsheets",
           items: [
-            { label: "Git cheatsheet", slug: "guides/linux-commands"},
+            { label: "Git cheatsheet", slug: "guides/git-commands"},
             { label: "Linux cheatsheet", slug: "guides/linux-commands"}
           ],
         },
@@ -58,6 +61,12 @@ export default defineConfig({
           items: [
             { autogenerate: { directory: "reference" } }
           ],
+        },
+        {
+          label: 'Design',
+          items: [ 
+            { label: "Excavator Hardware Interface", slug: "design/excavator/hardware-interface" },
+           ],
         },
       ],
       customCss: ["./src/styles/custom.css"],

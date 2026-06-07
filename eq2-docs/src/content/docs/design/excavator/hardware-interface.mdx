@@ -1,0 +1,36 @@
+---
+title: Excavator Hardware Interface
+description: Let's go designing!
+---
+
+## Functional Requirements
+### Excavating
+- Move Excavator Up / Down
+- Move Excavator Bucket Up / Down
+- Predict state of both (no encoders)
+- Bucket Shutter?
+- Aruco marker for excavator position?
+
+### Pavers
+- Last year's failures were lack of alignment and not tilting the bucket down enough
+- Aruco markers for alignment
+    - Potential automation of alignment?
+    - Potential automation of pulling out pavers at right speed?
+- Move the box to the Rover?
+    - Fuckass idea
+- Currently use french cleats, scrap.
+
+## Non-Functional Requirements
+- Process commands within 0.05 seconds
+- Watchdog
+- Support Excavator limit switch
+- Logging
+    - Time Stamps
+    - Telemetry Dataset
+    - Set Commands
+    - Failure
+    - Errors
+    - Warnings
+
+## API
+- Re
