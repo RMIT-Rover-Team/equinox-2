@@ -1,0 +1,36 @@
+---
+title: Universal CAN Bus Library Standards
+description: Standards for Universal CAN Bus Library.
+---
+
+## Universal Commands
+- `ping`
+    - Pings the 
+- `estop`
+- `tx`
+- `rx`
+
+## Excavator / Gimbal
+- Motor Pos
+    - Set
+- Motor Speed
+    - Set
+    
+## PDB
+- RequestDP
+    - Different CMD ID for each channel
+    - Dataset encoded into
+        - 8 bytes -> voltage-current-temp
+        - 16 bytes -> bms voltages
+
+# Arm
+- Set Speed
+    - Poke
+    - Open Close
+
+## Science
+- Stepper 1 (Set)
+- Stepper 2 (Set)
+- Stepper 3 (Set)
+- DC (Set)
+- Request DP (Each sensor, dc speed, stepper pos)
