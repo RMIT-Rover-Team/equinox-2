@@ -20,17 +20,37 @@ impl StreamRegistry {
         let source = device.create_element(Some("source"))
             .map_err(|_| CamError::ElementCreationFailed("source".into()))?;
 
-        pipeline.add(&source)?;
+        let videoconvert = gst::ElementFactory::make("videoconvert")
+            .name(format!("videoconvert_{}", uid))
+            .build()
+            .map_err(|_| CamError::ElementCreationFailed("videoconvert".into()))?;
 
+        let videoscale = gst::ElementFactory::make("videoscale")
+            .name(format!("videoscale_{}", uid))
+            .build()
+            .map_err(|_| CamError::ElementCreationFailed("videoscale".into()))?;
+        
+        let autovideosink = gst::ElementFactory::make("autovideosink")
+            .name(format!("sink_{}", uid))
+            .build()
+            .map_err(|_| CamError::ElementCreationFailed("sink".into()))?;
+        
         let webrtcbin = gst::ElementFactory::make("webrtcbin")
             .name(format!("webrtc_{}", uid))
             .build()
             .map_err(|_| CamError::ElementCreationFailed("webrtcbin".into()))?;
 
+        pipeline.add_many([source.clone(), videoconvert.clone(), videoscale.clone(), autovideosink.clone()]);
+
+        gst::Element::link_many([source.clone(), videoconvert.clone(), videoscale.clone(), autovideosink.clone()])?;
+
+        pipeline.set_state(gst::State::Playing)
+            .map_err(|_| CamError::PipelineError("pipeline".into()))?;
+
         self.streams.insert(uid.to_string(), StreamInstance {
             pipeline,
             source,
-            webrtcbin,
+            webrtcbin: gst::ElementFactory::make("webrtcbin").build().unwrap(),
         });
 
         log::info!("Successfully created stream for UID: {}", uid);

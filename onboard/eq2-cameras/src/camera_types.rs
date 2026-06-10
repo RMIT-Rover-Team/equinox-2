@@ -15,6 +15,8 @@ pub enum CamError {
     ElementCreationFailed(String),
     #[error("Monitor failure: {0}")]
     MonitorError(String),
+    #[error("Pipeline failure: {0}")]
+    PipelineError(String),
 }
 
 pub struct CameraHardware {
