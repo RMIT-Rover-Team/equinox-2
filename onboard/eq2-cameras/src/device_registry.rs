@@ -51,11 +51,12 @@ impl DeviceRegistry {
             CamError::PropertyNotFound("Device has no properties".to_string())
         })?;
         
-        let uid: String = props.get("api.v4l2.cap.bus_info")
-            .map_err(|_| CamError::PropertyNotFound("api.v4l2.cap.bus_info".into()))?;
+        let uid: String = props.get("v4l2.device.bus_info")
+            .or_else(|_| props.get("device.bus_path"))
+            .map_err(|_| CamError::PropertyNotFound("Failed to find a unique hardware UID".into()))?;
         
-        let path: String = props.get("api.v4l2.path")
-            .map_err(|_| CamError::PropertyNotFound("api.v4l2.path".into()))?;
+        let path: String = props.get("device.path")
+            .map_err(|_| CamError::PropertyNotFound("device.path not found".into()))?;
 
         let name = device.display_name().to_string();
         let caps = device.caps().ok_or_else(|| {

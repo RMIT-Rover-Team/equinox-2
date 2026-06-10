@@ -35,9 +35,7 @@ fn main() -> anyhow::Result<()> {
     log::info!("Starting device discovery...");
     discovery.start(move |event| {
         match event {
-            DiscoveryEvent::Added(uid) => {
-                log::info!("New device detected: {}", uid);
-                
+            DiscoveryEvent::Added(uid) => {                
                 let mut s_reg = str_reg.lock();
                 let d_reg = dev_reg.lock();
                 

@@ -22,11 +22,18 @@ impl StreamRegistry {
 
         pipeline.add(&source)?;
 
+        let webrtcbin = gst::ElementFactory::make("webrtcbin")
+            .name(format!("webrtc_{}", uid))
+            .build()
+            .map_err(|_| CamError::ElementCreationFailed("webrtcbin".into()))?;
+
         self.streams.insert(uid.to_string(), StreamInstance {
             pipeline,
             source,
+            webrtcbin,
         });
 
+        log::info!("Successfully created stream for UID: {}", uid);
         Ok(())
     }
 

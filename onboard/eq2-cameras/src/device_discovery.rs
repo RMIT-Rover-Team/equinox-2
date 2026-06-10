@@ -42,7 +42,7 @@ impl DeviceDiscovery {
     /// Returns [`CamError::MonitorError`] if the GStreamer bus watch cannot be initialized
     /// or if the monitor fails to start.
     // #[instrument(skip(self, on_event), level = "info")]
-    pub fn start<F>(&mut self, on_event: impl Into<Option<F>>) -> Result<(), CamError> 
+    pub fn start<F>(&mut self, on_event: impl Into<Option<F>>) -> Result<(), CamError>
     where 
         F: Fn(DiscoveryEvent) + Send + Sync + 'static   
     {
@@ -63,14 +63,28 @@ impl DeviceDiscovery {
             match msg.view() {
                 MessageView::DeviceAdded(device_msg) => {
                     let mut reg = registry_clone.lock();
-                    if let Ok(uid) = reg.handle_device_add(&device_msg.device()) {
-                        event = Some(DiscoveryEvent::Added(uid));
+                    
+                    match reg.handle_device_add(&device_msg.device()) {
+                        Ok(uid) => {
+                            log::info!("Successfully registered device UID: {}", uid);
+                            event = Some(DiscoveryEvent::Added(uid));
+                        }
+                        Err(e) => {
+                            log::error!("Failed to add device to registry! Error: {:?}", e);
+                        }
                     }
                 }
                 MessageView::DeviceRemoved(device_msg) => {
                     let mut reg = registry_clone.lock();
-                    if let Ok(uid) = reg.handle_device_remove(&device_msg.device()) {
-                        event = Some(DiscoveryEvent::Removed(uid));
+
+                    match reg.handle_device_remove(&device_msg.device()) {
+                        Ok(uid) => {
+                            log::info!("Successfully removed device UID: {}", uid);
+                            event = Some(DiscoveryEvent::Removed(uid));
+                        }
+                        Err(e) => {
+                            log::error!("Failed to remove device from registry! Error: {:?}", e);
+                        }
                     }
                 }
                 _ => (),
@@ -82,8 +96,8 @@ impl DeviceDiscovery {
 
             glib::ControlFlow::Continue
         }).map_err(|_| CamError::MonitorError("Failed to add bus watch".into()))?;
-
         monitor.start().map_err(|_| CamError::MonitorError("Failed to start monitor".into()))?;
+
         self.monitor = Some(monitor);
         self.watch_id = Some(watch);
         Ok(())
