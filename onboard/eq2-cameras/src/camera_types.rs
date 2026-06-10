@@ -30,6 +30,7 @@ pub struct CameraHardware {
 pub struct StreamInstance {
     pub pipeline: gst::Pipeline,
     pub source: gst::Element,
+    pub capsfilter: gst::Element,
     pub webrtcbin: gst::Element,
 }
 

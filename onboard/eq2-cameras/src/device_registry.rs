@@ -29,10 +29,6 @@ impl DeviceRegistry {
         }
     }
 
-    pub fn get_device(&self, uid: &str) -> Option<gst::Device> {
-        self.registry.get(uid).map(|hw| hw.device.clone())
-    }
-
     /// Adds device to registry
     /// 
     /// Adds a device to the registry map, with the key based off the uid (api.v4l2.cap.bus_info property).
@@ -84,5 +80,17 @@ impl DeviceRegistry {
         } else {
             Err(CamError::DeviceNotFound("Device handle not in registry".into()))
         }
+    }
+
+    /// Returns a gst::Device based off uid
+    /// 
+    /// 
+    pub fn get_device(&self, uid: &str) -> Option<gst::Device> {
+        self.registry.get(uid).map(|hw| hw.device.clone())
+    }
+
+    /// Returns Camera Hardware object based off uid
+    pub fn get_hardware(&self, uid: &str) -> Option<&CameraHardware> {
+        self.registry.get(uid)
     }
 }

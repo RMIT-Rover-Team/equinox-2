@@ -14,11 +14,16 @@ impl StreamRegistry {
         Self { streams: HashMap::new() }
     }
 
-    pub fn create_stream(&mut self, uid: &str, device: &gst::Device) -> Result<(), CamError> {
+    pub fn create_stream(&mut self, uid: &str, device: &gst::Device, hw_caps: &gst::Caps) -> Result<(), CamError> {
         let pipeline = gst::Pipeline::with_name(uid);
         
         let source = device.create_element(Some("source"))
             .map_err(|_| CamError::ElementCreationFailed("source".into()))?;
+
+        let capsfilter = gst::ElementFactory::make("capsfilter")
+            .name(format!("capsfilter_{}", uid))
+            .build()
+            .map_err(|_| CamError::ElementCreationFailed("capsfilter".into()))?;
 
         let videoconvert = gst::ElementFactory::make("videoconvert")
             .name(format!("videoconvert_{}", uid))
@@ -30,41 +35,37 @@ impl StreamRegistry {
             .build()
             .map_err(|_| CamError::ElementCreationFailed("videoscale".into()))?;
         
-        let autovideosink = gst::ElementFactory::make("autovideosink")
+        let autovideosink = gst::ElementFactory::make("autovideosink") // for local streaming
             .name(format!("sink_{}", uid))
             .build()
             .map_err(|_| CamError::ElementCreationFailed("sink".into()))?;
         
-        let webrtcbin = gst::ElementFactory::make("webrtcbin")
+        let webrtcbin = gst::ElementFactory::make("webrtcbin") // webrtc for later
             .name(format!("webrtc_{}", uid))
             .build()
             .map_err(|_| CamError::ElementCreationFailed("webrtcbin".into()))?;
 
-        pipeline.add_many([source.clone(), videoconvert.clone(), videoscale.clone(), autovideosink.clone()]);
+        pipeline.add_many([source.clone(), capsfilter.clone(), videoconvert.clone(), videoscale.clone(), autovideosink.clone()]);
 
-        gst::Element::link_many([source.clone(), videoconvert.clone(), videoscale.clone(), autovideosink.clone()])?;
-
-        pipeline.set_state(gst::State::Playing)
-            .map_err(|_| CamError::PipelineError("pipeline".into()))?;
+        gst::Element::link_many([source.clone(), capsfilter.clone(), videoconvert.clone(), videoscale.clone(), autovideosink.clone()])?;
 
         self.streams.insert(uid.to_string(), StreamInstance {
             pipeline,
             source,
+            capsfilter,
             webrtcbin: gst::ElementFactory::make("webrtcbin").build().unwrap(),
         });
 
-        log::info!("Successfully created stream for UID: {}", uid);
+        log::info!("Stream pipeline created for UID: {}", uid);
         Ok(())
     }
 
-    pub fn remove_stream(&mut self, uid: &str) {
-        if let Some(instance) = self.streams.remove(uid) {
-            let _ = instance.pipeline.set_state(gst::State::Null);
-            log::info!("Stream {} stopped and removed", uid);
-        }
-    }
 
-    pub fn setup_stream(&mut self, uid: &str) -> Result<(), CamError> {
+    pub fn configure_stream(&mut self, uid: &str, selected_caps: gst::Caps) -> Result<(), CamError> {
+        let instance = self.streams.get(uid)
+            .ok_or_else(|| CamError::DeviceNotFound(uid.into()))?;
+        log::info!("Configuring {} with caps: {}", uid, selected_caps.to_string());
+        instance.capsfilter.set_property("caps", &selected_caps);
         Ok(())
     }
 
@@ -73,7 +74,16 @@ impl StreamRegistry {
         let instance = self.streams.get(uid)
             .ok_or_else(|| CamError::DeviceNotFound(format!("Stream not found for UID: {}", uid)))?; 
             
-        instance.pipeline.set_state(gst::State::Playing);
+        instance.pipeline.set_state(gst::State::Playing)
+            .map_err(|_| CamError::PipelineError("pipeline".into()))?;
+        Ok(())
+    }
+
+    pub fn remove_stream(&mut self, uid: &str) -> Result<(), CamError> {
+        if let Some(instance) = self.streams.remove(uid) {
+            let _ = instance.pipeline.set_state(gst::State::Null);
+            log::info!("Stream {} stopped and removed", uid);
+        }
         Ok(())
     }
 }

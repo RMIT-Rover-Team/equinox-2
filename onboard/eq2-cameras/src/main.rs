@@ -39,8 +39,8 @@ fn main() -> anyhow::Result<()> {
                 let mut s_reg = str_reg.lock();
                 let d_reg = dev_reg.lock();
                 
-                if let Some(device) = d_reg.get_device(&uid) {
-                    if let Err(e) = s_reg.create_stream(&uid, &device) {
+                if let Some(hardware) = d_reg.get_hardware(&uid) {
+                    if let Err(e) = s_reg.create_stream(&uid, &hardware.device, &hardware.caps) {
                         log::error!("Failed to start stream for {}: {}", uid, e);
                     }
                 }
