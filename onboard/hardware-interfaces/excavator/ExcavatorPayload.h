@@ -1,9 +1,11 @@
 #pragma once
 #include "ExcavatorActuator.h"
+#include "GenericCan.h"
+#include "../lib-universal-canbus/libuniversalcan/SocketCanWrapper.h"
 
 class ExcavatorPayload {
 private:
-    EQUCAN can_bus;                  // concrete CAN implementation
+    SocketCanWrapper can_bus;                  // concrete CAN implementation
     ExcavatorActuator actuator1;
     ExcavatorActuator actuator2;
 public:
