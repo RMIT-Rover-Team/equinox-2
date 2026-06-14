@@ -16,7 +16,17 @@ The header specifies three key segments:
 #### GroupID
 Specifies the network segment of devices (group) intended to receive the message. A group typically has a size of 32 devices. There are 4 possible groups within the network.
 
-Due to collisions with MyActuator namespace, group 0x1 is unusable. Only Groups 0x00, 0x02 and 0x03 are available. 
+Due to collisions with MyActuator namespace, group 0x1 is unusable. Only Groups 0x00, 0x02 and 0x03 are available.
+
+Group allocations are:
+
+| Group ID | Devices |
+| ----- | ---- |
+| 0x00 | Onboard | 
+| 0x01 | Reserved |
+| 0x02 | Payload |
+| 0x03 | Unused | 
+
 
 #### Device
 Specifies the device within the group that is sending or receiving the message. 
@@ -30,18 +40,18 @@ These are:
 | --- | ------- | --- | ------ | ----------- |
 | 0x00 | Ping | Either | 0 | Checks whether a device is connected, also used as heartbeat payload |
 | 0x01 | EStop   | Master | 0 | Stops the device completely |
-| 0x02 | TxBool  | Master | 8 | Sends a boolean value |
-| 0x03 | TxInt   | Master | 16 | Sends an integer value |
+| 0x02 | TxInt8  | Master | 8 | Sends an integer value |
+| 0x03 | TxInt16   | Master | 16 | Sends an integer value |
 | 0x04 | TxFloat | Master | 32 | Sends a floating point value |
 | 0x05 | TxData  | Master | 64 | Sends an arbitrary byte buffer |
-| 0x06 | BrBool  | Slave | 8 | Receives a boolean value |
-| 0x07 | BrInt   | Slave | 16 | Receives an integer value |
+| 0x06 | BrInt8  | Slave | 8 | Receives an integer value |
+| 0x07 | BrInt16  | Slave | 16 | Receives an integer value |
 | 0x08 | BrFloat | Slave | 32 | Receives a floating point value |
 | 0x09 | BrData  | Slave | 64 | Broadcasts an arbitrary byte buffer |
  
 Each packet will include between 1 and 'n' inclusions of the datatype in little endian order.
 
-For example, a TxInt has a size of 16 bits. This means that up to 4 signed integers can be packed in the packet as follows:
+For example, a TxInt16 has a size of 16 bits. This means that up to 4 signed integers can be packed in the packet as follows:
 
 | Offset| Byte 1 | Byte 2 |
 | ------ | --------------- | --------------- |
@@ -56,7 +66,10 @@ Messages are intended to be asynchonous and not involve transactions. This requi
 ### Excavator
 - Uses TxInt to set the actuator velocity for the excavator arms and bucket motors. Motor is selected by device id, with netmasking selecting the parent device.
 
-Message Type: TxInt
+Device ID Sub-Structure:
+[ID Segment - 3 bits][Motor ID - 2 bits]
+
+Message Type: TxInt16
 
 | Offset| Byte 1 | Byte 2 |
 | ------ | --------------- | --------------- |
@@ -67,10 +80,14 @@ Message Type: TxInt
 
 
 
+
 ### Gimbal
 - Sets the Tilt position and Pan speed of a gimbal camera.
 
-Message Type: TxInt
+Device ID Sub-Structure:
+[ID Segment - 5 bits]
+
+Message Type: TxInt16
 
 | Offset| Byte 1 | Byte 2 |
 | ------ | --------------- | --------------- |
@@ -83,9 +100,10 @@ Message Type: TxInt
 
 - Firmware will broadcast status messages every 1 second by default. Each channel will present with a seperate device id. For example, a switchboard with 8 channels may occupy the device ids of 0 to 7. It is recommended to use the upper bits of the device id to specify which switchboard is selected. In this scenario, the device id netmask would be 0x1c.
 
-The message shall contain:
+Device ID Sub-Structure:
+[ID Segment - 2 bits][Channel ID - 3 bits]
 
-Message Type: TxInt
+Message Type: TxInt16
 
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
@@ -98,24 +116,26 @@ Message Type: TxInt
 
 - Toggle channel similarly will switch the state of a channel to a boolean value:
 
-Message Type: TxBool
+Message Type: TxInt8
 
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
-| 0x00 | State (Bool) | - |
+| 0x00 | State (Int8) | - |
 | 0x02 | - | - |
 | 0x04 | - | - |
 | 0x06 | - | - | 
 
 
 ### Science
-- Set Stepper (1, 2 or 3)
-- DC (set)
-- RequestDP (Each Sensor, DC Speed, Stepper POS)
 
-- Stepper positions (steps) are set by referencing the stepper motor as a function of the device id. Netmasking can be used to select specific control devices (see PDB)
+Device ID Sub-Structure:
+[ID Segment - 2 bits][Function Select - 1 bit][SubChannel - 2 bits]
 
-Message Type: TxInt
+
+- Stepper positions (steps) are set by referencing the stepper motor as a function of the device id. Netmasking can be used to select specific control devices (see PDB). Function select must be 0.
+
+
+Message Type: TxInt16
 
 | Offset | Byte 1 | Byte 2 |
 | 0x00 | Steps (Int16)[0] | Steps (Int16)[1] | 
@@ -124,9 +144,9 @@ Message Type: TxInt
 | 0x06 | - | - | 
 
 
-- Set DC Motor presents the same interface as Stepper motors only segmented by the device id.
+- Set DC Motor presents the same interface as Stepper motors only segmented by the device id. The Function select bit must be 0.
 
-Message Type: TxInt
+Message Type: TxInt16
 
 | Offset | Byte 1 | Byte 2 |
 | 0x00 | Speed (Int16)[0] | Speed (Int16)[1] | 
@@ -134,19 +154,50 @@ Message Type: TxInt
 | 0x04 | - | - |
 | 0x06 | - | - | 
 
-Message Type: 
+- Send temperature values in pairs, multiple pairs are designated by the device id offset by prior functions. Function select must be 1 and SubChannel N
+
+Message Type: BrFloat
+
+| Offset | Byte 1 | Byte 2 |
+| ------ | ------ | ------ |
+| 0x00   | Temp 0 (Float32)[0] | Temp 0 (Float32)[1] |
+| 0x02   | Temp 0 (Float32)[2] | Temp 0 (Float32)[3] |
+| 0x04   | Temp 1 (Float32)[0] | Temp 1 (Float32)[1] |
+| 0x06   | Temp 1 (Float32)[2] | Temp 1 (Float32)[3] |
+
+- Send the motor positions (combined) to the master. Function Select must be 0.
+
+Message Type: BrInt16
+
+| Offset | Byte 1 | Byte 2 |
+| ------ | ------ | ------ |
+| 0x00 | Pos 0 (Int16)[0] | Pos 0 (Int16)[1] | 
+| 0x02 | Pos 1 (Int16)[0] | Pos 1 (Int16)[1] | 
+| 0x04 | Pos 2 (Int16)[0] | Pos 2 (Int16)[1] | 
+| 0x06 | - | - | 
+
 
 ### Arm - End Effector
-- SetServoSpeed
-    - Poke
-    - Open / Close
+- Uses TxInt to set the gripper motors. Device ID is used to specify the exact motor to drive.
+
+Device ID Sub-Structure:
+[ID Segment - 3 bits][Channel ID - 2 bits]
+
+MessageType: Int16
+
+| Offset| Byte 1 | Byte 2 |
+| ------ | --------------- | --------------- |
+| 0x00   | Motor Speed (Int16)[0] | Motor Speed (Int16)[1] | 
+| 0x02  | - | - |
+| 0x04   | - | - |
+| 0x06   | - | - |
+
 
 
 #### Invalid Command IDs (due to MyActuators)
 The following CAN IDs are unavailable due to limitations with Coexisting MyActuator Motors.
 
-Group ID 0x1 is reserved.
-
+Group ID 0x1 is reserved encompassing the following:
 0b01001000000 0b0101000000
 0b01001000001 0b0101000001
 0b01001000010 0b0101000010
