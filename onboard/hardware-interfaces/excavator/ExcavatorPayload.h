@@ -2,6 +2,7 @@
 #include "ExcavatorActuator.h"
 #include "GenericCan.h"
 #include "SocketCanWrapper.h"
+#include "RoverCanMaster.h"
 
 class ExcavatorPayload {
 private:
