@@ -8,7 +8,7 @@ private:
     ExcavatorActuator actuator1;
     ExcavatorActuator actuator2;
 public:
-    ExcavatorPayload() : can_bus(EQUCAN()), actuator1(1, can_bus), actuator2(2, can_bus) {}
+    ExcavatorPayload() : can_bus(EQUCAN()), actuator1(1, 1, can_bus), actuator2(1, 2, can_bus) {}
     ~ExcavatorPayload();
 };
 
