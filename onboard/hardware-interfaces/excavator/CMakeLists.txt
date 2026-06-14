@@ -7,12 +7,16 @@ project(Excavator VERSION 1.0
                   DESCRIPTION "Excavator actuator interface"
                   LANGUAGES CXX)
 
-set(SOURCES
-  ExcavatorActuator.cpp
-  ExcavatorActuator.h
-  ../lib-universal-canbus/libuniversalcan/GenericCan.h
-  ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
-  ../lib-universal-canbus/libuniversalcan/RoverCanMaster.h
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../lib-universal-canbus/libuniversalcan
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+set(SOURCES
+  ExcavatorActuator.cpp
+  ExcavatorPayload.cpp
+  ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
+)
+
+
+add_library(${PROJECT_NAME} ${SOURCES})
