@@ -1,6 +1,6 @@
 #include "ExcavatorActuator.h" 
 
-ExcavatorActuator::ExcavatorActuator(u_int8_t can_id, u_int8_t motor_id, GenericCan& can) : can_id(can_id), motor_id(motor_id), velocity(0.0), can_master(can, motor_id) {}
+ExcavatorActuator::ExcavatorActuator(u_int8_t can_id, u_int8_t motor_id, RoverCanMaster &can_master) : can_id(can_id), motor_id(motor_id), velocity(0.0), can_master(can_master) {}
 
 double ExcavatorActuator::get_velocity() {
     std::pair<ReceivedState, float> result = can_master.GetMotorSpeed(can_id, motor_id);
@@ -13,7 +13,7 @@ double ExcavatorActuator::get_velocity() {
 
     if (result.first.uncallibrated_flag) {
         // TODO
-        // maybe run calibrate method once it exists
+        can_master.Calibrate(can_id, motor_id);
     }
 
     return velocity;
@@ -30,7 +30,7 @@ void ExcavatorActuator::set_velocity(double target_velocity) {
 
     if (result.uncallibrated_flag) {
         // TODO
-        // maybe run calibrate method once it exists
+        can_master.Calibrate(can_id, motor_id);
     }
 }
 
