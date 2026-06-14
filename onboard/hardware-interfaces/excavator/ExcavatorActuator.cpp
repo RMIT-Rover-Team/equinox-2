@@ -1,7 +1,4 @@
 #include "ExcavatorActuator.h" 
-// #include <stdint.h>
-// #include "../GenericCan.h"
-// #include "../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
 
 class ExcavatorActuator {
 public:
