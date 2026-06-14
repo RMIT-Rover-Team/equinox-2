@@ -5,7 +5,7 @@
 
 class ExcavatorActuator {
 public:
-    ExcavatorActuator();
+    ExcavatorActuator(u_int8_t id, GenericCan& can) : velocity(0.0), can_master(can, id) {}
     ~ExcavatorActuator();
 
     double get_velocity() {
@@ -17,10 +17,8 @@ public:
     }
 
 private:
-    uint8_t id;
     double velocity;
+    RoverCanMaster can_master;
 };
-
-ExcavatorActuator::ExcavatorActuator() {}
 
 ExcavatorActuator::~ExcavatorActuator() {}
