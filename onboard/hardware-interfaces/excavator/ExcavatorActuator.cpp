@@ -13,7 +13,7 @@ double ExcavatorActuator::get_velocity() {
 
     if (result.first.uncallibrated_flag) {
         // TODO
-        // maybe run calibrate method once it exists
+        can_master.Calibrate(can_id, motor_id);
     }
 
     return velocity;
@@ -30,7 +30,7 @@ void ExcavatorActuator::set_velocity(double target_velocity) {
 
     if (result.uncallibrated_flag) {
         // TODO
-        // maybe run calibrate method once it exists
+        can_master.Calibrate(can_id, motor_id);
     }
 }
 
