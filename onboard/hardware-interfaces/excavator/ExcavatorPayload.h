@@ -4,6 +4,8 @@
 #include "SocketCanWrapper.h"
 #include "RoverCanMaster.h"
 
+#define CAN_BUS_NAME "can0"
+
 class ExcavatorPayload {
 private:
     WrappedCANBus can_bus;                  // concrete CAN implementation
