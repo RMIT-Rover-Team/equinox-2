@@ -7,6 +7,6 @@ private:
     ExcavatorActuator actuator1;
     ExcavatorActuator actuator2;
 public:
-    ExcavatorPayload(GenericCan& can);
+    ExcavatorPayload();
     ~ExcavatorPayload();
 };
