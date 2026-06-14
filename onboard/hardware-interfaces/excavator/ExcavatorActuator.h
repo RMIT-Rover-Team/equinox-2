@@ -3,13 +3,13 @@
 #include "../GenericCan.h"
 #include "../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
 
-class ExcavatorActuator
-{
+class ExcavatorActuator {
 private:
-    uint8_t id;
     double velocity;
+    RoverCanMaster can_master;
+
 public:
-    ExcavatorActuator(uint8_t id);
+    ExcavatorActuator(uint8_t id, GenericCan& can);
     ~ExcavatorActuator();
     double get_velocity();
     void set_velocity();
