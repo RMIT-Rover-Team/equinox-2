@@ -10,5 +10,5 @@ public:
     ExcavatorActuator();
     ~ExcavatorActuator();
     double get_velocity();
-    void set_velocity();
+    void set_velocity(double target_velocity);
 };
