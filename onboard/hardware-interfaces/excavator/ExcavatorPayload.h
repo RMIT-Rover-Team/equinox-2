@@ -1,7 +1,7 @@
 #pragma once
 #include "ExcavatorActuator.h"
 #include "GenericCan.h"
-#include "../lib-universal-canbus/libuniversalcan/SocketCanWrapper.h"
+#include "SocketCanWrapper.h"
 
 class ExcavatorPayload {
 private:
