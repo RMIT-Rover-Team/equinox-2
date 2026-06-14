@@ -3,7 +3,7 @@
 // #include "../GenericCan.h"
 // #include "../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
 
-class ExcavatorActuator {
+ExcavatorActuator::ExcavatorActuator {
 public:
     ExcavatorActuator(u_int8_t id, GenericCan& can) : velocity(0.0), can_master(can, id) {}
     ~ExcavatorActuator();

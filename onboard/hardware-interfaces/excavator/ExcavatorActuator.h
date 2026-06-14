@@ -5,8 +5,9 @@
 
 class ExcavatorActuator {
 private:
+    uint8_t id;
     double velocity;
-    RoverCanMaster can_master;
+    RoverCanMaster can_master; // Owns the CAN logic
 
 public:
     ExcavatorActuator(uint8_t id, GenericCan& can);
