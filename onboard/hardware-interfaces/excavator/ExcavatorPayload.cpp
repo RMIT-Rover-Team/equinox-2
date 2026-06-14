@@ -1,14 +1,8 @@
-#include "ExcavatorActuator.h"
+#include "ExcavatorPayload.h"
 
-class ExcavatorPayload {
-private:
-    ExcavatorActuator actuator1;
-    ExcavatorActuator actuator2;
-public:
-    ExcavatorPayload();
-    ~ExcavatorPayload();
-};
-
-ExcavatorPayload::ExcavatorPayload() {}
+ExcavatorPayload::ExcavatorPayload()
+    : can_bus(EQUCAN())                      // initialize first, order matters
+    , actuator1(0x01, 0x01, can_bus)       // placeholder until Electrical confirms
+    , actuator2(0x01, 0x02, can_bus) {}
 
 ExcavatorPayload::~ExcavatorPayload() {}
