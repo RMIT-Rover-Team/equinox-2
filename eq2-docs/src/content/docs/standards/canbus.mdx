@@ -1,0 +1,51 @@
+---
+title: CANBus Standards
+description: CANBus Standards for Equinox 2
+---
+
+CAN Standards v1.0
+CANBus messages will not have responses, only reuests.
+## CAN Bus Standards
+### Header
+2 bits for Group
+| GroupID | Device | Command ID |
+| ------- | ------ | ---------- |
+| 2 bits  | 6 bits | 5 bits |
+### General
+- Ping
+- EStop
+- TxBool (Send)
+- TxInt (Send)
+- TxFloat (Send)
+- RxBool (Receive)
+- RxInt (Receive)
+- RxFloat (Recieve)
+
+### Excavator
+- TxInt ()
+
+### Gimbal
+- SetPanDirection(enumDirection)
+- SetTiltPosition(int)
+
+### PDB
+- RequestDP
+    - Different CMD ID for each channel
+    - Data get encoded into
+        - 8 bytes -> voltage-current-temp
+        - 16 bytes -> BMS Voltages
+- Toggle (unsigned int, bool)
+    {/* - 4 bits channel */}
+    - 1 bit toggle
+    - Different CMD id for each channel
+    - Status gets encoded in DB
+
+### Science
+- Set Stepper (1, 2 or 3)
+- DC (set)
+- RequestDP (Each Sensor, DC Speed, Stepper POS)
+
+### Arm - End Effector
+- SetServoSpeed
+    - Poke
+    - Open / Close
