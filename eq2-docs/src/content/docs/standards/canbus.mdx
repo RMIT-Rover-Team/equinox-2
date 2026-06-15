@@ -3,7 +3,7 @@ title: CANBus Standards
 description: CANBus Standards for Equinox 2
 ---
 
-CAN Standards v3.0
+CAN Standards v3.0.1
 CANBus messages will not have responses, only reuests.
 ## CAN Bus Standards
 ### Header
@@ -11,7 +11,7 @@ The header specifies three key segments:
 
 | GroupID | Device | Command ID |
 | ------- | ------ | ---------- |
-| 2 bits  | 5 bits | 4 bits |
+| 2 bits  | 5 bits |   4 bits   |
 
 #### GroupID
 Specifies the network segment of devices (group) intended to receive the message. A group typically has a size of 32 devices. There are 4 possible groups within the network.
@@ -20,12 +20,12 @@ Due to collisions with MyActuator namespace, group 0x1 is unusable. Only Groups 
 
 Group allocations are:
 
-| Group ID | Devices |
-| ----- | ---- |
-| 0x00 | Onboard | 
-| 0x01 | Reserved |
-| 0x02 | Payload |
-| 0x03 | Unused | 
+| Group ID | Devices  |
+| -------- | -------- |
+|   0x00   | Onboard  | 
+|   0x01   | Reserved |
+|   0x02   | Payload  |
+|   0x03   | Unused   | 
 
 
 #### Device
@@ -36,29 +36,29 @@ Indicates the type of message being sent and the intended outcome on the machine
 
 These are:
 
-| ID | Command | Sent From | Unit Size (bits) | Description | 
-| --- | ------- | --- | ------ | ----------- |
-| 0x00 | Ping | Either | 0 | Checks whether a device is connected, also used as heartbeat payload |
-| 0x01 | EStop   | Master | 0 | Stops the device completely |
-| 0x02 | TxInt8  | Master | 8 | Sends an integer value |
-| 0x03 | TxInt16   | Master | 16 | Sends an integer value |
-| 0x04 | TxFloat | Master | 32 | Sends a floating point value |
-| 0x05 | TxData  | Master | 64 | Sends an arbitrary byte buffer |
-| 0x0A | BrInt8  | Slave | 8 | Receives an integer value |
-| 0x0B | BrInt16  | Slave | 16 | Receives an integer value |
-| 0x0C | BrFloat | Slave | 32 | Receives a floating point value |
-| 0x0D | BrData  | Slave | 64 | Broadcasts an arbitrary byte buffer |
+|  ID  |  Command  | Sent From | Unit Size (bits) | Description | 
+| ---- | --------- | --------- | ---------------- | ----------- |
+| 0x00 | Ping      | Either    | 0  | Checks whether a device is connected, also used as heartbeat payload |
+| 0x01 | EStop     | Master    | 0  | Stops the device completely |
+| 0x02 | TxInt8    | Master    | 8  | Sends an integer value |
+| 0x03 | TxInt16   | Master    | 16 | Sends an integer value |
+| 0x04 | TxFloat   | Master    | 32 | Sends a floating point value |
+| 0x05 | TxData    | Master    | 64 | Sends an arbitrary byte buffer |
+| 0x0A | BrInt8    | Slave     | 8  | Receives an integer value |
+| 0x0B | BrInt16   | Slave     | 16 | Receives an integer value |
+| 0x0C | BrFloat   | Slave     | 32 | Receives a floating point value |
+| 0x0D | BrData    | Slave     | 64 | Broadcasts an arbitrary byte buffer |
  
 Each packet will include between 1 and 'n' inclusions of the datatype in little endian order.
 
 For example, a TxInt16 has a size of 16 bits. This means that up to 4 signed integers can be packed in the packet as follows:
 
-| Offset| Byte 1 | Byte 2 |
+| Offset |     Byte 1      |      Byte 2     |
 | ------ | --------------- | --------------- |
-| 0x00   | A (Int16)[0] | A (Int16)[1] | 
-| 0x02   | B (Int16)[0] | B (Int16)[1] |
-| 0x04   | C (Int16)[0] | C (Int16)[1] |
-| 0x06   | D (Int16)[0] | D (Int16)[1] |
+| 0x00   | A (Int16)[0]    | A (Int16)[1]    | 
+| 0x02   | B (Int16)[0]    | B (Int16)[1]    |
+| 0x04   | C (Int16)[0]    | C (Int16)[1]    |
+| 0x06   | D (Int16)[0]    | D (Int16)[1]    |
 
 Messages are intended to be asynchonous and not involve transactions. This requires a listening thread to handle broadcast messages separately to the sending thread.
 
@@ -71,10 +71,10 @@ Device ID Sub-Structure:
 
 Message Type: TxInt16
 
-| Offset| Byte 1 | Byte 2 |
-| ------ | --------------- | --------------- |
+| Offset | Byte 1 | Byte 2 |
+| ------ | ------ | ------ |
 | 0x00   | Motor Speed (Int16)[0] | Motor Speed (Int16)[1] | 
-| 0x02  | - | - |
+| 0x02   | - | - |
 | 0x04   | - | - |
 | 0x06   | - | - |
 
@@ -89,10 +89,10 @@ Device ID Sub-Structure:
 
 Message Type: TxInt16
 
-| Offset| Byte 1 | Byte 2 |
-| ------ | --------------- | --------------- |
+| Offset | Byte 1 | Byte 2 |
+| ------ | ------ | ------ |
 | 0x00   | Pan Speed (Int16)[0] | Pan Speed (Int16)[1] | 
-| 0x02   | Tilt Pos (Int16)[0] | Tilt Pos (Int16)[1] |
+| 0x02   | Tilt Pos (Int16)[0]  | Tilt Pos (Int16)[1]  |
 | 0x04   | - | - |
 | 0x06   | - | - |
 
@@ -107,8 +107,8 @@ Message Type: TxInt16
 
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
-| 0x00 | Voltage (Int16)[0] | Voltage (Int16)[1] | 
-| 0x02 | Current (Int16)[0] | Current (Int16)[1] | 
+| 0x00 | Voltage (Int16)[0]     | Voltage (Int16)[1]     | 
+| 0x02 | Current (Int16)[0]     | Current (Int16)[1]     | 
 | 0x04 | Temperature (Int16)[0] | Temperature (Int16)[1] | 
 | 0x06 | - | - | 
 
@@ -187,10 +187,10 @@ Device ID Sub-Structure:
 
 MessageType: Int16
 
-| Offset| Byte 1 | Byte 2 |
-| ------ | --------------- | --------------- |
+| Offset | Byte 1 | Byte 2 |
+| ------ | ------ | ------ |
 | 0x00   | Motor Speed (Int16)[0] | Motor Speed (Int16)[1] | 
-| 0x02  | - | - |
+| 0x02   | - | - |
 | 0x04   | - | - |
 | 0x06   | - | - |
 
