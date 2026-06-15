@@ -44,10 +44,10 @@ These are:
 | 0x03 | TxInt16   | Master | 16 | Sends an integer value |
 | 0x04 | TxFloat | Master | 32 | Sends a floating point value |
 | 0x05 | TxData  | Master | 64 | Sends an arbitrary byte buffer |
-| 0x06 | BrInt8  | Slave | 8 | Receives an integer value |
-| 0x07 | BrInt16  | Slave | 16 | Receives an integer value |
-| 0x08 | BrFloat | Slave | 32 | Receives a floating point value |
-| 0x09 | BrData  | Slave | 64 | Broadcasts an arbitrary byte buffer |
+| 0x0A | BrInt8  | Slave | 8 | Receives an integer value |
+| 0x0B | BrInt16  | Slave | 16 | Receives an integer value |
+| 0x0C | BrFloat | Slave | 32 | Receives a floating point value |
+| 0x0D | BrData  | Slave | 64 | Broadcasts an arbitrary byte buffer |
  
 Each packet will include between 1 and 'n' inclusions of the datatype in little endian order.
 
