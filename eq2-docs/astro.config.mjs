@@ -35,7 +35,7 @@ export default defineConfig({
           label: "Standards",
           items: [
             { label: "Git standards", slug: "standards/git" },
-            { label: "CAN Bus", slug: "standards/canbus" },
+            { label: "CANBus standards", slug: "standards/canbus"}
           ],
         },
         {
