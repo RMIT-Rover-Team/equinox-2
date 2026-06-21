@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(Excavator VERSION 1.0
-                  DESCRIPTION "Excavator actuator interface"
+                  DESCRIPTION "Excavator hardware interface"
                   LANGUAGES CXX)
 
 include_directories(
@@ -13,9 +13,10 @@ include_directories(
 )
 
 set(SOURCES
-  ExcavatorActuator.cpp
-  ExcavatorPayload.cpp
+  src/ExcavatorActuator.cpp
+  src/ExcavatorPayload.cpp
   ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
+  ../lib-universal-canbus/libuniversalcan/SocketCanWrapper.cpp
 )
 
 
