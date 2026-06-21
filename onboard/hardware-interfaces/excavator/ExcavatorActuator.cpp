@@ -1,37 +1,18 @@
 #include "ExcavatorActuator.h" 
 
-ExcavatorActuator::ExcavatorActuator(u_int8_t can_id, u_int8_t motor_id, RoverCanMaster &can_master) : can_id(can_id), motor_id(motor_id), velocity(0.0), can_master(can_master) {}
-
-double ExcavatorActuator::get_velocity() {
-    std::pair<ReceivedState, float> result = can_master.GetMotorSpeed(can_id, motor_id);
-    velocity = result.second;
-
-    if (result.first.error_flag) {
-        // TODO
-        // maybe set up an error buffer
-    }
-
-    if (result.first.uncallibrated_flag) {
-        // TODO
-        can_master.Calibrate(can_id, motor_id);
-    }
-
-    return velocity;
+/* 
+ * Returns a 5 bit integer with the first 3 bits being the device id and the last 2 being the motor id
+ */
+uint8_t format_device_motor_id(uint8_t device_id, uint8_t motor_id) {
+    return ((device_id && 0b00000111) << 2) && (motor_id && 0b00000011);
 }
 
-void ExcavatorActuator::set_velocity(double target_velocity) {
+ExcavatorActuator::ExcavatorActuator(u_int8_t device_id, u_int8_t motor_id, RoverCanMaster &can_master) : device_id(device_id), motor_id(motor_id), velocity(0.0), can_master(can_master) {}
+
+void ExcavatorActuator::set_velocity(int16_t target_velocity) {
     velocity = target_velocity;
-    ReceivedState result = can_master.SetMotorSpeed(can_id, motor_id, velocity);
-
-    if (result.error_flag) {
-        // TODO
-        // maybe set up an error buffer
-    }
-
-    if (result.uncallibrated_flag) {
-        // TODO
-        can_master.Calibrate(can_id, motor_id);
-    }
+    int16_t msg[4] = { target_velocity, 0, 0, 0 };
+    can_master.tx_int16(GroupId::PAYLOAD, format_device_motor_id(device_id, motor_id), msg);
 }
 
 ExcavatorActuator::~ExcavatorActuator() {}
