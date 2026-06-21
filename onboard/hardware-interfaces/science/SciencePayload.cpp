@@ -30,3 +30,18 @@ void SciencePayload::set_microscope_swivel(int device_id, float degrees) {
 
 void SciencePayload::stop_all() {
 }
+
+int SciencePayload::get_heater_state() {
+}
+
+int SciencePayload::get_heater_current_temperature() {
+}
+
+float SciencePayload::get_servo_position(int device_id) {
+}
+
+float SciencePayload::get_servo_velocity(int device_id) {
+}
+
+float SciencePayload::get_microscope_swivel(int device_id) {
+}
