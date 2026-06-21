@@ -21,3 +21,9 @@ set(SOURCES
 
 
 add_library(${PROJECT_NAME} ${SOURCES})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
+# make sure to run this to install spdlog
+# git clone https://github.com/gabime/spdlog.git
+# cd spdlog && mkdir build && cd build
+# cmake .. && cmake --build .
