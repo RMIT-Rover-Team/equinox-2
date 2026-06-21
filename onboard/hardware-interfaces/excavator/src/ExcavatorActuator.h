@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "../GenericCan.h"
 #include "../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
+#include "spdlog/spdlog.h"
 
 class ExcavatorActuator {
 private:
@@ -14,4 +15,5 @@ public:
     ExcavatorActuator(uint8_t device_id, uint8_t motor_id, RoverCanMaster &can_master);
     ~ExcavatorActuator();
     void set_velocity(int16_t target_velocity);
+    void estop();
 };

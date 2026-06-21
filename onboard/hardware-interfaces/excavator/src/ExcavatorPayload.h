@@ -15,4 +15,5 @@ private:
 public:
     ExcavatorPayload();
     ~ExcavatorPayload();
+    estop();
 };
