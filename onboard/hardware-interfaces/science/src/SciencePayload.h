@@ -1,6 +1,6 @@
-#include "GenericCan.h"
-#include "SocketCanWrapper.h"
-#include "RoverCanMaster.h"
+#include "../../lib-universal-canbus/libuniversalcan/GenericCan.h"
+#include "../../lib-universal-canbus/libuniversalcan/SocketCanWrapper.h"
+#include "../../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
 
 #ifndef EQUINOX_2_SCIENCEPAYLOAD_H
 #define EQUINOX_2_SCIENCEPAYLOAD_H
