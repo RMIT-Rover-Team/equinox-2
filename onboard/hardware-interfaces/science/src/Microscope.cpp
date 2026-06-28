@@ -1,3 +1,10 @@
+/*
+ * Microscope.h
+ * Defines the Microscope hardware abstraction.
+ * Controls microscope vertical height and swivel angle using two stepper motors.
+ * Converts requested physical movement values into stepper motor commands. 
+ */
+ 
 #include "Microscope.h"
 
 // TODO: Update device_id when confirmed by engineering

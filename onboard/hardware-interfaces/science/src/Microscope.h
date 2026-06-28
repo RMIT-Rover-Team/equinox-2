@@ -1,3 +1,9 @@
+/*
+ * Defines the Microscope hardware abstraction.
+ * Provides methods to set/get height and swivel angle
+ * and reserves space for future distance sensor polling.
+ */
+
 #ifndef EQUINOX_2_MICROSCOPE_H
 #define EQUINOX_2_MICROSCOPE_H
 

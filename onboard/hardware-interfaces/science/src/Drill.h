@@ -1,3 +1,10 @@
+/*
+ * Drill.h
+ * Defines the Drill hardware abstraction.
+ * Stores drill height/status and exposes methods to set height,
+ * start/stop the drill and retrieve the current stored state.
+*/
+
 #ifndef EQUINOX_2_DRILL_H
 #define EQUINOX_2_DRILL_H
 

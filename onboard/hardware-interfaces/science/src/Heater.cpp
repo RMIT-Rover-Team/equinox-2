@@ -1,3 +1,9 @@
+/*
+ * Heater.cpp
+ * Implements the Heater hardware interface.
+ * set_temperature() stores the target temperature and sends it
+ * to the heater device over the CAN bus as a float message.
+ */
 #include "Heater.h"
 
 Heater::Heater(uint8_t device_id, RoverCanMaster& can_master)

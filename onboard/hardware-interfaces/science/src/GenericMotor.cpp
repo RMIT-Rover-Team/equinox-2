@@ -1,3 +1,11 @@
+/*
+ * GenericMotor.cpp
+ * Implements a simple CAN-controlled motor interface.
+ * start() sends a configured RPM command over CAN.
+ * stop() sends zero RPM over CAN.
+ * The class also tracks whether the motor is currently marked as running.
+ */
+
 #include "GenericMotor.h"
 
 GenericMotor::GenericMotor(uint8_t device_id, RoverCanMaster &can_master)

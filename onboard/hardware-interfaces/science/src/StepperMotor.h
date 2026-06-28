@@ -1,3 +1,8 @@
+/* StepperMotor.h
+ * Defines a stepper motor abstraction for payload mechanisms.
+ * Used by Drill and Microscope to send movement commands as step counts.
+ */
+ 
 #ifndef EQUINOX_2_STEPPERMOTOR_H
 #define EQUINOX_2_STEPPERMOTOR_H
 

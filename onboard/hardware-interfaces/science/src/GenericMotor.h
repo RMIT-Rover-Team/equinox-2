@@ -1,3 +1,9 @@
+/*
+ * GenericMotor.h
+ * Defines a generic motor abstraction for payload devices.
+ * Used for motors that only need basic start/stop control.
+ */
+
 #ifndef EQUINOX_2_GENERICMOTOR_H
 #define EQUINOX_2_GENERICMOTOR_H
 

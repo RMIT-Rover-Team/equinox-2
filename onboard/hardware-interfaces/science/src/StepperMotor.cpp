@@ -1,3 +1,10 @@
+/*
+ * StepperMotor.cpp
+ * Implements a CAN-controlled stepper motor interface.
+ * set_steps() stores the most recent step command and sends it over CAN.
+ * stop() clears the most recent command locally.
+ */
+ 
 #include "StepperMotor.h"
 
 StepperMotor::StepperMotor(uint8_t device_id, RoverCanMaster &can_master)

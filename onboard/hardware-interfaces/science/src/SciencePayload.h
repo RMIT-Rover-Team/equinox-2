@@ -1,3 +1,10 @@
+/*
+ * SciencePayload.h
+ * Defines the SciencePayload class.
+ * This is the main entry point for the science payload hardware interface.
+ * It owns the CAN bus, CAN master and science device abstractions.
+ */
+ 
 #include "../../lib-universal-canbus/libuniversalcan/GenericCan.h"
 #include "../../lib-universal-canbus/libuniversalcan/SocketCanWrapper.h"
 #include "../../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"

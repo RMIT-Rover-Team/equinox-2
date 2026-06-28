@@ -1,3 +1,10 @@
+/*
+ * SciencePayload.cpp
+ * Implements the top-level science payload interface.
+ * Creates teh CAN bus connection, CAN master and all science subsystem devices:
+ * heater, drill, microscope
+*/
+
 #include "SciencePayload.h"
 
 // TODO: Confirm device IDs with engineering
