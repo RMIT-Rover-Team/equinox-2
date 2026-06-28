@@ -16,4 +16,6 @@ public:
     ~ExcavatorActuator();
     void set_velocity(int16_t target_velocity);
     void estop();
+    void ping();
+    void heartbeat();
 };

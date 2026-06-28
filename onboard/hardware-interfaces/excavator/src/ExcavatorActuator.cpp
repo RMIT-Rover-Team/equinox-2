@@ -24,4 +24,12 @@ void ExcavatorActuator::estop() {
     can_master.estop(GroupId::PAYLOAD, format_device_motor_id(device_id, motor_id));
 }
 
+void ExcavatorActuator::ping() {
+    can_master.ping(GroupId::PAYLOAD, format_device_motor_id(device_id, motor_id));
+}
+
+void ExcavatorActuator::heartbeat() {
+    return; // TODO: implement heartbeat
+}
+
 ExcavatorActuator::~ExcavatorActuator() {}
