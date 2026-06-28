@@ -35,25 +35,25 @@ export default defineConfig({
           label: "Standards",
           items: [
             { label: "Git standards", slug: "standards/git" },
-            { label: "CANBus standards", slug: "standards/canbus"}
+            { label: "CANBus standards", slug: "standards/canbus" }
           ],
         },
         {
           label: "Cheatsheets",
           items: [
-            { label: "Git cheatsheet", slug: "guides/git-commands"},
-            { label: "Linux cheatsheet", slug: "guides/linux-commands"}
+            { label: "Git cheatsheet", slug: "guides/git-commands" },
+            { label: "Linux cheatsheet", slug: "guides/linux-commands" }
           ],
         },
         {
           label: "Guides",
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: "Buzzword Basics" , slug: "guides/buzzword-basics" },
+            { label: "Buzzword Basics", slug: "guides/buzzword-basics" },
             { label: "Git Basics Workshop", slug: "guides/git-basics" },
             { label: "ROS2 Workshop", slug: "guides/ros2" },
-            { label: "CAN Bus Guide", slug: "guides/canbus-basics"},
-            { label: "Packing and Unpacking", slug: "guides/pack-and-unpack"},
+            { label: "CAN Bus Guide", slug: "guides/canbus-basics" },
+            { label: "Packing and Unpacking", slug: "guides/pack-and-unpack" },
           ],
         },
         {
@@ -64,9 +64,10 @@ export default defineConfig({
         },
         {
           label: 'Design',
-          items: [ 
+          items: [
             { label: "Excavator Hardware Interface", slug: "design/excavator/hardware-interface" },
-           ],
+            { label: "Science Hardware Interface", slug: "design/science/science-hardware-interface" },
+          ],
         },
       ],
       customCss: ["./src/styles/custom.css"],

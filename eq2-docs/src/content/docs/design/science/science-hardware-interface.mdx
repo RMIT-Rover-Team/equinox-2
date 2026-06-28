@@ -1,0 +1,322 @@
+---
+title: Science Hardware Interface
+description: Overview of the Science hardware interface and CAN communication flow.
+---
+
+## Overview
+The Science Hardware Interface is a C++ hardware abstraction layer for controlling the rover's science payload devices.
+
+It provides a clean software interface for the heater, drill, microscope, stepper motors and generic motors, while hiding the lower-level CAN bus communication details from higher-level rover software.
+
+## Purpose
+The purpose of this interface is to allow rover software to control science hardware without directly constructing CAN messages.
+
+Instead of higher-level code needing to know device IDs, message formats, or CAN transmission details, it can call methods such as:
+
+- `set_temperature()`
+- `set_height()`
+- `run_drill()`
+- `set_swivel()`
+- `set_steps()`
+
+Each hardware class translates these method calls into CAN messages through `RoverCanMaster`.
+
+## Architecture
+The Science Payload Hardware Interface follows a layered architecture that separates high-level science operations from low-level CAN communication. Each layer has a single responsibility, making the interface modular, reusable, and easier to maintain.
+
+```text
++------------------------------------------------------+
+|          Mission / Autonomy / Teleoperation          |
++------------------------------------------------------+
+                      |
+                      v
++------------------------------------------------------+
+|                  SciencePayload                      |
+|  - Owns the CAN bus                                 |
+|  - Initialises all science subsystem objects        |
++------------------------------------------------------+
+        |                 |                  |
+        |                 |                  |
+        v                 v                  v
++-------------+   +---------------+   +---------------+
+|   Heater    |   |     Drill     |   |  Microscope   |
++-------------+   +---------------+   +---------------+
+                        |                    |
+                 +-------------+      +-------------+
+                 |StepperMotor |      |StepperMotor |
+                 +-------------+      +-------------+
+                        |
+                 +-------------+
+                 |GenericMotor |
+                 +-------------+
+                        |
+                        v
++------------------------------------------------------+
+|                RoverCanMaster                        |
++------------------------------------------------------+
+                        |
+                        v
++------------------------------------------------------+
+|                     CAN Bus                          |
++------------------------------------------------------+
+                        |
+                        v
++------------------------------------------------------+
+|          Science Payload Electronics                 |
++------------------------------------------------------+
+```
+
+### Layer Responsibilities
+| Layer | Responsibility |
+| ------ | -------------- |
+| Application Layer | Calls high-level functions such as `set_temperature()`, `set_height()`, and `run_drill()`. |
+| `SciencePayload` | Owns the CAN bus and initialises the heater, drill, and microscope interfaces. |
+| Device Layer | Represents individual science devices and translates user requests into actuator commands. |
+| Actuator Layer | `StepperMotor` and `GenericMotor` convert movement requests into CAN-compatible messages. |
+| Communication Layer | `RoverCanMaster` packages and transmits CAN messages over the rover's CAN bus. |
+| Hardware Layer | Science payload electronics receive CAN messages and control the physical hardware. |
+
+### Command Flow
+When higher-level software requests a hardware action, the command flows through the interface as follows:
+1. The application calls a method on a science device (e.g. `Drill` or `Heater`).
+2. The device class updates its internal state and converts the request into actuator commands if required.
+3. The actuator class formats a CAN message.
+4. `RoverCanMaster` transmits the message over the CAN bus.
+5. The payload electronics receive the message and control the corresponding hardware.
+
+For example, calling:
+
+```cpp
+drill.run_drill(true);
+```
+
+produces the following flow:
+
+```text
+Application
+    │
+    ▼
+Drill
+    │
+    ▼
+GenericMotor
+    │
+    ▼
+RoverCanMaster
+    │
+    ▼
+CAN Bus
+    │
+    ▼
+Drill Motor Controller
+```
+
+## Component Breakdown
+### SciencePayload
+`SciencePayload` is the top-level interface for the science payload subsystem. It owns the CAN bus connection and initialises all science hardware components. By creating a single `RoverCanMaster` instance, it allows all devices to communicate over the same CAN bus.
+
+**Responsibilities**
+- Initialise the CAN bus.
+- Create the `RoverCanMaster`.
+- Construct and manage the heater, drill, and microscope interfaces.
+
+**Collaborates with**
+- `Heater`
+- `Drill`
+- `Microscope`
+- `RoverCanMaster`
+
+---
+
+### Heater
+The `Heater` class provides an interface for controlling the payload heater. It stores the target temperature and transmits temperature commands over the CAN bus.
+
+**Responsibilities**
+- Set the target temperature.
+- Send temperature commands to the heater controller.
+- Store the requested target temperature.
+
+**Key Methods**
+- `set_temperature()`
+- `get_temp()`
+- `tick_temperature()` *(reserved for future sensor feedback)*
+
+---
+
+### Drill
+The `Drill` class controls the drilling subsystem. It coordinates a stepper motor for vertical movement and a generic motor for drill rotation.
+
+**Responsibilities**
+- Raise and lower the drill.
+- Start and stop drill rotation.
+- Maintain the requested drill position and status.
+
+**Key Methods**
+- `set_height()`
+- `run_drill()`
+- `get_height()`
+- `get_status()`
+
+**Uses**
+- `StepperMotor`
+- `GenericMotor`
+
+---
+
+### Microscope
+The `Microscope` class controls the microscope positioning system using two stepper motors.
+
+**Responsibilities**
+- Adjust microscope height.
+- Rotate the microscope to the requested viewing angle.
+- Store the requested position.
+
+**Key Methods**
+- `set_height()`
+- `set_swivel()`
+- `get_height()`
+- `get_swivel()`
+- `tick_distance_sensor()`
+
+**Uses**
+- `StepperMotor`
+
+---
+
+### StepperMotor
+`StepperMotor` is a reusable actuator class that converts movement requests into CAN commands expressed as step counts.
+
+It is shared by multiple science devices that require precise positioning.
+
+**Responsibilities**
+- Store the requested step count.
+- Transmit step commands over CAN.
+- Stop motor movement when requested.
+
+**Key Methods**
+- `set_steps()`
+- `get_steps()`
+- `stop()`
+
+---
+
+### GenericMotor
+`GenericMotor` is a reusable actuator class for motors that only require simple start and stop control.
+
+It sends RPM commands over the CAN bus and tracks whether the motor is running.
+
+**Responsibilities**
+- Start motor rotation.
+- Stop motor rotation.
+- Track motor state.
+
+**Key Methods**
+- `start()`
+- `stop()`
+- `get_status()`
+
+## Communication Flow
+The Science Payload Hardware Interface sends commands through a layered communication path. Higher-level rover software does not directly construct CAN messages. Instead, it calls methods on the science hardware classes, which then use `RoverCanMaster` to transmit commands over the CAN bus.
+
+### General Flow
+```text
+Higher-level rover software
+        |
+        v
+Science device class
+        |
+        v
+Actuator wrapper
+        |
+        v
+RoverCanMaster
+        |
+        v
+CAN bus
+        |
+        v
+Science payload electronics
+```
+
+### Step-by-Step Flow
+1. Higher-level software calls a method such as `set_temperature()`, `set_height()`, or `run_drill()`.
+2. The science device class stores the requested state locally.
+3. If movement is required, the device class converts the physical request into a motor command.
+4. The actuator wrapper creates a CAN-compatible message.
+5. `RoverCanMaster` sends the message to the payload CAN group.
+6. The science payload electronics receive the message and drive the physical hardware.
+
+### Example: Starting the Drill
+```cpp
+drill.run_drill(true);
+```
+
+This call updates the drill state to running, then calls `GenericMotor::start()`.
+
+```text
+drill.run_drill(true)
+        |
+        v
+GenericMotor::start()
+        |
+        v
+CAN message containing target RPM
+        |
+        v
+RoverCanMaster::tx_int16()
+        |
+        v
+CAN bus
+        |
+        v
+Drill motor controller
+```
+
+### Example: Setting Heater Temperature
+```cpp
+heater.set_temperature(60.0);
+```
+
+This stores the target temperature and sends it as a CAN float message.
+
+```text
+heater.set_temperature(60.0)
+        |
+        v
+CAN message containing target temperature
+        |
+        v
+RoverCanMaster::tx_float()
+        |
+        v
+CAN bus
+        |
+        v
+Heater controller
+```
+
+### Example: Moving the Microscope
+```cpp
+microscope.set_swivel(45.0);
+```
+
+This updates the requested swivel angle, converts the angle into motor steps, and sends the step command through the stepper motor interface.
+
+```text
+microscope.set_swivel(45.0)
+        |
+        v
+StepperMotor::set_steps()
+        |
+        v
+CAN message containing step count
+        |
+        v
+RoverCanMaster::tx_int16()
+        |
+        v
+CAN bus
+        |
+        v
+Microscope swivel motor controller
+```
