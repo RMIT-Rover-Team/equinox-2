@@ -8,12 +8,11 @@ class Heater {
 private:
     uint8_t device_id;
     RoverCanMaster can_master;
-    bool status;
-    double temperature;
+    double target_temperature;
+    double current_temperature;
 public:
     Heater(uint8_t device_id, RoverCanMaster& can_master);
-    void set_status(bool status);
-    bool get_status();
+    void set_temperature(float target_temperature);
     double get_temp();
     void tick_temperature();
 };
