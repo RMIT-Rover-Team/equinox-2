@@ -10,7 +10,7 @@ uint8_t format_device_motor_id(uint8_t device_id, uint8_t motor_id) {
 ExcavatorActuator::ExcavatorActuator(uint8_t device_id, uint8_t motor_id, RoverCanMaster &can_master) : device_id(device_id), motor_id(motor_id), velocity(0.0), can_master(can_master) {}
 
 void ExcavatorActuator::set_velocity(int16_t target_velocity) {
-    spdlog::critical("Set velocity of excavator actuator {0:x} to {0:d}", motor_id, target_velocity);
+    spdlog::critical("Set velocity of excavator actuator {0:x} to {1:d}", motor_id, target_velocity);
 
     velocity = target_velocity;
     int16_t msg[4] = { target_velocity, 0, 0, 0 };
