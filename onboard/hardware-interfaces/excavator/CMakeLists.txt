@@ -16,6 +16,7 @@ set(SOURCES
     src/ExcavatorPayload.cpp
     src/ExcavatorActuator.cpp
     src/TeethActuator.cpp
+    src/PaverMagnet.cpp
   ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
   ../lib-universal-canbus/libuniversalcan/SocketCanWrapper.cpp
 )
