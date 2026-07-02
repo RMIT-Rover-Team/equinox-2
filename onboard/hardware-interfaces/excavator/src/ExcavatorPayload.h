@@ -1,5 +1,6 @@
 #pragma once
 #include "ExcavatorActuator.h"
+#include "TeethActuator.h"
 #include "GenericCan.h"
 #include "SocketCanWrapper.h"
 #include "RoverCanMaster.h"
@@ -12,7 +13,7 @@ private:
     RoverCanMaster can_master;              // CAN logic handler
     ExcavatorActuator excavator_tilt;
     ExcavatorActuator bucket_tilt;
-    ExcavatorActuator teeth;
+    TeethActuator teeth;
 public:
     ExcavatorPayload();
     ~ExcavatorPayload();

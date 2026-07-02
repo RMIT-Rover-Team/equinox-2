@@ -13,8 +13,9 @@ include_directories(
 )
 
 set(SOURCES
-  src/ExcavatorActuator.cpp
-  src/ExcavatorPayload.cpp
+    src/ExcavatorPayload.cpp
+    src/ExcavatorActuator.cpp
+    src/TeethActuator.cpp
   ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
   ../lib-universal-canbus/libuniversalcan/SocketCanWrapper.cpp
 )

@@ -5,7 +5,7 @@
 #include "spdlog/spdlog.h"
 
 class ExcavatorActuator {
-private:
+protected:
     uint8_t device_id;
     uint8_t motor_id;
     int16_t velocity;
