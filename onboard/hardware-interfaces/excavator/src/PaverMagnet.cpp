@@ -10,8 +10,8 @@ void PaverMagnet::set_status(bool status) {
 
     this->status = status;
 
-    int8_t data[8] = { (int8_t)status, 0, 0, 0, 0, 0, 0, 0 };
-    can_master.tx_int8(GroupId::PAYLOAD, device_id, data);
+    int8_t msg[8] = { (int8_t)status, 0, 0, 0, 0, 0, 0, 0 };
+    can_master.tx_int8(GroupId::PAYLOAD, device_id, msg);
 }
 
 bool PaverMagnet::get_status() {
