@@ -3,10 +3,10 @@
 ExcavatorPayload::ExcavatorPayload()
     : can_bus(CAN_BUS_NAME)                 // initialize first, order matters
     , can_master(can_bus, GroupId::PAYLOAD)
-    , excavator_tilt(0x00, can_master)
-    , bucket_tilt(0x01, can_master)
-    , teeth(0x02, can_master)
-    , paver_magnet(0x03, can_master) {}
+    , excavator_tilt(DeviceId::EXCAVATOR_TILT, can_master)
+    , bucket_tilt(DeviceId::BUCKET_TILT, can_master)
+    , teeth(DeviceId::TEETH, can_master)
+    , paver_magnet(DeviceId::PAVER_MAGNET, can_master) {}
 
 void ExcavatorPayload::estop() {
     excavator_tilt.estop();
