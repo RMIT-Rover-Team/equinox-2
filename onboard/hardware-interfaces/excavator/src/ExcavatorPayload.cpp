@@ -1,6 +1,6 @@
 #include "ExcavatorPayload.h"
 
-ExcavatorPayload::ExcavatorPayload(RoverCanMaster can_master)
+ExcavatorPayload::ExcavatorPayload(RoverCanMaster &can_master)
     : can_master(can_master)
     , excavator_tilt(DeviceId::EXCAVATOR_TILT, can_master)
     , bucket_tilt(DeviceId::BUCKET_TILT, can_master)

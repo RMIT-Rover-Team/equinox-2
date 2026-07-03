@@ -22,7 +22,7 @@ private:
     TeethActuator teeth;
     PaverMagnet paver_magnet;
 public:
-    ExcavatorPayload(RoverCanMaster can_master);
+    ExcavatorPayload(RoverCanMaster &can_master);
     ~ExcavatorPayload();
     void estop();
 };
