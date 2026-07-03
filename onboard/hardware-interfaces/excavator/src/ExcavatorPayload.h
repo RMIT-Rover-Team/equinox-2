@@ -6,7 +6,6 @@
 #include "SocketCanWrapper.h"
 #include "RoverCanMaster.h"
 
-#define CAN_BUS_NAME "can0"
 
 enum DeviceId {
     EXCAVATOR_TILT = 0x0,
@@ -17,14 +16,13 @@ enum DeviceId {
 
 class ExcavatorPayload {
 private:
-    WrappedCANBus can_bus;                  // concrete CAN implementation
-    RoverCanMaster can_master;              // CAN logic handler
+    RoverCanMaster can_master;
     ExcavatorActuator excavator_tilt;
     ExcavatorActuator bucket_tilt;
     TeethActuator teeth;
     PaverMagnet paver_magnet;
 public:
-    ExcavatorPayload();
+    ExcavatorPayload(RoverCanMaster can_master);
     ~ExcavatorPayload();
     void estop();
 };
