@@ -18,6 +18,7 @@ void StepperMotor::set_steps(int16_t steps) {
 }
 
 int StepperMotor::get_steps() {
+    return steps;
 }
 
 void StepperMotor::stop() {
