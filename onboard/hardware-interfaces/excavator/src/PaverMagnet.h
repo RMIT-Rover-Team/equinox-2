@@ -6,7 +6,7 @@
 
 class PaverMagnet {
 private:
-    uint8_t device_id : 5;
+    uint8_t device_id;
     RoverCanMaster &can_master;
     bool status;
 public:
