@@ -2,8 +2,9 @@
 title: CANBus Standards
 description: CANBus Standards for Equinox 2
 ---
+import { Aside } from '@astrojs/starlight/components';
 
-**<u>CAN Standards v3.0.1</u>**
+**<u>CAN Standards v3.0.2</u>**
 
 CANBus messages will not have responses, only requests.
 ## CAN Bus Standards
@@ -23,21 +24,21 @@ Group allocations are:
 
 | Group ID | Devices  |
 | -------- | -------- |
-|   0x00   | Onboard  | 
+|   0x00   | Onboard  |
 |   0x01   | Reserved |
 |   0x02   | Payload  |
-|   0x03   | Unused   | 
+|   0x03   | Unused   |
 
 
 #### Device
-Specifies the device within the group that is sending or receiving the message. 
+Specifies the device within the group that is sending or receiving the message.
 
 #### Command ID
 Indicates the type of message being sent and the intended outcome on the machine.
 
 These are:
 
-|  ID  |  Command  | Sent From | Unit Size (bits) | Description | 
+|  ID  |  Command  | Sent From | Unit Size (bits) | Description |
 | ---- | --------- | --------- | ---------------- | ----------- |
 | 0x00 | Ping      | Either    | 0  | Checks whether a device is connected, also used as heartbeat payload |
 | 0x01 | EStop     | Master    | 0  | Stops the device completely |
@@ -45,10 +46,12 @@ These are:
 | 0x03 | TxInt16   | Master    | 16 | Sends an integer value |
 | 0x04 | TxFloat   | Master    | 32 | Sends a floating point value |
 | 0x05 | TxData    | Master    | 64 | Sends an arbitrary byte buffer |
+| 0x06 | TxData2   | Master    | 64 | Sends an arbitrary byte buffer |
 | 0x0A | BrInt8    | Slave     | 8  | Receives an integer value |
 | 0x0B | BrInt16   | Slave     | 16 | Receives an integer value |
 | 0x0C | BrFloat   | Slave     | 32 | Receives a floating point value |
 | 0x0D | BrData    | Slave     | 64 | Broadcasts an arbitrary byte buffer |
+| 0x0E | BrData2   | Slave     | 64 | Broadcasts an arbitrary byte buffer |
  
 Each packet will include between 1 and 'n' inclusions of the datatype in little endian order.
 
@@ -63,104 +66,202 @@ For example, a TxInt16 has a size of 16 bits. This means that up to 4 signed int
 
 Messages are intended to be asynchonous and not involve transactions. This requires a listening thread to handle broadcast messages separately to the sending thread.
 
-
 ### Excavator
 - Uses TxInt to set the actuator velocity for the excavator arms and bucket motors. Motor is selected by device id, with netmasking selecting the parent device.
 
-Device ID Sub-Structure:
-[ID Segment - 3 bits][Motor ID - 2 bits]
+Group ID: 0x2 (Payload)<br/>
+Device ID Sub-Structure: [Device Id - 5 bits]<br/>
+| Device ID | Device Name | Device Function |
+| --------- | ----------- | --------------- |
+| 0 | Excavator Tilt | (Linear Actuator, Supports Speed Control) |
+| 1 | Bucket Tilt | (Linear Actutaor, Supports Speed Control) |
+| 2 | Bucket Teeth Tilt | (DC Motor, Supports Speed Control or Position Based (in firwmare) and has Encoder) |
+| 3 | Electro-magnet | Used for pavers, On or Off |
 
-Message Type: TxInt16
-
+<hr/>
+Set Motor Speed, TxInt16
+#### Actuators
+##### Message Payload
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
 | 0x00   | Motor Speed (Int16)[0] | Motor Speed (Int16)[1] | 
 | 0x02   | - | - |
 | 0x04   | - | - |
 | 0x06   | - | - |
-
-
-
-
-### Gimbal
-- Sets the Tilt position and Pan speed of a gimbal camera.
-
-Device ID Sub-Structure:
-[ID Segment - 5 bits]
-
-Message Type: TxInt16
-
+<hr/>
+#### Electromagnet
+##### Message Payload
+Toggle Electromagnet State, TxInt8
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
-| 0x00   | Pan Speed (Int16)[0] | Pan Speed (Int16)[1] | 
-| 0x02   | Tilt Pos (Int16)[0]  | Tilt Pos (Int16)[1]  |
+| 0x00   | Toggle Electromagnet State (0 or 1) (Int8)[0] | - | 
+| 0x02   | - | - |
 | 0x04   | - | - |
 | 0x06   | - | - |
 
+### Gimbal
+
+Group ID: 0x0 (Onboard)
+Device ID Sub-Structure: [Device Id - 5 bits]
+
+
+##### Message Header
+| Device ID | Device Name | Device Function |
+| --------- | ----------- | --------------- |
+| 0 | Gimble Pan and Tilt | Pans and Tilts the gimble |
+
+##### Message Payloads
+Set Gimble Pan Speed and Tilt Position, Message Type: TxInt16
+| Offset | Byte 1 | Byte 2 |
+| ------ | ------ | ------ |
+| 0x00   | Pan Speed (Int8)[0] | TiltPos (Int8)[1] |
+| 0x02   | - | - |
+| 0x04   | - | - |
+| 0x06   | - | - |
+
+The payload has both pan speed and tilt position at the same time as it maps to a controller better. It also means the terminal user interface experience will be easier.
 ### PDB
 
-- Firmware will broadcast status messages every 1 second by default. Each channel will present with a seperate device id. For example, a switchboard with 8 channels may occupy the device ids of 0 to 7. It is recommended to use the upper bits of the device id to specify which switchboard is selected. In this scenario, the device id netmask would be 0x1c.
+- Firmware will broadcast status messages every 1 second by default.
+- Each channel will present with a seperate device id. For example, a switchboard with 8 channels may occupy the device ids of 0 to 7. 
+- It is recommended to use the upper bits of the device id to specify which switchboard is selected. In this scenario, the device id netmask would be 0x1c.
 
 Device ID Sub-Structure:
 [ID Segment - 2 bits][Channel ID - 3 bits]
 
-Message Type: TxInt16
+<Aside>
+    In the **message headers**, the "Board" section of the table is not actually part of the message header, but instead states what each ID Segment and Channel ID associate with on the board.
+</Aside>
+
+#### Buckboards
+##### Message Header
+| ID Segment | Channel ID | Board |
+| ---------- | ---------- | ----- |
+| 0 | 0 | Buck 0 Channel 0 |
+| 0 | 1 | Buck 0 Channel 1 |
+| 0 | 2 | Buck 1 Channel 0 |
+| 0 | 3 | Buck 1 Channel 1 |
+
+##### Message Payloads
+Toggle Buckboard Channel Off / On, Message Type: TxInt8
+| Offset | Byte 1 | Byte 2 |
+| ------ | ------ | ------ |
+| 0x00 | Toggle Buckboard Channel Off or On (0 / 1)[0] | - |
+| 0x02 | - | - |
+| 0x04 | - | - |
+| 0x06 | - | - |
+
+Send Telemetry of Buckboard Channel, Message Type: BrInt16
 
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
-| 0x00 | Voltage (Int16)[0]     | Voltage (Int16)[1]     | 
-| 0x02 | Current (Int16)[0]     | Current (Int16)[1]     | 
-| 0x04 | Temperature (Int16)[0] | Temperature (Int16)[1] | 
+| 0x00 | Voltage (Int16)[0]     | Voltage (Int16)[1]     |
+| 0x02 | Current (Int16)[0]     | Current (Int16)[1]     |
+| 0x04 | Temperature (Int16)[0] | Temperature (Int16)[1] |
+| 0x06 | - | - |
+
+#### BMS
+##### Message Header
+| ID Segment | Channel IDs | Board |
+| ---------- | ---------- | ----- |
+| 1 | Id 0 | BMS Cells 0-5  |
+| 1 | Id 1 | BMS Cells 6-11 |
+
+##### Message Payload
+Toggle BMS Cell On / Off, Message Type: TxInt8
+| Offset | Byte 1 | Byte 2 |
+| ------ | ------ | ------ |
+| 0x00 | Cell 0/6 Voltage (Int8)[0]  | Cell 1/7 Voltage (Int8)[0]  |
+| 0x02 | Cell 2/8 Voltage (Int8)[0]  | Cell 3/9 Voltage (Int8)[0]  |
+| 0x04 | Cell 4/10 Voltage (Int8)[0] | Cell 5/11 Voltage (Int8)[0] |
+| 0x06 | - | - |
+
+Send Telemetry of BMS Cells, Message Type: BdInt8
+| Offset | Byte 1 | Byte 2 |
+| ------ | ------ | ------ |
+| 0x00 | Cell 0/6 Voltage (Int8)[0]  | Cell 1/7 Voltage (Int8)[0]  |
+| 0x02 | Cell 2/8 Voltage (Int8)[0]  | Cell 3/9 Voltage (Int8)[0]  |
+| 0x04 | Cell 4/10 Voltage (Int8)[0] | Cell 5/11 Voltage (Int8)[0] |
 | 0x06 | - | - | 
 
+#### Switchboard
+##### Message Header
+**Id Segment 2**
+| ID Segment | Channel IDs | Board |
+| ---------- | ----------- | ----- |
+| 2 | 0-5 | Switchboard 0 Channels 0-5 |
+| 3 | 0-3 | Switchboard 1 Channels 0-3 |
 
-
-- Toggle channel similarly will switch the state of a channel to a boolean value:
-
-Message Type: TxInt8
+##### Message Payload
+Toggle Switchboard Channel On / Off, Message Type: TxInt8
 
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
 | 0x00 | State (Int8) | - |
 | 0x02 | - | - |
 | 0x04 | - | - |
-| 0x06 | - | - | 
+| 0x06 | - | - |
 
+Send Telemetry of Switchboard Channel, Message Type: BdInt16
+
+| Offset | Byte 1 | Byte 2 |
+| ------ | ------ | ------ |
+| 0x00 | Voltage (Int16)[0]     | Voltage (Int16)[1]     |
+| 0x02 | Current (Int16)[0]     | Current (Int16)[1]     |
+| 0x04 | Temperature (Int16)[0] | Temperature (Int16)[1] |
+| 0x06 | - | - |
 
 ### Science
-
 Device ID Sub-Structure:
 [ID Segment - 2 bits][Function Select - 1 bit][SubChannel - 2 bits]
+<hr/>
+#### Stepper
+Set Stepper Position, Message Type: TxInt16
+##### Message Header
+| ID Segment | Function Select | Channel ID | Device Name | Device Function |
+| ---------- | --------------- | ---------- | ----------- | --------------- |
+| 0 | 0 | 0 | Drill Height Stepper Actuator | Moves the drill height Stepper Actuator up or down by set steps |
+| 0 | 0 | 1 | Microscope Height Stepper Actuator | Moves the microscope height up or down by set steps |
+| 0 | 0 | 2 | Microcope Rotation Stepper Actuator | Swivels the microscope left or right by set steps |
 
-
-- Stepper positions (steps) are set by referencing the stepper motor as a function of the device id. Netmasking can be used to select specific control devices (see PDB). Function select must be 0.
-
-
-Message Type: TxInt16
-
+##### Message Payload
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
-| 0x00 | Steps (Int16)[0] | Steps (Int16)[1] | 
+| 0x00 | Steps (Int16)[0] | Steps (Int16)[1] |
 | 0x02 | - | - |
 | 0x04 | - | - |
-| 0x06 | - | - | 
+| 0x06 | - | - |
 
+<hr/>
+#### DC Motor
+Set DC Motor, Message Type: TxInt16
+##### Message Header
+| ID Segment | Function Select | Channel ID | Device Name | Device Function |
+| ---------- | --------------- | ---------- | ----------- | --------------- |
+| 0 | 0 | 3 | Drill Motor | Sets the drill motor to a set speed, when positive clockwise, when negative counter-clockwise |
 
-- Set DC Motor presents the same interface as Stepper motors only segmented by the device id. The Function select bit must be 0.
-
-Message Type: TxInt16
-
+##### Message Payload
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
-| 0x00 | Speed (Int16)[0] | Speed (Int16)[1] | 
+| 0x00 | Speed (Int16)[0] | Speed (Int16)[1] |
 | 0x02 | - | - |
 | 0x04 | - | - |
-| 0x06 | - | - | 
+| 0x06 | - | - |
+<hr/>
+Send Temperature Value, BrFloat.
+<Aside>
+This is the only command currently where the function select bit is set to 1. In other words, if you are sending a temperature, set function select to 1. Otherwise, keep it at 0.
+</Aside>
+##### Message Header
+| ID Segment | Function Select | Channel ID | Device Name | Device Function |
+| ---------- | --------------- | ---------- | ----------- | --------------- |
+| 0 | 1 | 0 | Temperature Value | Sends temperature value |
+| 0 | 1 | 1 | Temperature Value | Sends temperature value |
+| 0 | 1 | 2 | Temperature Value | Sends temperature value |
+| .. | 1 | .. | Temperature Value | Sends temperature value |
+| 3 | 1 | 3 | Temperature Value | Sends temperature value |
 
-- Send temperature values in pairs, multiple pairs are designated by the device id offset by prior functions. Function select must be 1 and SubChannel N
-
-Message Type: BrFloat
-
+##### Message Payload
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
 | 0x00   | Temp 0 (Float32)[0] | Temp 0 (Float32)[1] |
@@ -168,25 +269,34 @@ Message Type: BrFloat
 | 0x04   | Temp 1 (Float32)[0] | Temp 1 (Float32)[1] |
 | 0x06   | Temp 1 (Float32)[2] | Temp 1 (Float32)[3] |
 
-- Send the motor positions (combined) to the master. Function Select must be 0.
+<hr/>
+BroadcastMotorTelemetry, BrInt16
+##### Message Header
+| ID Segment | Function Select | Channel ID | Device Name | Device Function |
+| ---------- | --------------- | ---------- | ----------- | --------------- |
+| 0 | 0 | 0 | Drill Height Stepper Actuator | Broadcasts position of stepper actuator in steps |
+| 0 | 0 | 1 | Microscope Height Stepper Actuator | Broadcasts microscope height in steps |
+| 0 | 0 | 2 | Microcope Rotation Stepper Actuator | Broadcasts microscope swivel in steps |
+| 0 | 0 | 3 | Drill Motor | Broadcasts drill motor PWM |
 
-Message Type: BrInt16
-
+##### Message Payload
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
-| 0x00 | Pos 0 (Int16)[0] | Pos 0 (Int16)[1] | 
-| 0x02 | Pos 1 (Int16)[0] | Pos 1 (Int16)[1] | 
-| 0x04 | Pos 2 (Int16)[0] | Pos 2 (Int16)[1] | 
-| 0x06 | - | - | 
-
+| 0x00 | Pos 0 (Int16)[0] | Pos 0 (Int16)[1] |
+| 0x02 | Pos 1 (Int16)[0] | Pos 1 (Int16)[1] |
+| 0x04 | Pos 2 (Int16)[0] | Pos 2 (Int16)[1] |
+| 0x06 | - | - |
 
 ### Arm - End Effector
-- Uses TxInt to set the gripper motors. Device ID is used to specify the exact motor to drive.
-
 Device ID Sub-Structure:
 [ID Segment - 3 bits][Channel ID - 2 bits]
 
-MessageType: Int16
+Set Gripper Speed, MessageType: Int16
+##### Message Header
+| ID Segment | Channel ID | Device Name | Device Function |
+| ---------- | ---------- | ----------- | --------------- |
+| 0 | 0 | Gripper Speed | Sets speed of gripper |
+| 0 | 1 | Poke speed | Sets speed of poke |
 
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |

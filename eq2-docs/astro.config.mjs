@@ -18,8 +18,18 @@ export default defineConfig({
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/withastro/starlight",
+          href: "https://github.com/RMIT-Rover-Team/equinox-2",
         },
+        {
+          icon: "linkedin",
+          label: "Linkedin",
+          href: "https://au.linkedin.com/company/rmitroverteam",
+        },
+        {
+          icon: "instagram",
+          label: "Instagram",
+          href: "https://www.instagram.com/rmitrover/"
+        }
       ],
       sidebar: [
         {

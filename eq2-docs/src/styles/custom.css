@@ -10,6 +10,8 @@ editable props: https://github.com/withastro/starlight/blob/main/packages/starli
 	--sl-color-accent-low: hsl(var(--ui-red-low));
 	--sl-color-accent: hsl(var(--ui-red));
 	--sl-color-accent-high: hsl(var(--ui-red-high));
+	
+	--sl-content-width: 75rem;
 }
 
 :root[data-theme='dark'] {
