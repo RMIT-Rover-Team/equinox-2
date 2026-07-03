@@ -17,8 +17,10 @@ set(SOURCES
     src/ExcavatorActuator.cpp
     src/TeethActuator.cpp
     src/PaverMagnet.cpp
-  ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
-  ../lib-universal-canbus/libuniversalcan/SocketCanWrapper.cpp
+    # TODO: Change libuniversalcan subtree to a submodule or a subrepo. Newer commits in that repo have a CMakeLists so we can import that library like any other
+    ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
+    ../lib-universal-canbus/libuniversalcan/SocketCanWrapper.cpp
+    ../lib-universal-canbus/libuniversalcan/CommandUtils.cpp
 )
 
 
@@ -61,7 +63,7 @@ enable_testing()
 
 add_executable(ExcavatorTests
     test/ExcavatorTest.cpp
-    # ${SOURCES}
+    ${SOURCES}
 )
 
 target_include_directories(ExcavatorTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -69,6 +71,7 @@ target_include_directories(ExcavatorTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ExcavatorTests PRIVATE 
     GTest::gtest_main
     GTest::gmock_main
+    spdlog::spdlog
 )
 
 include(GoogleTest)
