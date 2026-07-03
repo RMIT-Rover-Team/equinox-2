@@ -31,7 +31,6 @@ public:
     void set_swivel(double swivel);
     double get_height();
     double get_swivel();
-    void tick_distance_sensor();
 };
 
 

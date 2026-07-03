@@ -19,7 +19,3 @@ void Heater::set_temperature(float target_temperature) {
 double Heater::get_temp() {
     return target_temperature;
 }
-
-void Heater::tick_temperature() {
-
-}

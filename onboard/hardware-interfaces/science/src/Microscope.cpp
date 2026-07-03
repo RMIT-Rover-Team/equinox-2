@@ -45,6 +45,3 @@ double Microscope::get_height() {
 double Microscope::get_swivel() {
     return swivel;
 }
-
-void Microscope::tick_distance_sensor() {
-}

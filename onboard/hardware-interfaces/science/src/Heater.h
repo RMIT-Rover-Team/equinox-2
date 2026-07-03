@@ -21,7 +21,6 @@ public:
     Heater(uint8_t device_id, RoverCanMaster& can_master);
     void set_temperature(float target_temperature);
     double get_temp();
-    void tick_temperature();
 };
 
 
