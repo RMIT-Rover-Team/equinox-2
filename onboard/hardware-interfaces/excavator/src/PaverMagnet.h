@@ -12,6 +12,6 @@ private:
 public:
     PaverMagnet(uint8_t device_id, RoverCanMaster &can_master);
     ~PaverMagnet();
-    void set_status(bool status);
     bool get_status();
+    void set_status(bool status);
 };

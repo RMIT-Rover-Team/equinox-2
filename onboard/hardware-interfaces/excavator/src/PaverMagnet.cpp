@@ -4,6 +4,10 @@ PaverMagnet::PaverMagnet(uint8_t device_id, RoverCanMaster &can_master) : device
 
 PaverMagnet::~PaverMagnet() {}
 
+bool PaverMagnet::get_status() {
+    return status;
+}
+
 void PaverMagnet::set_status(bool status) {
     if (status) spdlog::info("Enabled paver magnet");
     else spdlog::info("Disabled paver magnet");
@@ -12,8 +16,4 @@ void PaverMagnet::set_status(bool status) {
 
     int8_t msg[8] = { (int8_t)status, 0, 0, 0, 0, 0, 0, 0 };
     can_master.tx_int8(GroupId::PAYLOAD, device_id, msg);
-}
-
-bool PaverMagnet::get_status() {
-    return status;
 }

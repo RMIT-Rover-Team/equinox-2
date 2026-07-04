@@ -3,6 +3,10 @@
 
 ExcavatorActuator::ExcavatorActuator(uint8_t device_id, RoverCanMaster &can_master) : device_id(device_id), velocity(0.0), can_master(can_master) {}
 
+int16_t ExcavatorActuator::get_velocity() {
+    return velocity;
+}
+
 void ExcavatorActuator::set_velocity(int16_t target_velocity) {
     spdlog::info("Set velocity of excavator actuator {0:x} to {1:d}", device_id, target_velocity);
 

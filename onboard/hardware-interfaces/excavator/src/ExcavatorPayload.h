@@ -17,11 +17,12 @@ enum DeviceId {
 class ExcavatorPayload {
 private:
     RoverCanMaster can_master;
+public:
     ExcavatorActuator excavator_tilt;
     ExcavatorActuator bucket_tilt;
     TeethActuator teeth;
     PaverMagnet paver_magnet;
-public:
+
     ExcavatorPayload(RoverCanMaster &can_master);
     ~ExcavatorPayload();
     void estop();
