@@ -18,8 +18,18 @@ export default defineConfig({
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/withastro/starlight",
+          href: "https://github.com/RMIT-Rover-Team/equinox-2",
         },
+        {
+          icon: "linkedin",
+          label: "Linkedin",
+          href: "https://au.linkedin.com/company/rmitroverteam",
+        },
+        {
+          icon: "instagram",
+          label: "Instagram",
+          href: "https://www.instagram.com/rmitrover/"
+        }
       ],
       sidebar: [
         {
@@ -56,18 +66,12 @@ export default defineConfig({
             { label: "Packing and Unpacking", slug: "guides/pack-and-unpack"},
           ],
         },
-        {
-          label: "Reference",
-          items: [
-            { autogenerate: { directory: "reference" } }
-          ],
-        },
-        {
-          label: 'Design',
-          items: [ 
-            { label: "Excavator Hardware Interface", slug: "design/excavator/hardware-interface" },
-           ],
-        },
+        // {
+        //   label: 'Design',
+        //   items: [ 
+        //     { label: "Excavator Hardware Interface", slug: "design/excavator/hardware-interface" },
+        //    ],
+        // },
       ],
       customCss: ["./src/styles/custom.css"],
     }),
