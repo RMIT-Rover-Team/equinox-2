@@ -40,15 +40,6 @@ private:
 };
 
 
-/// Returns a lambda predicate that matches for the given command id
-std::function<bool(uint32_t)> IsCommand(int command_id) {
-    return [command_id](uint32_t header) {
-        std::printf("%x", header);
-        return (header & 0x000f) == command_id;
-    };
-}
-
-
 
 
 uint16_t generate_header(uint8_t group, uint8_t device, uint8_t command){
@@ -77,7 +68,6 @@ uint16_t generate_header(uint8_t group, uint8_t device, uint8_t command){
 
 TEST(ExcavatorTests, ESTOP) {
     MockCanWrapper can_bus;
-    // NiceMock<MockCanWrapper> can_bus;
     RoverCanMaster can_master = RoverCanMaster(can_bus, 0x0);
     ExcavatorPayload excavator = ExcavatorPayload(can_master);
 
@@ -85,12 +75,32 @@ TEST(ExcavatorTests, ESTOP) {
     ON_CALL(can_bus, writeMSG(_, _, _)).WillByDefault(::testing::Return(0));
 
     // stop motors
-    EXPECT_CALL(can_bus, writeMSG(generate_header(GroupId::PAYLOAD, 0x0, CommandId::ESTOP), _, _)).Times(1);
-    EXPECT_CALL(can_bus, writeMSG(generate_header(GroupId::PAYLOAD, 0x1, CommandId::ESTOP), _, _)).Times(1);
-    EXPECT_CALL(can_bus, writeMSG(generate_header(GroupId::PAYLOAD, 0x2, CommandId::ESTOP), _, _)).Times(1);
+    EXPECT_CALL(can_bus, writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::EXCAVATOR_TILT, CommandId::ESTOP), _, _)).Times(1);
+    EXPECT_CALL(can_bus, writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::BUCKET_TILT, CommandId::ESTOP), _, _)).Times(1);
+    EXPECT_CALL(can_bus, writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::TEETH, CommandId::ESTOP), _, _)).Times(1);
     // disable magnet
-    EXPECT_CALL(can_bus, writeMSG(generate_header(GroupId::PAYLOAD, 0x3, CommandId::TXINT8), _, _)).Times(1);
+    EXPECT_CALL(can_bus, writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::PAVER_MAGNET, CommandId::TXINT8), _, _)).Times(1);
 
     excavator.estop();
+}
+
+
+
+TEST(ExcavatorTests, MoveMotors) {
+    MockCanWrapper can_bus;
+    RoverCanMaster can_master = RoverCanMaster(can_bus, 0x0);
+    ExcavatorPayload excavator = ExcavatorPayload(can_master);
+
+    // set return value
+    ON_CALL(can_bus, writeMSG(_, _, _)).WillByDefault(::testing::Return(0));
+
+    // start motors
+    EXPECT_CALL(can_bus, writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::EXCAVATOR_TILT, CommandId::TXINT16), ::testing::StrEq("\x5"), _)).Times(1);
+    EXPECT_CALL(can_bus, writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::BUCKET_TILT, CommandId::TXINT16), ::testing::StrEq("\x5"), _)).Times(1);
+    EXPECT_CALL(can_bus, writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::TEETH, CommandId::TXINT16), ::testing::StrEq("\x5"), _)).Times(1);
+
+    excavator.excavator_tilt.set_velocity(5);
+    excavator.bucket_tilt.set_velocity(5);
+    excavator.teeth.set_velocity(5);
 }
 
