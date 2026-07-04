@@ -23,28 +23,31 @@ set(SOURCES
     ../lib-universal-canbus/libuniversalcan/CommandUtils.cpp
 )
 
-
 add_library(Excavator ${SOURCES})
+
 
 
 #
 # SPDLOG
 #
-set(spdlog_DIR ~/spdlog/build/)
+include(FetchContent)
+FetchContent_Declare(
+    spdlog
+    GIT_TAG v1.17.0
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    EXCLUDE_FROM_ALL
+    SYSTEM
+)
 
-find_package(spdlog REQUIRED)
+FetchContent_MakeAvailable(spdlog)
 target_link_libraries(Excavator PRIVATE spdlog::spdlog)
-# make sure to run this to install spdlog
-# git clone https://github.com/gabime/spdlog.git
-# cd spdlog && mkdir build && cd build
-# cmake .. && cmake --build .
 
 
 
 #
 # TESTING
 #
-include(FetchContent)
+# include(FetchContent)
 FetchContent_Declare(
     googletest
     GIT_TAG v1.17.0
@@ -57,9 +60,9 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-
-
 enable_testing()
+
+
 
 add_executable(ExcavatorTests
     test/ExcavatorTest.cpp
