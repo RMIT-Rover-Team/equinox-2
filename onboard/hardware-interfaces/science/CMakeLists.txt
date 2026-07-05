@@ -11,17 +11,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/../lib-universal-canbus/libuniversalcan
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 set(SOURCES
-    SciencePayload.cpp
-    Heater.cpp
-    Drill.cpp
-    Microscope.cpp
-    StepperMotor.cpp
-    GenericMotor.cpp
+        src/SciencePayload.cpp
+        src/Heater.cpp
+        src/Drill.cpp
+        src/Microscope.cpp
+        src/StepperMotor.cpp
+        src/GenericMotor.cpp
     ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
   )
 
