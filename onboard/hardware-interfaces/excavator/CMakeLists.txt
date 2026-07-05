@@ -23,6 +23,8 @@ set(SOURCES
     ../lib-universal-canbus/libuniversalcan/CommandUtils.cpp
 )
 
+find_package(spdlog REQUIRED)
+
 add_library(Excavator ${SOURCES})
 
 
