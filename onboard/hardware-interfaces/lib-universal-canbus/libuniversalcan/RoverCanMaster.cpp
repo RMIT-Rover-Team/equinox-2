@@ -75,7 +75,7 @@ void RoverCanMaster::tx_int16(uint8_t group, uint8_t device, int16_t numbers[4])
   uint16_t canbus_header = generate_header(group, device, CommandId::TXINT16);
 
   for (int i = 0; i < 4; i++) {
-    myCommand.addInt16(numbers[i]);
+    myCommand.addUInt16((uint16_t)numbers[i]);
   }
 
   can.writeMSG(canbus_header, (char*)myCommand.getBuffer(), myCommand.getBufferLength());
