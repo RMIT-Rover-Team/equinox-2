@@ -127,7 +127,7 @@ void CommsThread::handle_recv() {
 
         // handle recieve pings
         // if ping, set the matching ping bool
-        if (header & 0xf == 0x0) {
+        if (heartbeat_enabled && header & 0xf == 0x0) {
             if ((header & 0x1f) >> 4 == DeviceId::EXCAVATOR_TILT) excavator_tilt_alive = true;
             else if ((header & 0x1f) >> 4 == DeviceId::BUCKET_TILT) bucket_tilt_alive = true;
         } else {
@@ -151,6 +151,8 @@ void CommsThread::handle_send() {
     }
 
     // send heartbeat msgs
-    can_bus.writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::EXCAVATOR_TILT, CommandId::PING), {}, 0);
-    can_bus.writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::BUCKET_TILT, CommandId::PING), {}, 0);
+    if (heartbeat_enabled) {
+        can_bus.writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::EXCAVATOR_TILT, CommandId::PING), {}, 0);
+        can_bus.writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::BUCKET_TILT, CommandId::PING), {}, 0);
+    }
 }
