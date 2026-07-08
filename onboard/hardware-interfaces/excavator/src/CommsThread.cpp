@@ -78,67 +78,11 @@ void CommsThread::send_msg(u_int16_t header, char* data, u_int8_t len) {
 void CommsThread::run() {
     while(true) {
         // handle commands from the main thread to this thread
-        {
-            std::lock_guard<std::mutex> lock(m_thread_queue);
-            while (!thread_command_queue.empty()) {
-                switch (thread_command_queue.front()) {
-                    case ThreadCommand::START_HEARTBEAT:
-                        heartbeat_enabled = true;
-                        break;
-                    case ThreadCommand::STOP_HEARTBEAT:
-                        heartbeat_enabled = false;
-                        break;
-                    case ThreadCommand::STOP:
-                        return;
-                }
+        // exit if stop command given
+        if (handle_thread_cmds()) break;
 
-                thread_command_queue.pop();
-            }
-        }
-
-        // handle recieved msgs
-        {
-            // reset alive bools
-            excavator_tilt_alive = false;
-            bucket_tilt_alive = false;
-
-            std::lock_guard<std::mutex> lock(m_recv_queue);
-
-            while (can_bus.available()) {
-                CANFrame frame = can_bus.readMSG();
-
-                uint16_t header = frame.can_id;
-                std::vector<char> data(frame.data, frame.data + frame.can_dlc);
-
-                // handle recieve pings
-                // if ping, set the matching ping bool
-                if (header & 0xf == 0x0) {
-                    if ((header & 0x1f) >> 4 == DeviceId::EXCAVATOR_TILT) excavator_tilt_alive = true;
-                    else if ((header & 0x1f) >> 4 == DeviceId::BUCKET_TILT) bucket_tilt_alive = true;
-                } else {
-                    std::pair<uint16_t, std::vector<char>> msg(header, data);
-                    recv_queue.emplace(msg);
-                }
-            }
-        }
-
-        // handle send msgs
-        {
-            std::lock_guard<std::mutex> lock(m_send_queue);
-            while (!send_queue.empty()) {
-                can_bus.writeMSG(
-                    send_queue.front().first,
-                    send_queue.front().second.data(),
-                    send_queue.front().second.size()
-                );
-        
-                send_queue.pop();
-            }
-        
-            // send heartbeat msgs
-            can_bus.writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::EXCAVATOR_TILT, CommandId::PING), {}, 0);
-            can_bus.writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::BUCKET_TILT, CommandId::PING), {}, 0);
-        }
+        handle_recv();
+        handle_send();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     };
@@ -147,5 +91,66 @@ void CommsThread::run() {
 
 /// @brief Returns true if should exit main loop
 bool CommsThread::handle_thread_cmds() {
+    std::lock_guard<std::mutex> lock(m_thread_queue);
 
+    while (!thread_command_queue.empty()) {
+        switch (thread_command_queue.front()) {
+            case ThreadCommand::START_HEARTBEAT:
+                heartbeat_enabled = true;
+                break;
+            case ThreadCommand::STOP_HEARTBEAT:
+                heartbeat_enabled = false;
+                break;
+            case ThreadCommand::STOP:
+                return true;
+        }
+
+        thread_command_queue.pop();
+    }
+
+    return false;
+}
+
+
+void CommsThread::handle_recv() {
+    // reset alive bools
+    excavator_tilt_alive = false;
+    bucket_tilt_alive = false;
+
+    std::lock_guard<std::mutex> lock(m_recv_queue);
+
+    while (can_bus.available()) {
+        CANFrame frame = can_bus.readMSG();
+
+        uint16_t header = frame.can_id;
+        std::vector<char> data(frame.data, frame.data + frame.can_dlc);
+
+        // handle recieve pings
+        // if ping, set the matching ping bool
+        if (header & 0xf == 0x0) {
+            if ((header & 0x1f) >> 4 == DeviceId::EXCAVATOR_TILT) excavator_tilt_alive = true;
+            else if ((header & 0x1f) >> 4 == DeviceId::BUCKET_TILT) bucket_tilt_alive = true;
+        } else {
+            std::pair<uint16_t, std::vector<char>> msg(header, data);
+            recv_queue.emplace(msg);
+        }
+    }
+}
+
+
+void CommsThread::handle_send() {
+    std::lock_guard<std::mutex> lock(m_send_queue);
+    while (!send_queue.empty()) {
+        can_bus.writeMSG(
+            send_queue.front().first,
+            send_queue.front().second.data(),
+            send_queue.front().second.size()
+        );
+
+        send_queue.pop();
+    }
+
+    // send heartbeat msgs
+    can_bus.writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::EXCAVATOR_TILT, CommandId::PING), {}, 0);
+    can_bus.writeMSG(generate_header(GroupId::PAYLOAD, DeviceId::BUCKET_TILT, CommandId::PING), {}, 0);
 }

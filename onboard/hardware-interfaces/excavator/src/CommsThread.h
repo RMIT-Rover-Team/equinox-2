@@ -37,6 +37,9 @@ private:
     std::thread worker;
 
     void run();
+    bool handle_thread_cmds(); // returns true if should exit loop
+    void handle_send();
+    void handle_recv();
 public:
     CommsThread(GenericCan& can_bus);
     ~CommsThread();
