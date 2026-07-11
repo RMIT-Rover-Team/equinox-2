@@ -250,30 +250,51 @@ std::string get_data(CommandId cmd, char data[CanDataLength]) {
 }
 
 
+typedef struct {
+    GroupId group_id;
+    uint8_t device_id;
+    CommandId cmd;
+    char data[8];
+} CANData;
+
+#define CANBufferLen 32
+
+class VCANTest : public testing::Test {
+protected:
+    VCANTest()
+     : can_bus("vcan0")
+     , can_master(can_bus, 0x0)
+     , excavator(can_master)
+     , can_reader("vcan0") {}
+
+    void read_from_vcan() {
+        while (can_reader.available()) {
+            // ensure buffer not full
+            EXPECT_LT(i, CANBufferLen);
+    
+            CANFrame msg = can_reader.readMSG();
+    
+            memcpy(&msgs[i], &msg, sizeof(CANFrame));
+            i++;
+    
+            std::printf("recieved %s to device %x, data: %s \n", get_command_name(msg.can_id).c_str(), get_device(msg.can_id), get_data(get_command_id(msg.can_id), msg.data).c_str());
+        }
+    }
+
+    WrappedCANBus can_bus;
+    RoverCanMaster can_master;
+    ExcavatorPayload excavator;
+    WrappedCANBus can_reader;
+
+    CANFrame msgs[CANBufferLen];
+    uint8_t i;
+};
 
 
-TEST(ExcavatorTests, VCAN) {
-    WrappedCANBus can_bus("vcan0");
-    RoverCanMaster can_master(can_bus, 0x0);
-    ExcavatorPayload excavator(can_master);
-
-    WrappedCANBus can_reader("vcan0");
-
+TEST_F(VCANTest, VCAN) {
     excavator.estop();
 
-    CANFrame msgs[4];
-    uint8_t i;
-    while (can_reader.available()) {
-        // ensure buffer not full
-        EXPECT_LT(i, 4);
-
-        CANFrame msg = can_reader.readMSG();
-
-        memcpy(&msgs[i], &msg, sizeof(CANFrame));
-        i++;
-
-        std::printf("recieved %s to device %x, data: %s \n", get_command_name(msg.can_id).c_str(), get_device(msg.can_id), get_data(get_command_id(msg.can_id), msg.data).c_str());
-    }
+    read_from_vcan();
 
     // recieved 4 msgs
     EXPECT_EQ(i, 4);
