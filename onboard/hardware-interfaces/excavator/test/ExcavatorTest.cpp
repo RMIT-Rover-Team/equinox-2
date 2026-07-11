@@ -2,6 +2,7 @@
 #include <gmock/gmock.h>
 #include <stdint.h>
 #include <cstring>
+#include <format>
 #include "../src/ExcavatorPayload.h"
 #include "RoverCanMaster.h"
 #include "GenericCan.h"
@@ -20,7 +21,7 @@ public:
     MOCK_METHOD(CANFrame, readMSG, (), (override));
     MOCK_METHOD(CANFrame, readMSGFrom, (uint32_t Id, uint32_t Mask), (override));
     MOCK_METHOD(CANFrame, readMSGFrom, (uint32_t Id, uint32_t Mask, uint32_t timeout_ms), (override));
-    // MOCK_METHOD(CANFrame, readReturnMSGFrom, (uint32_t Id, uint32_t Mask, uint32_t timeout_ms, uint32_t command_id), (override));
+    MOCK_METHOD(CANFrame, readReturnMSGFrom, (uint32_t Id, uint32_t Mask, uint32_t timeout_ms, uint32_t command_id), (override));
     MOCK_METHOD(int, writeMSG, (uint32_t IdAndFlags, const char* data, uint8_t length), (override));
     MOCK_METHOD(void, clearBuffer, (), (override));
     MOCK_METHOD(bool, available, (), (override));
@@ -199,4 +200,102 @@ TEST(ExcavatorTests, TeethActuatorDefaultPosition) {
  
     // No CAN traffic expected just from construction.
     EXPECT_EQ(excavator.teeth.get_teeth_pos(), 0.0);
+}
+
+GroupId get_group_id(uint32_t header) {
+    return (GroupId)((header >> 9) & 0b11);
+}
+
+uint8_t get_device(uint32_t header) {
+    return (uint8_t)((header >> 4) & 0b11111);
+}
+
+CommandId get_command_id(uint32_t header) {
+    return (CommandId)(header & 0b1111);
+}
+
+std::string get_command_name(uint16_t header) {
+    CommandId cmd = get_command_id(header);
+    
+    switch (cmd) {
+        case CommandId::PING: return "ping";
+        case CommandId::ESTOP: return "estop";
+        case CommandId::TXINT8: return "txint8";
+        case CommandId::TXINT16: return "txint16";
+        case CommandId::TXFLOAT: return "txfloat";
+        case CommandId::TXDATA: return "txdata";
+        default: return "unknown cmd";
+    }
+}
+
+std::string get_data(CommandId cmd, char data[CanDataLength]) {
+    if (cmd = CommandId::PING) return "";
+    if (cmd = CommandId::ESTOP) return "";
+    if (cmd = CommandId::TXINT8) return std::format("{}, {}, {}, {}, {}, {}, {}, {}", data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
+    if (cmd = CommandId::TXINT16) {
+        // reinterpret u8[8] to u16[4]
+        uint16_t data_16[CanDataLength/2];
+        memcpy(data_16, data, CanDataLength);
+        return std::format("{}, {}, {}, {}", data_16[0], data_16[1], data_16[2], data_16[3]);
+    }
+    if (cmd = CommandId::TXFLOAT) {
+        // reinterpret u8[8] to float[4]
+        float data_f[CanDataLength/2];
+        memcpy(data_f, data, CanDataLength);
+        return std::format("{}, {}, {}, {}", data_f[0], data_f[1], data_f[2], data_f[3]);
+    }
+    if (cmd = CommandId::TXDATA) return std::format("{}, {}, {}, {}, {}, {}, {}, {}", data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
+
+    return "UNKNOWN COMMAND ID";
+}
+
+
+
+
+TEST(ExcavatorTests, VCAN) {
+    WrappedCANBus can_bus("vcan0");
+    RoverCanMaster can_master(can_bus, 0x0);
+    ExcavatorPayload excavator(can_master);
+
+    WrappedCANBus can_reader("vcan0");
+
+    excavator.estop();
+
+    CANFrame msgs[4];
+    uint8_t i;
+    while (can_reader.available()) {
+        // ensure buffer not full
+        EXPECT_LT(i, 4);
+
+        CANFrame msg = can_reader.readMSG();
+
+        memcpy(&msgs[i], &msg, sizeof(CANFrame));
+        i++;
+
+        std::printf("recieved %s to device %x, data: %s \n", get_command_name(msg.can_id).c_str(), get_device(msg.can_id), get_data(get_command_id(msg.can_id), msg.data).c_str());
+    }
+
+    // recieved 4 msgs
+    EXPECT_EQ(i, 4);
+
+    // excavator arm actuator
+    EXPECT_EQ(get_group_id(msgs[0].can_id), GroupId::PAYLOAD);
+    EXPECT_EQ(get_command_id(msgs[0].can_id), CommandId::ESTOP);
+    EXPECT_EQ(get_device(msgs[0].can_id), 0x0);
+
+    // bucket actuator
+    EXPECT_EQ(get_group_id(msgs[1].can_id), GroupId::PAYLOAD);
+    EXPECT_EQ(get_command_id(msgs[1].can_id), CommandId::ESTOP);
+    EXPECT_EQ(get_device(msgs[1].can_id), 0x1);
+
+    //teeth actuator
+    EXPECT_EQ(get_group_id(msgs[2].can_id), GroupId::PAYLOAD);
+    EXPECT_EQ(get_command_id(msgs[2].can_id), CommandId::ESTOP);
+    EXPECT_EQ(get_device(msgs[2].can_id), 0x2);
+
+    // paver magnet
+    EXPECT_EQ(get_group_id(msgs[3].can_id), GroupId::PAYLOAD);
+    EXPECT_EQ(get_command_id(msgs[3].can_id), CommandId::TXINT8);
+    EXPECT_EQ(get_device(msgs[3].can_id), 0x3);
+    EXPECT_EQ(msgs[3].data[0], 0);
 }
