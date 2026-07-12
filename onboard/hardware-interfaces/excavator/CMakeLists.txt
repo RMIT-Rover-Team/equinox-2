@@ -66,6 +66,7 @@ enable_testing()
 
 add_executable(ExcavatorTests
     test/ExcavatorTest.cpp
+    test/VCanTest.cpp
     ${SOURCES}
 )
 
