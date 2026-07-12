@@ -11,8 +11,8 @@
 #include "../../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
 #include "StepperMotor.h"
 
-constexpr double height_motor_ratio = 0.0;
-constexpr double swivel_motor_ratio = 0.0;
+constexpr double HEIGHT_MOTOR_RATIO = 0.0;
+constexpr double SWIVEL_MOTOR_RATIO = 0.0;
 
 class Microscope {
 private:
@@ -29,8 +29,8 @@ public:
     ~Microscope();
     void set_height(double height);
     void set_swivel(double swivel);
-    double get_height();
-    double get_swivel();
+    double get_height() const;
+    double get_swivel() const;
 };
 
 

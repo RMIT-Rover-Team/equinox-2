@@ -20,7 +20,7 @@ Microscope::~Microscope() {
 void Microscope::set_height(double height) {
     this->height = height;
 
-    int16_t steps = height_motor_ratio * (height - this->height);
+    int16_t steps = HEIGHT_MOTOR_RATIO * (height - this->height);
     height_motor.set_steps(steps);
 }
 
@@ -34,14 +34,14 @@ void Microscope::set_swivel(double swivel) {
         swivel += 360;
     }
 
-    int16_t steps = swivel_motor_ratio * (swivel - this->swivel);
+    int16_t steps = SWIVEL_MOTOR_RATIO * (swivel - this->swivel);
     swivel_motor.set_steps(steps);
 }
 
-double Microscope::get_height() {
+double Microscope::get_height() const {
     return height;
 }
 
-double Microscope::get_swivel() {
+double Microscope::get_swivel() const {
     return swivel;
 }
