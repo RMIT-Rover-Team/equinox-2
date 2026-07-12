@@ -12,7 +12,8 @@
 #include "StepperMotor.h"
 #include "GenericMotor.h"
 
-constexpr double height_motor_ratio = 0.0;
+constexpr double HEIGHT_MOTOR_RATIO = 0.0;
+constexpr int16_t DRILL_RUNNING_RPM = 5000; // Confirm with engineering
 
 class Drill {
 private:
@@ -21,14 +22,14 @@ private:
     StepperMotor height_motor;
     GenericMotor drill_motor;
     double drill_height;
-    bool drill_status;
+    int16_t drill_current_rpm;
 public:
     Drill(uint8_t device_id, RoverCanMaster &can_master);
     ~Drill();
     void set_height(double height);
-    void run_drill(bool status);
-    double get_height();
-    double get_status();
+    void run_drill(int16_t rpm);
+    double get_height() const;
+    double get_status() const;
 };
 
 
