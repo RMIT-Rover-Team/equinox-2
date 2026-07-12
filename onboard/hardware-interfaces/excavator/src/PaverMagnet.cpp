@@ -17,3 +17,12 @@ void PaverMagnet::set_status(bool status) {
     int8_t msg[8] = { (int8_t)status, 0, 0, 0, 0, 0, 0, 0 };
     can_master.tx_int8(GroupId::PAYLOAD, device_id, msg);
 }
+
+void PaverMagnet::estop() {
+    spdlog::critical("ESTOP PAVER MAGNET {0:x}", device_id);
+    can_master.estop(GroupId::PAYLOAD, device_id);
+}
+
+void PaverMagnet::ping() {
+    can_master.ping(GroupId::PAYLOAD, device_id);
+}
