@@ -26,4 +26,28 @@ set(SOURCES
     ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
   )
 
+FetchContent_Declare(
+        googletest
+        GIT_TAG v1.17.0
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        FIND_PACKAGE_ARGS 1.17.0 NAMES GTest COMPONENTS gmain_main
+        EXCLUDE_FROM_ALL
+        SYSTEM
+)
+
+add_executable(ScienceTests
+        tests/DrillTests.cpp
+        tests/GenericMotorTests.cpp
+        tests/HeaterTests.cpp
+        tests/MicroscopeTests.cpp
+        tests/SciencePayloadTests.cpp
+        tests/StepperMotorTests.cpp
+)
+
+
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
   add_library(${PROJECT_NAME} ${SOURCES})
