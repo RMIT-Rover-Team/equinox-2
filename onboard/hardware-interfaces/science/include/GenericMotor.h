@@ -8,19 +8,26 @@
 #define EQUINOX_2_GENERICMOTOR_H
 
 #include "../../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
-
-constexpr int16_t motor_rpm = 5000;
+#include <thread>
 
 class GenericMotor {
 private:
     uint8_t device_id;
     RoverCanMaster can_master;
-    bool status;
+    int16_t current_rpm;
+    int16_t target_rpm;
+    bool target_changed;
+
+    std::mutex motor_mutex;
+    std::atomic<bool> stop_can_worker;
+    std::thread can_worker_thread;
+
+    void can_monitor_loop();
 public:
     GenericMotor(uint8_t device_id, RoverCanMaster& can_master);
     ~GenericMotor();
-    bool get_status();
-    void start();
+    bool get_rpm() const;
+    void set_rpm(int16_t rpm);
     void stop();
 };
 
