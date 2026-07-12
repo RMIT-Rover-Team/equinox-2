@@ -6,8 +6,6 @@ TEST_F(VCANTest, EStop) {
     excavator.estop();
 
     read_from_vcan();
-
-    // recieved 4 msgs
     EXPECT_EQ(msgs_recieved, 4);
 
     // excavator arm actuator
@@ -46,8 +44,6 @@ TEST_F(VCANTest, MoveMotors) {
     excavator.teeth.set_velocity(50);
 
     read_from_vcan();
-
-    // recieved 3 msgs
     EXPECT_EQ(msgs_recieved, 3);
 
     // excavator arm actuator
@@ -80,8 +76,6 @@ TEST_F(VCANTest, PaverMagnet) {
     excavator.paver_magnet.set_status(true);
 
     read_from_vcan();
-
-    // recieved 1 msg
     EXPECT_EQ(msgs_recieved, 1);
 
     // paver magnet
@@ -103,8 +97,6 @@ TEST_F(VCANTest, Ping) {
     excavator.paver_magnet.ping();
 
     read_from_vcan();
-
-    // recieved 1 msg
     EXPECT_EQ(msgs_recieved, 4);
 
     // excavator arm actuator
