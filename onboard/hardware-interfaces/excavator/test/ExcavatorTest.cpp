@@ -1,32 +1,15 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <stdint.h>
-#include <cstring>
-#include <iostream>
-#include <format>
-#include "../src/ExcavatorPayload.h"
+
+#include "SocketCanWrapper.h"
 #include "RoverCanMaster.h"
-#include "GenericCan.h"
-
-using ::testing::NiceMock;
-using ::testing::Truly;
-using ::testing::Exactly;
-using ::testing::Return;
-using ::testing::Eq;
-using ::testing::_;
+#include "../src/ExcavatorPayload.h"
 
 
-GroupId get_group_id(uint32_t header) {
-    return (GroupId)((header >> 9) & 0b11);
-}
 
-uint8_t get_device(uint32_t header) {
-    return (uint8_t)((header >> 4) & 0b11111);
-}
-
-CommandId get_command_id(uint32_t header) {
-    return (CommandId)(header & 0b1111);
-}
+GroupId get_group_id(uint32_t header) { return (GroupId)((header >> 9) & 0b11); }
+uint8_t get_device(uint32_t header) { return (uint8_t)((header >> 4) & 0b11111); }
+CommandId get_command_id(uint32_t header) { return (CommandId)(header & 0b1111); }
 
 std::string get_command_name(uint16_t header) {
     CommandId cmd = get_command_id(header);
@@ -102,14 +85,14 @@ protected:
     void SetUp() override {
         // clear out any messages previously sent
         read_from_vcan();
-        i = 0;
+        msgs_recieved = 0;
         memset(msgs, 0, sizeof(msgs));
     }
 
     void read_from_vcan() {
         while (can_reader.available()) {
             // ensure buffer not full
-            EXPECT_LT(i, CANBufferLen);
+            EXPECT_LT(msgs_recieved, CANBufferLen);
     
             CANFrame msg = can_reader.readMSG();
 
@@ -122,8 +105,8 @@ protected:
 
             memcpy(data.data, msg.data, CanDataLength);
     
-            memcpy(&msgs[i], &data, sizeof(CANData));
-            i++;
+            memcpy(&msgs[msgs_recieved], &data, sizeof(CANData));
+            msgs_recieved++;
     
             std::printf("recieved %s to device %x%s \n", get_command_name(msg.can_id).c_str(), data.device_id, get_data(get_command_id(msg.can_id), data.data).c_str());
         }
@@ -135,7 +118,7 @@ protected:
     WrappedCANBus can_reader;
 
     CANData msgs[CANBufferLen];
-    uint8_t i;
+    uint8_t msgs_recieved;
 };
 
 
@@ -150,7 +133,7 @@ TEST_F(VCANTest, EStop) {
     read_from_vcan();
 
     // recieved 4 msgs
-    EXPECT_EQ(i, 4);
+    EXPECT_EQ(msgs_recieved, 4);
 
     // excavator arm actuator
     EXPECT_EQ(msgs[0].group_id, GroupId::PAYLOAD);
@@ -190,7 +173,7 @@ TEST_F(VCANTest, MoveMotors) {
     read_from_vcan();
 
     // recieved 3 msgs
-    EXPECT_EQ(i, 3);
+    EXPECT_EQ(msgs_recieved, 3);
 
     // excavator arm actuator
     EXPECT_EQ(msgs[0].group_id, GroupId::PAYLOAD);
@@ -224,7 +207,7 @@ TEST_F(VCANTest, PaverMagnet) {
     read_from_vcan();
 
     // recieved 1 msg
-    EXPECT_EQ(i, 1);
+    EXPECT_EQ(msgs_recieved, 1);
 
     // paver magnet
     EXPECT_EQ(msgs[0].group_id, GroupId::PAYLOAD);
@@ -247,7 +230,7 @@ TEST_F(VCANTest, Ping) {
     read_from_vcan();
 
     // recieved 1 msg
-    EXPECT_EQ(i, 4);
+    EXPECT_EQ(msgs_recieved, 4);
 
     // excavator arm actuator
     EXPECT_EQ(msgs[0].group_id, GroupId::PAYLOAD);
