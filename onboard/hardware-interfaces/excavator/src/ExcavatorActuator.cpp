@@ -26,8 +26,4 @@ void ExcavatorActuator::ping() {
     can_master.ping(GroupId::PAYLOAD, device_id);
 }
 
-void ExcavatorActuator::heartbeat() {
-    return; // TODO: implement heartbeat
-}
-
 ExcavatorActuator::~ExcavatorActuator() {}
