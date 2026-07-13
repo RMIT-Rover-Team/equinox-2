@@ -9,6 +9,8 @@
 
 #include "../../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
 #include <thread>
+#include <mutex>
+#include <atomic>
 
 class GenericMotor {
 private:
