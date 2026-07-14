@@ -9,39 +9,34 @@
 
 // TODO: Update device_id when confirmed by engineering
 Microscope::Microscope(uint8_t device_id, RoverCanMaster &can_master)
-    : device_id(device_id)
-    , can_master(can_master)
-    , height_motor(0x01, can_master)
-    , swivel_motor(0x02, can_master) {};
+    : height_motor(0x01, can_master)
+    , swivel_motor(0x02, can_master)
+    , current_height(0)
+    , current_swivel(0) {};
 
 Microscope::~Microscope() {
 }
 
 void Microscope::setHeight(double height) {
-    this->height = height;
-
-    int16_t steps = HEIGHT_MOTOR_RATIO * (height - this->height);
-    height_motor.setTargetSteps(steps);
+    height_motor.setTargetSteps(height * HEIGHT_MOTOR_RATIO);
 }
 
 void Microscope::setSwivel(double swivel) {
-    this->swivel = swivel;
-
-    while (swivel >= 180) {
-        swivel -= 360;
-    }
-    while (swivel <= -180) {
-        swivel += 360;
-    }
-
-    int16_t steps = SWIVEL_MOTOR_RATIO * (swivel - this->swivel);
-    swivel_motor.setTargetSteps(steps);
+    swivel_motor.setTargetSteps(swivel * SWIVEL_MOTOR_RATIO);
 }
 
-double Microscope::getHeight() const {
-    return height;
+double Microscope::getCurrentHeight() const {
+    return height_motor.getCurrentSteps() / HEIGHT_MOTOR_RATIO;
 }
 
-double Microscope::getSwivel() const {
-    return swivel;
+double Microscope::getTargetHeight() const {
+    return target_height;
+}
+
+double Microscope::getCurrentSwivel() const {
+    return swivel_motor.getCurrentSteps() / SWIVEL_MOTOR_RATIO;
+}
+
+double Microscope::getTargetSwivel() const {
+    return target_swivel;
 }

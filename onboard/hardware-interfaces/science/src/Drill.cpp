@@ -10,23 +10,23 @@
 #include "Drill.h"
 
 Drill::Drill(uint8_t device_id, RoverCanMaster& can_master)
-    : device_id(device_id)
-    , can_master(can_master)
-    , height_motor(0x01, can_master)
+    : height_motor(0x01, can_master)
     , drill_motor(0x02, can_master)
-    , drill_height(0)
-    , drill_current_rpm(0) {};
+    , current_height(0)
+    , target_height(0)
+    , current_rpm(0)
+    , target_rpm(0) {};
 
 Drill::~Drill() {
 }
 
 void Drill::setHeight(double height) {
-    drill_height = height;
-    int16_t steps = HEIGHT_MOTOR_RATIO * height;
-    height_motor.setTargetSteps(steps);
+    this->target_height = height;
+    height_motor.setTargetSteps(height * HEIGHT_MOTOR_RATIO);
 }
 
 void Drill::start(int16_t rpm) {
+    this->target_rpm = rpm;
     drill_motor.setRpm(rpm);
 }
 
@@ -35,13 +35,22 @@ void Drill::start() {
 }
 
 void Drill::stop() {
+    this->target_rpm = 0;
     this->start(0);
 }
 
 double Drill::getCurrentHeight() const {
-    return drill_height;
+    return height_motor.getCurrentSteps() / HEIGHT_MOTOR_RATIO;
 }
 
-double Drill::getStatus() const {
-    return drill_current_rpm;
+int16_t Drill::getCurrentRpm() const {
+    return drill_motor.getRpm();
+}
+
+double Drill::getTargetHeight() const {
+    return this->target_height;
+}
+
+int16_t Drill::getTargetRpm() const {
+    return this->target_rpm;
 }

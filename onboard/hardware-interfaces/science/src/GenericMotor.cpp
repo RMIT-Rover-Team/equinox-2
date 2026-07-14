@@ -9,29 +9,25 @@
 #include "GenericMotor.h"
 
 GenericMotor::GenericMotor(const uint8_t device_id, RoverCanMaster &can_master)
-    : CanSender(device_id, can_master)
+    : CanDevice(device_id, can_master)
     , current_rpm(0)
     , target_rpm(0) {}
 
-GenericMotor::~GenericMotor() {
-    CanSender::~CanSender();
-}
-
-void GenericMotor::setCurrent(const int16_t current) {
+void GenericMotor::updateCurrent(const int16_t current) {
     current_rpm = current;
 }
 
-bool GenericMotor::getRpm() const {
+int16_t GenericMotor::getRpm() const {
     return current_rpm;
 }
 
 void GenericMotor::setRpm(const int16_t target) {
     target_rpm = target;
-    CanSender::setTarget(target);
+    CanDevice::setTarget(target);
 }
 
 void GenericMotor::stop() {
     target_rpm = 0;
-    CanSender::setTarget(0);
+    CanDevice::setTarget(0);
 }
 

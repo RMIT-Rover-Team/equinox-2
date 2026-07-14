@@ -16,21 +16,23 @@ constexpr double SWIVEL_MOTOR_RATIO = 0.0;
 
 class Microscope {
 private:
-    uint8_t device_id;
-    RoverCanMaster can_master;
     // Two StepperMotors: Microscope class receives position (cm/deg) and
     // calls StepperMotor with number of steps
     StepperMotor height_motor;
     StepperMotor swivel_motor;
-    double height;
-    double swivel;
+    double current_height;
+    double target_height;
+    double current_swivel;
+    double target_swivel;
 public:
     Microscope(uint8_t device_id, RoverCanMaster &can_master);
     ~Microscope();
     void setHeight(double height);
     void setSwivel(double swivel);
-    double getHeight() const;
-    double getSwivel() const;
+    double getCurrentHeight() const;
+    double getTargetHeight() const;
+    double getCurrentSwivel() const;
+    double getTargetSwivel() const;
 };
 
 

@@ -17,12 +17,12 @@ constexpr int16_t DRILL_RUNNING_RPM = 5000; // Confirm with engineering
 
 class Drill {
 private:
-    uint8_t device_id;
-    RoverCanMaster can_master;
     StepperMotor height_motor;
     GenericMotor drill_motor;
-    double drill_height;
-    int16_t drill_current_rpm;
+    double current_height;
+    double target_height;
+    int16_t current_rpm;
+    int16_t target_rpm;
 public:
     Drill(uint8_t device_id, RoverCanMaster &can_master);
     ~Drill();
@@ -31,7 +31,9 @@ public:
     void start();
     void stop();
     double getCurrentHeight() const;
-    double getStatus() const;
+    double getTargetHeight() const;
+    int16_t getCurrentRpm() const;
+    int16_t getTargetRpm() const;
 };
 
 

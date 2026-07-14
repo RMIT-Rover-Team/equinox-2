@@ -10,17 +10,17 @@
 
 #include "../../lib-universal-canbus/libuniversalcan/GenericCan.h"
 #include "../../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
-#include "CanSender.h"
+#include "CanDevice.h"
 
-class Heater : public CanSender {
+class Heater : public CanDevice {
 private:
     int16_t target_temperature;
     int16_t current_temperature;
 protected:
-    void setCurrent(int16_t current) override;
+    void updateCurrent(int16_t current) override;
 public:
     Heater(uint8_t device_id, RoverCanMaster& can_master);
-    ~Heater();
+    ~Heater() override = default;
     void setTargetTemperature(int16_t target);
     int16_t getCurrentTemperature() const;
     int16_t getTargetTemperature() const;

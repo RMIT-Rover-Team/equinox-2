@@ -8,23 +8,19 @@
 #include "StepperMotor.h"
 
 StepperMotor::StepperMotor(const uint8_t device_id, RoverCanMaster &can_master)
-    : CanSender(device_id, can_master)
+    : CanDevice(device_id, can_master)
     , current_steps(0)
     , target_steps(0)
 {
 }
 
-StepperMotor::~StepperMotor() {
-    CanSender::~CanSender();
-}
-
-void StepperMotor::setCurrent(int16_t current) {
+void StepperMotor::updateCurrent(int16_t current) {
     current_steps = current;
 }
 
 void StepperMotor::setTargetSteps(const int16_t steps) {
     this->target_steps = steps;
-    CanSender::setTarget(steps);
+    CanDevice::setTarget(steps);
 }
 
 int16_t StepperMotor::getTargetSteps() const {
@@ -37,6 +33,6 @@ int16_t StepperMotor::getCurrentSteps() const {
 
 void StepperMotor::stop() {
     target_steps = current_steps;
-    CanSender::setTarget(current_steps);
+    CanDevice::setTarget(current_steps);
 }
 

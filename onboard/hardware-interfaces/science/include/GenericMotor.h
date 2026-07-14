@@ -11,18 +11,18 @@
 #include <thread>
 #include <mutex>
 #include <atomic>
-#include "CanSender.h"
+#include "CanDevice.h"
 
-class GenericMotor : public CanSender{
+class GenericMotor : public CanDevice{
 private:
     int16_t current_rpm;
     int16_t target_rpm;
 protected:
-    void setCurrent(int16_t current) override;
+    void updateCurrent(int16_t current) override;
 public:
     GenericMotor(uint8_t device_id, RoverCanMaster& can_master);
-    ~GenericMotor();
-    bool getRpm() const;
+    ~GenericMotor() override = default;
+    int16_t getRpm() const;
     void setRpm(int16_t target);
     void stop();
 };

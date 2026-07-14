@@ -6,7 +6,7 @@
 #include <mutex>
 #include <atomic>
 
-class CanSender {
+class CanDevice {
 private:
     uint8_t device_id;
     RoverCanMaster* can_master;
@@ -25,10 +25,10 @@ private:
     void canHeartbeatLoop() const;
     void logFailedHeartbeat() const;
 protected:
-    virtual void setCurrent(int16_t current) = 0;
+    virtual void updateCurrent(int16_t current) = 0;
+    virtual ~CanDevice();
 public:
-    CanSender(uint8_t device_id, RoverCanMaster & can_master);
-    ~CanSender();
+    CanDevice(uint8_t device_id, RoverCanMaster & can_master);
     bool isAlive() const;
     void setTarget(int16_t target);
 };

@@ -1,6 +1,6 @@
-#include "CanSender.h"
+#include "CanDevice.h"
 
-CanSender::CanSender(const uint8_t device_id, RoverCanMaster & can_master)
+CanDevice::CanDevice(const uint8_t device_id, RoverCanMaster & can_master)
     : device_id(device_id)
     , can_master(&can_master)
     , target_value(0)
@@ -10,11 +10,11 @@ CanSender::CanSender(const uint8_t device_id, RoverCanMaster & can_master)
     , stop_heartbeat_thread(false)
     , is_alive(true)
 {
-    can_worker_thread = std::thread(&CanSender::canMonitorLoop, this);
-    can_heartbeat_thread = std::thread(&CanSender::canHeartbeatLoop, this);
+    can_worker_thread = std::thread(&CanDevice::canMonitorLoop, this);
+    can_heartbeat_thread = std::thread(&CanDevice::canHeartbeatLoop, this);
 }
 
-CanSender::~CanSender() {
+CanDevice::~CanDevice() {
     stop_can_worker = true;
     stop_heartbeat_thread = true;
 
@@ -27,17 +27,17 @@ CanSender::~CanSender() {
     }
 }
 
-void CanSender::setTarget(int16_t target) {
+void CanDevice::setTarget(int16_t target) {
     std::lock_guard<std::mutex> lock(target_mutex);
     target_value = target;
     target_changed = true;
 }
 
-bool CanSender::isAlive() const {
+bool CanDevice::isAlive() const {
     return is_alive;
 }
 
-void CanSender::canMonitorLoop() {
+void CanDevice::canMonitorLoop() {
     while (!stop_can_worker) {
         int16_t local_target = 0;
         bool should_update = false;
@@ -60,12 +60,12 @@ void CanSender::canMonitorLoop() {
     }
 }
 
-void CanSender::canHeartbeatLoop() const {
+void CanDevice::canHeartbeatLoop() const {
     can_master->ping(GroupId::PAYLOAD, device_id);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
-void CanSender::logFailedHeartbeat() const {
+void CanDevice::logFailedHeartbeat() const {
     std::cerr << "CanSender: Heartbeat not received for device_id ";
     std::cerr << device_id << std::endl;
 }
