@@ -6,16 +6,28 @@
  */
 #include "Heater.h"
 
-Heater::Heater(uint8_t device_id, RoverCanMaster& can_master)
-    : device_id(device_id)
-    , can_master(can_master) {}
+Heater::Heater(const uint8_t device_id, RoverCanMaster& can_master)
+    : CanSender(device_id, can_master)
+    , target_temperature(0)
+    , current_temperature(0) {}
 
-void Heater::set_temperature(float target_temperature) {
-    this->target_temperature = target_temperature;
-    float values[4] = {target_temperature, 0.0, 0.0, 0.0};
-    can_master.tx_float(GroupId::PAYLOAD, device_id, values);
+Heater::~Heater() {
+    CanSender::~CanSender();
 }
 
-double Heater::get_temp() {
+void Heater::setTargetTemperature(const int16_t target) {
+    this->target_temperature = target;
+    CanSender::setTarget(target);
+}
+
+int16_t Heater::getCurrentTemperature() const {
+    return current_temperature;
+}
+
+void Heater::setCurrent(const int16_t current) {
+    current_temperature = current;
+}
+
+int16_t Heater::getTargetTemperature() const {
     return target_temperature;
 }

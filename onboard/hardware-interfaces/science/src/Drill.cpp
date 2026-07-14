@@ -20,20 +20,28 @@ Drill::Drill(uint8_t device_id, RoverCanMaster& can_master)
 Drill::~Drill() {
 }
 
-void Drill::set_height(double height) {
+void Drill::setHeight(double height) {
     drill_height = height;
     int16_t steps = HEIGHT_MOTOR_RATIO * height;
-    height_motor.set_steps(steps);
+    height_motor.setTargetSteps(steps);
 }
 
-void Drill::run_drill(int16_t rpm) {
-    drill_motor.set_rpm(rpm);
+void Drill::start(int16_t rpm) {
+    drill_motor.setRpm(rpm);
 }
 
-double Drill::get_height() const {
+void Drill::start() {
+    this->start(DRILL_RUNNING_RPM);
+}
+
+void Drill::stop() {
+    this->start(0);
+}
+
+double Drill::getCurrentHeight() const {
     return drill_height;
 }
 
-double Drill::get_status() const {
+double Drill::getStatus() const {
     return drill_current_rpm;
 }

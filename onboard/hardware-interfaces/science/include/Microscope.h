@@ -27,10 +27,10 @@ private:
 public:
     Microscope(uint8_t device_id, RoverCanMaster &can_master);
     ~Microscope();
-    void set_height(double height);
-    void set_swivel(double swivel);
-    double get_height() const;
-    double get_swivel() const;
+    void setHeight(double height);
+    void setSwivel(double swivel);
+    double getHeight() const;
+    double getSwivel() const;
 };
 
 

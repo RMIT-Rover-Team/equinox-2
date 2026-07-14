@@ -24,12 +24,13 @@ private:
     void canMonitorLoop();
     void canHeartbeatLoop() const;
     void logFailedHeartbeat() const;
+protected:
+    virtual void setCurrent(int16_t current) = 0;
 public:
     CanSender(uint8_t device_id, RoverCanMaster & can_master);
     ~CanSender();
     bool isAlive() const;
     void setTarget(int16_t target);
-    virtual void setCurrent(int16_t current) = 0;
 };
 
 

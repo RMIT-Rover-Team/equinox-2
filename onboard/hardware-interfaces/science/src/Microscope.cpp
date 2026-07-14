@@ -17,14 +17,14 @@ Microscope::Microscope(uint8_t device_id, RoverCanMaster &can_master)
 Microscope::~Microscope() {
 }
 
-void Microscope::set_height(double height) {
+void Microscope::setHeight(double height) {
     this->height = height;
 
     int16_t steps = HEIGHT_MOTOR_RATIO * (height - this->height);
-    height_motor.set_steps(steps);
+    height_motor.setTargetSteps(steps);
 }
 
-void Microscope::set_swivel(double swivel) {
+void Microscope::setSwivel(double swivel) {
     this->swivel = swivel;
 
     while (swivel >= 180) {
@@ -35,13 +35,13 @@ void Microscope::set_swivel(double swivel) {
     }
 
     int16_t steps = SWIVEL_MOTOR_RATIO * (swivel - this->swivel);
-    swivel_motor.set_steps(steps);
+    swivel_motor.setTargetSteps(steps);
 }
 
-double Microscope::get_height() const {
+double Microscope::getHeight() const {
     return height;
 }
 
-double Microscope::get_swivel() const {
+double Microscope::getSwivel() const {
     return swivel;
 }

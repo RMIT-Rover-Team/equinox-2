@@ -26,10 +26,12 @@ private:
 public:
     Drill(uint8_t device_id, RoverCanMaster &can_master);
     ~Drill();
-    void set_height(double height);
-    void run_drill(int16_t rpm);
-    double get_height() const;
-    double get_status() const;
+    void setHeight(double height);
+    void start(int16_t rpm);
+    void start();
+    void stop();
+    double getCurrentHeight() const;
+    double getStatus() const;
 };
 
 

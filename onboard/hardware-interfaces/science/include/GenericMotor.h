@@ -11,25 +11,19 @@
 #include <thread>
 #include <mutex>
 #include <atomic>
+#include "CanSender.h"
 
-class GenericMotor {
+class GenericMotor : public CanSender{
 private:
-    uint8_t device_id;
-    RoverCanMaster can_master;
     int16_t current_rpm;
     int16_t target_rpm;
-    bool target_changed;
-
-    std::mutex motor_mutex;
-    std::atomic<bool> stop_can_worker;
-    std::thread can_worker_thread;
-
-    void can_monitor_loop();
+protected:
+    void setCurrent(int16_t current) override;
 public:
     GenericMotor(uint8_t device_id, RoverCanMaster& can_master);
     ~GenericMotor();
-    bool get_rpm() const;
-    void set_rpm(int16_t rpm);
+    bool getRpm() const;
+    void setRpm(int16_t target);
     void stop();
 };
 
