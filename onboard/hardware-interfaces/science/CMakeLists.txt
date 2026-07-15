@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
+include(FetchContent)
 
 project(SciencePayload
   VERSION 1.0
@@ -44,10 +45,21 @@ add_executable(ScienceTests
         tests/StepperMotorTests.cpp
 )
 
+target_include_directories(ScienceTests PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(ScienceTests PRIVATE 
+    GTest::gtest_main
+    GTest::gmock_main
+)
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+include(GoogleTest)
+
 enable_testing()
 
   add_library(${PROJECT_NAME} ${SOURCES})
+gtest_discover_tests(ScienceTests)
