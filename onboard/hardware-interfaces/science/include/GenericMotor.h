@@ -22,7 +22,8 @@ protected:
 public:
     GenericMotor(uint8_t device_id, RoverCanMaster& can_master);
     ~GenericMotor() override = default;
-    int16_t getRpm() const;
+    int16_t getCurrentRpm() const;
+    int16_t getTargetRpm() const;
     void setRpm(int16_t target);
     void stop();
 };

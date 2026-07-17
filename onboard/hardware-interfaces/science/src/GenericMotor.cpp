@@ -17,8 +17,12 @@ void GenericMotor::updateCurrent(const int16_t current) {
     current_rpm = current;
 }
 
-int16_t GenericMotor::getRpm() const {
+int16_t GenericMotor::getCurrentRpm() const {
     return current_rpm;
+}
+
+int16_t GenericMotor::getTargetRpm() const {
+    return target_rpm;
 }
 
 void GenericMotor::setRpm(const int16_t target) {
