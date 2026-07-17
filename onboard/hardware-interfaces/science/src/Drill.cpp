@@ -22,7 +22,7 @@ Drill::~Drill() {
 
 void Drill::setHeight(double height) {
     this->target_height = height;
-    height_motor.setTargetSteps(height * HEIGHT_MOTOR_RATIO);
+    height_motor.setTargetSteps(height * DRILL_HEIGHT_MOTOR_RATIO);
 }
 
 void Drill::start(int16_t rpm) {
@@ -40,11 +40,11 @@ void Drill::stop() {
 }
 
 double Drill::getCurrentHeight() const {
-    return height_motor.getCurrentSteps() / HEIGHT_MOTOR_RATIO;
+    return height_motor.getCurrentSteps() / DRILL_HEIGHT_MOTOR_RATIO;
 }
 
 int16_t Drill::getCurrentRpm() const {
-    return drill_motor.getRpm();
+    return drill_motor.getCurrentRpm();
 }
 
 double Drill::getTargetHeight() const {

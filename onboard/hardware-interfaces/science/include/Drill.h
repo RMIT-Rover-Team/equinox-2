@@ -12,7 +12,7 @@
 #include "StepperMotor.h"
 #include "GenericMotor.h"
 
-constexpr double HEIGHT_MOTOR_RATIO = 0.0;
+constexpr double DRILL_HEIGHT_MOTOR_RATIO = 1.0;
 constexpr int16_t DRILL_RUNNING_RPM = 5000; // Confirm with engineering
 
 class Drill {

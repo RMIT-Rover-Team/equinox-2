@@ -18,7 +18,7 @@ Microscope::~Microscope() {
 }
 
 void Microscope::setHeight(double height) {
-    height_motor.setTargetSteps(height * HEIGHT_MOTOR_RATIO);
+    height_motor.setTargetSteps(height * MICROSCOPE_HEIGHT_MOTOR_RATIO);
 }
 
 void Microscope::setSwivel(double swivel) {
@@ -26,7 +26,7 @@ void Microscope::setSwivel(double swivel) {
 }
 
 double Microscope::getCurrentHeight() const {
-    return height_motor.getCurrentSteps() / HEIGHT_MOTOR_RATIO;
+    return height_motor.getCurrentSteps() / MICROSCOPE_HEIGHT_MOTOR_RATIO;
 }
 
 double Microscope::getTargetHeight() const {
