@@ -12,6 +12,7 @@ CanDevice::CanDevice(const uint8_t device_id, RoverCanMaster & can_master)
 {
     can_worker_thread = std::thread(&CanDevice::canMonitorLoop, this);
     can_heartbeat_thread = std::thread(&CanDevice::canHeartbeatLoop, this);
+    // stop_heartbeat_thread = true;
 }
 
 CanDevice::~CanDevice() {
@@ -60,9 +61,11 @@ void CanDevice::canMonitorLoop() {
     }
 }
 
-void CanDevice::canHeartbeatLoop() const {
-    can_master->ping(GroupId::PAYLOAD, device_id);
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+void CanDevice::canHeartbeatLoop() {
+    while (!stop_heartbeat_thread) {
+        can_master->ping(GroupId::PAYLOAD, device_id);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
 }
 
 void CanDevice::logFailedHeartbeat() const {

@@ -22,7 +22,7 @@ private:
     bool is_alive;
 
     void canMonitorLoop();
-    void canHeartbeatLoop() const;
+    void canHeartbeatLoop();
     void logFailedHeartbeat() const;
 protected:
     virtual void updateCurrent(int16_t current) = 0;
