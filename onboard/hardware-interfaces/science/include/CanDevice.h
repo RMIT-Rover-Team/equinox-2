@@ -6,6 +6,8 @@
 #include <mutex>
 #include <atomic>
 
+// TODO: Implement listener to update current value
+// TODO: Correctly implement heartbeat to listen for reply
 class CanDevice {
 private:
     uint8_t device_id;
@@ -31,6 +33,9 @@ public:
     CanDevice(uint8_t device_id, RoverCanMaster & can_master);
     bool isAlive() const;
     void setTarget(int16_t target);
+    int16_t getCanTarget() const { return target_value; }
+    int16_t getCanCurrent() const { return current_value; }
+    int16_t getCanTargetChanged() const { return target_changed; }
 };
 
 
