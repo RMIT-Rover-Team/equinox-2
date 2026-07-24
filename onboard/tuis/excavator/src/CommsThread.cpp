@@ -14,6 +14,12 @@ bool CommsThread::bucket_alive() {
 
 void CommsThread::estop() {
     excavator.estop();
+    
+    std::lock_guard<std::mutex> lock(m_target_velocity);
+    excavator_target_velocity = 0;
+    last_sent_excavator_velocity = 0;
+    bucket_target_velocity = 0;
+    last_sent_bucket_velocity = 0;
 }
 
 void CommsThread::set_excavator_velocity(int16_t velocity) {

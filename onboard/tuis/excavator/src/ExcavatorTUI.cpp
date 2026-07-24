@@ -16,7 +16,7 @@ int main() {
     CommsThread worker;
     worker.start();
 
-    std::cout << "----- Controls -----\n\tW: Excavator up\n\tS: Excavator down\n\tA: Bucket up\n\tD: Bucket down\n\tSpace: Stop\n\tEsc: Estop\n" << std::endl;
+    std::cout << "----- Controls -----\n  W: Excavator up\n  S: Excavator down\n  A: Bucket up\n  D: Bucket down\n  Space: Stop\n  Esc: Estop\n" << std::endl;
 
     while (true) {
         std::cout << "\rExcavator velocity: " << worker.get_excavator_velocity() << " Bucket velocity: " << worker.get_bucket_velocity() << std::flush;
