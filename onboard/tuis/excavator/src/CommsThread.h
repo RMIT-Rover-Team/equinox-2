@@ -28,11 +28,11 @@ private:
 
     // both worker and main thread
     std::mutex m_target_velocity;
-    int16_t excavator_target_velocity;
-    int16_t bucket_target_velocity;
+    int16_t excavator_target_velocity = 0;
+    int16_t bucket_target_velocity = 0;
 
     std::mutex m_should_stop;
-    bool should_stop;
+    bool should_stop = false;
 
     // true if recieved a ping from the respective device
     std::atomic_bool excavator_tilt_alive{false};
@@ -52,4 +52,7 @@ public:
     void set_excavator_velocity(int16_t velocity);
     void set_bucket_velocity(int16_t velocity);
     void estop();
+
+    int16_t get_excavator_velocity();
+    int16_t get_bucket_velocity();
 };

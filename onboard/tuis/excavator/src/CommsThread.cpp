@@ -26,6 +26,16 @@ void CommsThread::set_bucket_velocity(int16_t velocity) {
     bucket_target_velocity = velocity;
 }
 
+int16_t CommsThread::get_excavator_velocity() {
+    std::lock_guard<std::mutex> lock(m_target_velocity);
+    return excavator_target_velocity;
+}
+
+int16_t CommsThread::get_bucket_velocity() {
+    std::lock_guard<std::mutex> lock(m_target_velocity);
+    return bucket_target_velocity;
+}
+
 
 void CommsThread::start() {
     worker = std::thread(&CommsThread::run, this);

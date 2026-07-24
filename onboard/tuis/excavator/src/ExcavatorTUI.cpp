@@ -15,7 +15,48 @@ int main() {
     worker.start();
 
     while (true) {
-        std::cout << getch() << std::endl;
+        // blocks until char
+        char c = getch();
+
+        int16_t v;
+        switch (c) {
+            // esc key - estop
+            case 27:
+                worker.estop();
+                break;
+
+            // space - non-emergency stop
+            case ' ':
+                worker.set_excavator_velocity(0);
+                worker.set_bucket_velocity(0);
+                break;
+            
+            case 'w':
+                v = worker.get_excavator_velocity();
+                worker.set_excavator_velocity(v + 10);
+                break;
+
+            case 's':
+                v = worker.get_excavator_velocity();
+                worker.set_excavator_velocity(v - 10);
+                break;
+
+            case 'a':
+                v = worker.get_bucket_velocity();
+                worker.set_bucket_velocity(v + 10);
+                break;
+
+            case 'd':
+                v = worker.get_bucket_velocity();
+                worker.set_bucket_velocity(v - 10);
+                break;
+
+            default:
+                break;
+        }
+
+        // reprint status
+        std::cout << "\rExcavator velocity: " << worker.get_excavator_velocity() << " Bucket velocity: " << worker.get_bucket_velocity() << std::flush;
     }
 
     return 0;
@@ -26,6 +67,7 @@ int main() {
 
 // https://stackoverflow.com/questions/421860/capture-characters-from-standard-input-without-waiting-for-enter-to-be-pressed
 // https://www.man7.org/linux/man-pages/man3/termios.3.html
+/// Gets a character in non-canonical mode (blocks until char)
 char getch() {
         char buf = 0;
         struct termios old = {0};
