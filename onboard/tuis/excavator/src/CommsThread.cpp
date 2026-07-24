@@ -2,7 +2,9 @@
 
 
 CommsThread::CommsThread() : can_bus("can2"), can_master(can_bus, 0x0), excavator(can_master) {}
-CommsThread::~CommsThread() {}
+CommsThread::~CommsThread() {
+    stop();
+}
 
 bool CommsThread::excavator_alive() {
     return excavator_tilt_alive;
@@ -13,8 +15,11 @@ bool CommsThread::bucket_alive() {
 }
 
 void CommsThread::estop() {
-    excavator.estop();
-    
+    {
+        std::lock_guard<std::mutex> lock(m_excavator);
+        excavator.estop();
+    }
+
     std::lock_guard<std::mutex> lock(m_target_velocity);
     excavator_target_velocity = 0;
     last_sent_excavator_velocity = 0;
@@ -64,6 +69,7 @@ void CommsThread::run() {
 
         {
             std::lock_guard<std::mutex> lock(m_target_velocity);
+            std::lock_guard<std::mutex> lock2(m_excavator);
 
             if (excavator_target_velocity != last_sent_excavator_velocity) {
                 excavator.excavator_tilt.set_velocity(excavator_target_velocity);
