@@ -16,7 +16,11 @@ int main() {
     CommsThread worker;
     worker.start();
 
+    std::cout << "----- Controls -----\n\tW: Excavator up\n\tS: Excavator down\n\tA: Bucket up\n\tD: Bucket down\n\tSpace: Stop\n\tEsc: Estop\n" << std::endl;
+
     while (true) {
+        std::cout << "\rExcavator velocity: " << worker.get_excavator_velocity() << " Bucket velocity: " << worker.get_bucket_velocity() << std::flush;
+
         // blocks until char
         char c = getch();
 
@@ -56,9 +60,6 @@ int main() {
             default:
                 break;
         }
-
-        // reprint status
-        std::cout << "\rExcavator velocity: " << worker.get_excavator_velocity() << " Bucket velocity: " << worker.get_bucket_velocity() << std::flush;
     }
 
     return 0;
