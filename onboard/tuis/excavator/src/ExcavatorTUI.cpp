@@ -11,6 +11,8 @@ int main() {
     // what tui library are we using
     // otherwise were using ncurses
 
+    spdlog::set_level(spdlog::level::off);
+
     CommsThread worker;
     worker.start();
 
