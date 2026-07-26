@@ -23,17 +23,6 @@ void CommsThread::estop() {
     target_state.drill_enabled = false;
 }
 
-SciencePayloadState CommsThread::get_target_state() {
-    std::lock_guard<std::mutex> lock(m_target_state);
-    return target_state;
-}
-
-void CommsThread::get_mut_target_state(SciencePayloadState &state) {
-    std::lock_guard<std::mutex> lock(m_target_state);
-    state = target_state;
-}
-
-
 void CommsThread::start() {
     worker = std::thread(&CommsThread::run, this);
 }

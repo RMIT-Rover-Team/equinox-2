@@ -31,16 +31,9 @@ private:
     SciencePayloadState last_sent_state = {};
 
     // both worker and main thread
-    
-    std::mutex m_target_state;
-    SciencePayloadState target_state = {};
 
     std::mutex m_should_stop;
     bool should_stop = false;
-
-    // true if recieved a ping from the respective device
-    std::atomic_bool excavator_tilt_alive{false};
-    std::atomic_bool bucket_tilt_alive{false};
 
     std::mutex m_payload;
     SciencePayload payload;
@@ -54,6 +47,6 @@ public:
     void stop();
     void estop();
 
-    SciencePayloadState get_target_state();
-    void get_mut_target_state(SciencePayloadState &state);    
+    std::mutex m_target_state;
+    SciencePayloadState target_state = {};
 };

@@ -4,7 +4,7 @@
 #include "CommsThread.h"
 
 void print_controls();
-void print_status(SciencePayloadState state, int selected_device);
+void print_status(SciencePayloadState &state, int selected_device);
 char getch();
 void move_terminal_cursor_up(int lines);
 
@@ -24,15 +24,17 @@ int main() {
 
     while (true) {
         // std::cout << "\rExcavator velocity: " << worker.get_excavator_velocity() << " Bucket velocity: " << worker.get_bucket_velocity() << std::flush;
-        print_status(worker.get_target_state(), selected_device);
+        {
+            std::lock_guard<std::mutex> lock(worker.m_target_state);
+            print_status(worker.target_state, selected_device);
+        }
         // blocks until char
         char c = getch();
 
-        int16_t v;
         switch (c) {
             // esc key - estop
             case 27:
-                // worker.estop();
+                worker.estop();
                 break;
 
             case 'w':
@@ -43,6 +45,19 @@ int main() {
             case 's':
                 ++selected_device;
                 if (selected_device > 4) selected_device = 0;
+                break;
+
+            case 'a':
+            case 'd':
+                {
+                    std::lock_guard<std::mutex> lock(worker.m_target_state);
+
+                    if (selected_device == 0) worker.target_state.heater_temperature += (c == 'a' ? -1 : 1);
+                    else if (selected_device == 1) worker.target_state.drill_height += (c == 'a' ? -0.1 : 0.1);
+                    else if (selected_device == 2) worker.target_state.drill_enabled = !worker.target_state.drill_enabled;
+                    else if (selected_device == 3) worker.target_state.microscope_height += (c == 'a' ? -0.1 : 0.1);
+                    else if (selected_device == 4) worker.target_state.microscope_swivel += (c == 'a' ? -0.1 : 0.1);
+                }
                 break;
 
             default:
@@ -59,7 +74,7 @@ void print_controls() {
     std::cout << "----- Controls -----\n  W/S: Select device\n A/D: Control device\n  Space: Stop\n  Esc: Estop\n\n\n\n\n" << std::endl;
 }
 
-void print_status(SciencePayloadState state, int selected_device) {
+void print_status(SciencePayloadState &state, int selected_device) {
     move_terminal_cursor_up(5);
     std::cout << "Heater Temperature " << (selected_device == 0 ? "<< " : "   ") << state.heater_temperature << (selected_device == 0 ? " >>" : "   ") << std::endl;
     std::cout << "Drill Height       " << (selected_device == 1 ? "<< " : "   ") << state.drill_height << (selected_device == 1 ? " >>" : "   ") << std::endl;
