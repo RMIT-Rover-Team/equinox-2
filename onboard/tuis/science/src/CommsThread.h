@@ -28,12 +28,12 @@ private:
     // worker thread only
 
     /// if != target, need to send new packet
-    SciencePayloadState last_sent_state;
+    SciencePayloadState last_sent_state = {};
 
     // both worker and main thread
     
     std::mutex m_target_state;
-    SciencePayloadState target_state;
+    SciencePayloadState target_state = {};
 
     std::mutex m_should_stop;
     bool should_stop = false;
@@ -54,5 +54,6 @@ public:
     void stop();
     void estop();
 
+    SciencePayloadState get_target_state();
     void get_mut_target_state(SciencePayloadState &state);    
 };

@@ -1,7 +1,12 @@
 #include "CommsThread.h"
 
 
-CommsThread::CommsThread() {}
+CommsThread::CommsThread() {
+    //TEMP
+    payload.heater.~Heater();
+    payload.drill.~Drill();
+    payload.microscope.~Microscope();
+}
 CommsThread::~CommsThread() {
     stop();
 }
@@ -16,6 +21,11 @@ void CommsThread::estop() {
     std::lock_guard<std::mutex> lock(m_target_state);
     target_state.heater_temperature = 0;
     target_state.drill_enabled = false;
+}
+
+SciencePayloadState CommsThread::get_target_state() {
+    std::lock_guard<std::mutex> lock(m_target_state);
+    return target_state;
 }
 
 void CommsThread::get_mut_target_state(SciencePayloadState &state) {
