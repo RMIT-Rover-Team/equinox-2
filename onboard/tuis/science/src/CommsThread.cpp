@@ -1,12 +1,7 @@
 #include "CommsThread.h"
 
 
-CommsThread::CommsThread() {
-    //TEMP
-    payload.heater.~Heater();
-    payload.drill.~Drill();
-    payload.microscope.~Microscope();
-}
+CommsThread::CommsThread() {}
 CommsThread::~CommsThread() {
     stop();
 }
