@@ -58,6 +58,7 @@ int main() {
                     else if (selected_device == 2) worker.target_state.drill_enabled = !worker.target_state.drill_enabled;
                     else if (selected_device == 3) worker.target_state.microscope_height += (c == 'a' ? -0.1 : 0.1);
                     else if (selected_device == 4) worker.target_state.microscope_swivel += (c == 'a' ? -0.1 : 0.1);
+                    worker.cv.notify_one();
                 }
                 break;
 

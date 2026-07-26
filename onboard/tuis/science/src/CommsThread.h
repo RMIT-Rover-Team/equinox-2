@@ -4,6 +4,7 @@
 #include <mutex>
 #include <atomic>
 #include <queue>
+#include <condition_variable>
 #include "SciencePayload.h"
 #include "RoverCanMaster.h"
 #include "SocketCanWrapper.h"
@@ -47,6 +48,7 @@ public:
     void stop();
     void estop();
 
+    std::condition_variable cv;
     std::mutex m_target_state;
     SciencePayloadState target_state = {};
 };
