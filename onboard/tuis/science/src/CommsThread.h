@@ -52,16 +52,7 @@ public:
 
     void start();
     void stop();
-
-    bool excavator_alive();
-    bool bucket_alive();
-
-    void get_mut_target_state(SciencePayloadState &state);
-
-    void set_excavator_velocity(int16_t velocity);
-    void set_bucket_velocity(int16_t velocity);
     void estop();
 
-    int16_t get_excavator_velocity();
-    int16_t get_bucket_velocity();
+    void get_mut_target_state(SciencePayloadState &state);    
 };

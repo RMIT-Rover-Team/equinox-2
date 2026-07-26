@@ -15,7 +15,7 @@
 #ifndef EQUINOX_2_SCIENCEPAYLOAD_H
 #define EQUINOX_2_SCIENCEPAYLOAD_H
 
-#define CAN_BUS_NAME "can2"
+#define CAN_BUS_NAME "vcan0"
 
 class SciencePayload {
 private:

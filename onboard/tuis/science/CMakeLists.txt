@@ -15,6 +15,7 @@ include_directories(
 
 set(SOURCES
     src/ScienceTUI.cpp
+    src/CommsThread.cpp
     ../../hardware-interfaces/science/src/CanDevice.cpp
     ../../hardware-interfaces/science/src/Drill.cpp
     ../../hardware-interfaces/science/src/GenericMotor.cpp
