@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <unistd.h>
 #include <termios.h>
 #include "CommsThread.h"
@@ -76,11 +77,11 @@ void print_controls() {
 
 void print_status(SciencePayloadState &state, int selected_device) {
     move_terminal_cursor_up(5);
-    std::cout << "Heater Temperature " << (selected_device == 0 ? "<< " : "   ") << state.heater_temperature << (selected_device == 0 ? " >>" : "   ") << std::endl;
-    std::cout << "Drill Height       " << (selected_device == 1 ? "<< " : "   ") << state.drill_height << (selected_device == 1 ? " >>" : "   ") << std::endl;
-    std::cout << "Drill Enabled      " << (selected_device == 2 ? "<< " : "   ") << state.drill_enabled << (selected_device == 2 ? " >>" : "   ") << std::endl;
-    std::cout << "Microscope Height  " << (selected_device == 3 ? "<< " : "   ") << state.microscope_height << (selected_device == 3 ? " >>" : "   ") << std::endl;
-    std::cout << "Microscope Swivel  " << (selected_device == 4 ? "<< " : "   ") << state.microscope_swivel << (selected_device == 4 ? " >>" : "   ") << std::endl;
+    std::cout << "Heater Temperature " << (selected_device == 0 ? "<< " : "   ") << std::setw(3) << state.heater_temperature << (selected_device == 0 ? " >>" : "   ") << std::endl;
+    std::cout << "Drill Height       " << (selected_device == 1 ? "<< " : "   ") << std::setw(3) << state.drill_height << (selected_device == 1 ? " >>" : "   ") << std::endl;
+    std::cout << "Drill Enabled      " << (selected_device == 2 ? "<< " : "   ") << std::setw(3) << (state.drill_enabled ? "ON" : "OFF") << (selected_device == 2 ? " >>" : "   ") << std::endl;
+    std::cout << "Microscope Height  " << (selected_device == 3 ? "<< " : "   ") << std::setw(3) << state.microscope_height << (selected_device == 3 ? " >>" : "   ") << std::endl;
+    std::cout << "Microscope Swivel  " << (selected_device == 4 ? "<< " : "   ") << std::setw(3) << state.microscope_swivel << (selected_device == 4 ? " >>" : "   ") << std::endl;
 }
 
 
