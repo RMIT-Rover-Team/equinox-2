@@ -21,10 +21,10 @@ class SciencePayload {
 private:
     WrappedCANBus can_bus;
     RoverCanMaster can_master;
+public:
     Heater heater;
     Drill drill;
     Microscope microscope;
-public:
     SciencePayload();
     ~SciencePayload();
 };
