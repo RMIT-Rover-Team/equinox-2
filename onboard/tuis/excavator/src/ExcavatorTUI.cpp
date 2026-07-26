@@ -29,32 +29,38 @@ int main() {
             // esc key - estop
             case 27:
                 worker.estop();
+                worker.cv.notify_one();
                 break;
 
             // space - non-emergency stop
             case ' ':
                 worker.set_excavator_velocity(0);
                 worker.set_bucket_velocity(0);
+                worker.cv.notify_one();
                 break;
             
             case 'w':
                 v = worker.get_excavator_velocity();
                 worker.set_excavator_velocity(v + 10);
+                worker.cv.notify_one();
                 break;
 
             case 's':
                 v = worker.get_excavator_velocity();
                 worker.set_excavator_velocity(v - 10);
+                worker.cv.notify_one();
                 break;
 
             case 'a':
                 v = worker.get_bucket_velocity();
                 worker.set_bucket_velocity(v + 10);
+                worker.cv.notify_one();
                 break;
 
             case 'd':
                 v = worker.get_bucket_velocity();
                 worker.set_bucket_velocity(v - 10);
+                worker.cv.notify_one();
                 break;
 
             default:

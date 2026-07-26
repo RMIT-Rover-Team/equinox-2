@@ -4,6 +4,7 @@
 #include <mutex>
 #include <atomic>
 #include <queue>
+#include <condition_variable>
 #include "ExcavatorPayload.h"
 #include "RoverCanMaster.h"
 #include "SocketCanWrapper.h"
@@ -59,4 +60,6 @@ public:
 
     int16_t get_excavator_velocity();
     int16_t get_bucket_velocity();
+
+    std::condition_variable cv;
 };

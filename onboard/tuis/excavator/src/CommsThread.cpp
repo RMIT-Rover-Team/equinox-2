@@ -82,8 +82,8 @@ void CommsThread::run() {
             }
         }
 
-        // TODO: change to conditional variable
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::unique_lock<std::mutex> lock(m_target_velocity);
+        cv.wait_for(lock, std::chrono::milliseconds(100));
     }
     
 }
