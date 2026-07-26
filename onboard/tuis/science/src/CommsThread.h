@@ -14,11 +14,11 @@ enum ThreadCommand {
 };
 
 typedef struct {
-    int16_t heater_target_temperature;
-    double drill_target_height;
-    bool drill_target_enabled;
-    double microscope_target_height;
-    double microscope_target_swivel;
+    int16_t heater_temperature;
+    double drill_height;
+    bool drill_enabled;
+    double microscope_height;
+    double microscope_swivel;
 } SciencePayloadState;
 
 
@@ -43,9 +43,6 @@ private:
     std::atomic_bool bucket_tilt_alive{false};
 
     std::mutex m_payload;
-
-    WrappedCANBus can_bus;
-    RoverCanMaster can_master;
     SciencePayload payload;
 
     void run();
@@ -58,6 +55,8 @@ public:
 
     bool excavator_alive();
     bool bucket_alive();
+
+    void get_mut_target_state(SciencePayloadState &state);
 
     void set_excavator_velocity(int16_t velocity);
     void set_bucket_velocity(int16_t velocity);

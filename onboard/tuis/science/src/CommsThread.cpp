@@ -1,50 +1,26 @@
 #include "CommsThread.h"
 
 
-CommsThread::CommsThread() : can_bus("can2"), can_master(can_bus, 0x0), excavator(can_master) {}
+CommsThread::CommsThread() {}
 CommsThread::~CommsThread() {
     stop();
 }
 
-bool CommsThread::excavator_alive() {
-    return excavator_tilt_alive;
-}
-
-bool CommsThread::bucket_alive() {
-    return bucket_tilt_alive;
-}
-
 void CommsThread::estop() {
     {
-        std::lock_guard<std::mutex> lock(m_excavator);
-        excavator.estop();
+        std::lock_guard<std::mutex> lock(m_payload);
+        payload.heater.setTargetTemperature(0);
+        payload.drill.stop();
     }
 
-    std::lock_guard<std::mutex> lock(m_target_velocity);
-    excavator_target_velocity = 0;
-    last_sent_excavator_velocity = 0;
-    bucket_target_velocity = 0;
-    last_sent_bucket_velocity = 0;
+    std::lock_guard<std::mutex> lock(m_target_state);
+    target_state.heater_temperature = 0;
+    target_state.drill_enabled = false;
 }
 
-void CommsThread::set_excavator_velocity(int16_t velocity) {
-    std::lock_guard<std::mutex> lock(m_target_velocity);
-    excavator_target_velocity = velocity;
-}
-
-void CommsThread::set_bucket_velocity(int16_t velocity) {
-    std::lock_guard<std::mutex> lock(m_target_velocity);
-    bucket_target_velocity = velocity;
-}
-
-int16_t CommsThread::get_excavator_velocity() {
-    std::lock_guard<std::mutex> lock(m_target_velocity);
-    return excavator_target_velocity;
-}
-
-int16_t CommsThread::get_bucket_velocity() {
-    std::lock_guard<std::mutex> lock(m_target_velocity);
-    return bucket_target_velocity;
+void CommsThread::get_mut_target_state(SciencePayloadState &state) {
+    std::lock_guard<std::mutex> lock(m_target_state);
+    state = target_state;
 }
 
 
@@ -68,17 +44,33 @@ void CommsThread::run() {
         }
 
         {
-            std::lock_guard<std::mutex> lock(m_target_velocity);
-            std::lock_guard<std::mutex> lock2(m_excavator);
+            std::lock_guard<std::mutex> lock(m_target_state);
+            std::lock_guard<std::mutex> lock2(m_payload);
 
-            if (excavator_target_velocity != last_sent_excavator_velocity) {
-                excavator.excavator_tilt.set_velocity(excavator_target_velocity);
-                last_sent_excavator_velocity = excavator_target_velocity;
+            if (target_state.heater_temperature != last_sent_state.heater_temperature) {
+                payload.heater.setTargetTemperature(target_state.heater_temperature);
+                last_sent_state.heater_temperature = target_state.heater_temperature;
             }
 
-            if (bucket_target_velocity != last_sent_bucket_velocity) {
-                excavator.bucket_tilt.set_velocity(bucket_target_velocity);
-                last_sent_bucket_velocity = bucket_target_velocity;
+            if (target_state.drill_height != last_sent_state.drill_height) {
+                payload.drill.setHeight(target_state.drill_height);
+                last_sent_state.drill_height = target_state.drill_height;
+            }
+
+            if (target_state.drill_enabled != last_sent_state.drill_enabled) {
+                if (target_state.drill_enabled) payload.drill.start();
+                else payload.drill.stop();
+                last_sent_state.drill_enabled = target_state.drill_enabled;
+            }
+
+            if (target_state.microscope_height != last_sent_state.microscope_height) {
+                payload.microscope.setHeight(target_state.microscope_height);
+                last_sent_state.microscope_height = target_state.microscope_height;
+            }
+
+            if (target_state.microscope_swivel != last_sent_state.microscope_swivel) {
+                payload.microscope.setSwivel(target_state.microscope_swivel);
+                last_sent_state.microscope_swivel = target_state.microscope_swivel;
             }
         }
 
