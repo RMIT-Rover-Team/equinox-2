@@ -57,4 +57,4 @@ if __name__ == "__main__":
         print("Sending controller state: left_stick={}, right_stick={}, right_bumper={}, dpad_up={}, dpad_down={}, dpad_left={}, dpad_right={}".format(left_stick, right_stick, right_bumper, dpad_up, dpad_down, dpad_left, dpad_right))
         publisher.publish(message)
 
-        time.sleep(0.5)
+        time.sleep(0.2)
