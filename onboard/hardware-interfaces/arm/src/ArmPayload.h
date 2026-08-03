@@ -10,12 +10,7 @@ class ArmPayload {
 private:
     RoverCanMaster can_master;
 public:
-    ArmActuator motor1;
-    ArmActuator motor2;
-    ArmActuator motor3;
-    ArmActuator motor4;
-    ArmActuator motor5;
-    ArmActuator motor6;
+    std::array<ArmActuator, 6> motors;
     EndEffector end_effector;
 
     ArmPayload(RoverCanMaster &can_master);
