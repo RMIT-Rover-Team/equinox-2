@@ -9,3 +9,12 @@
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# DEFCOM Nodes
+__pycache__/
+**/pyenv/
+**/CMakeCache.txt
+**/CMakeFiles/
+**/cmake_install.cmake
+**/Makefile
+**.so
