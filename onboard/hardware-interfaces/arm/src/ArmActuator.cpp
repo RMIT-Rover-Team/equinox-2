@@ -27,6 +27,9 @@ void ArmActuator::set_position(int16_t target_position) {
 
 int32_t ArmActuator::get_encoded_position() {
     int32_t pos = 0;
-    
-    can_master.tx_int8(0b01, motor_id, )
+
+    int8_t request_data[8] = {MyActuatorCommand::ReadEncoderPosition};
+    can_master.tx_int8(0b01, motor_id, request_data);
+
+    // TODO: once canbus library is updated, read the encoded position (command 2.6 in the manual)
 }

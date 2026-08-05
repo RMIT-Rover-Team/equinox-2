@@ -22,7 +22,18 @@ set(SOURCES
     ../lib-universal-canbus/libuniversalcan/CommandUtils.cpp
 )
 
-add_library(Arm ${SOURCES})
+include(FetchContent)
+FetchContent_Declare(
+    myactuator
+    GIT_REPOSITORY git@github.com:RMIT-Rover-Team/rmit-utils-MyMon.git
+    GIT_TAG main
+    EXCLUDE_FROM_ALL
+    SYSTEM
+)
+
+FetchContent_MakeAvailable(myactuator)
+# target_link_libraries(Arm PRIVATE myactuator::MyActuatorMotor)
+add_library(ArmInterface ${SOURCES})
 
 
 
@@ -43,39 +54,39 @@ add_library(Arm ${SOURCES})
 
 
 
-# #
-# # TESTING
-# #
-# # include(FetchContent)
-# FetchContent_Declare(
-#     googletest
-#     GIT_TAG v1.17.0
-#     GIT_REPOSITORY https://github.com/google/googletest.git
-#     FIND_PACKAGE_ARGS 1.17.0 NAMES GTest COMPONENTS gmain_main
-#     EXCLUDE_FROM_ALL
-#     SYSTEM
-# )
+#
+# TESTING
+#
+# include(FetchContent)
+FetchContent_Declare(
+    googletest
+    GIT_TAG v1.17.0
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    FIND_PACKAGE_ARGS 1.17.0 NAMES GTest COMPONENTS gmain_main
+    EXCLUDE_FROM_ALL
+    SYSTEM
+)
 
-# set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-# FetchContent_MakeAvailable(googletest)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
-# enable_testing()
+enable_testing()
 
 
 
-# add_executable(ArmTests
-#     test/ArmTest.cpp
-#     test/VCanTest.cpp
-#     ${SOURCES}
-# )
+add_executable(ArmTests
+    ../test/ArmTest.cpp
+    ../test/VCanTest.cpp
+    ${SOURCES}
+)
 
-# target_include_directories(ArmTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(ArmTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-# target_link_libraries(ArmTests PRIVATE 
-#     GTest::gtest_main
-#     GTest::gmock_main
-#     spdlog::spdlog
-# )
+target_link_libraries(ArmTests PRIVATE 
+    GTest::gtest_main
+    GTest::gmock_main
+    myactuator
+)
 
-# include(GoogleTest)
-# gtest_discover_tests(ArmTests)
+include(GoogleTest)
+gtest_discover_tests(ArmTests)

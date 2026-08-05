@@ -4,6 +4,10 @@
 #include "GenericCan.h"
 #include "../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
 
+enum MyActuatorCommand {
+    ReadEncoderPosition = 0x60
+};
+
 /// @brief MyActuator wrapper
 class ArmActuator {
 private:
