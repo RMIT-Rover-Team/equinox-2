@@ -1,15 +1,19 @@
 #include "ArmPayload.h"
 
-ArmPayload::ArmPayload(RoverCanMaster &can_master)
-  : can_master(can_master),
-    motors(std::array<ArmActuator, 6>{
-        ArmActuator(0, can_master),
-        ArmActuator(1, can_master),
-        ArmActuator(2, can_master),
-        ArmActuator(3, can_master),
-        ArmActuator(4, can_master),
-        ArmActuator(5, can_master)
+ArmPayload::ArmPayload(GenericCan &can_bus)
+  : can_bus(can_bus), can_master(can_bus, 0x0),
+    motors(std::array<MyActuatorMotor, 6>{
+        MyActuatorMotor(0, &can_bus),
+        MyActuatorMotor(1, &can_bus),
+        MyActuatorMotor(2, &can_bus),
+        MyActuatorMotor(3, &can_bus),
+        MyActuatorMotor(4, &can_bus),
+        MyActuatorMotor(5, &can_bus)
     }),
     end_effector(can_master) {}
 
 ArmPayload::~ArmPayload() {}
+
+void ArmPayload::estop() {
+
+}

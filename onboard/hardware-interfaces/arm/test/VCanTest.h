@@ -25,7 +25,6 @@ protected:
     void read_from_vcan();
 
     WrappedCANBus can_bus;
-    RoverCanMaster can_master;
     ArmPayload payload;
     WrappedCANBus can_reader;
 

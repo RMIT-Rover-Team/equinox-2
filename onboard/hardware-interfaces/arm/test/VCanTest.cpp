@@ -59,7 +59,7 @@ std::string get_data(CommandId cmd, char data[CanDataLength]) {
 }
 
 
-VCANTest::VCANTest() : can_bus("vcan0"), can_master(can_bus, 0x0), payload(can_master), can_reader("vcan0") {}
+VCANTest::VCANTest() : can_bus("vcan0"), payload(can_bus), can_reader("vcan0") {}
 
 void VCANTest::SetUp() {
     // clear out any messages previously sent

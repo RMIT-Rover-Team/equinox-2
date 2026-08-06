@@ -1,6 +1,7 @@
 #pragma once
 #include "ArmActuator.h"
 #include "EndEffector.h"
+#include "MyActuatorMotor.h"
 #include "GenericCan.h"
 #include "SocketCanWrapper.h"
 #include "RoverCanMaster.h"
@@ -8,12 +9,13 @@
 
 class ArmPayload {
 private:
+    GenericCan &can_bus;
     RoverCanMaster can_master;
 public:
-    std::array<ArmActuator, 6> motors;
+    std::array<MyActuatorMotor, 6> motors;
     EndEffector end_effector;
 
-    ArmPayload(RoverCanMaster &can_master);
+    ArmPayload(GenericCan &can_bus);
     ~ArmPayload();
     void estop();
 };

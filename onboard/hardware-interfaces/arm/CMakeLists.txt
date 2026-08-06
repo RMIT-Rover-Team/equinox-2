@@ -16,6 +16,7 @@ set(SOURCES
     src/ArmPayload.cpp
     src/ArmActuator.cpp
     src/EndEffector.cpp
+    src/MyActuatorMotor.cpp
     # TODO: Change libuniversalcan subtree to a submodule or a subrepo. Newer commits in that repo have a CMakeLists so we can import that library like any other
     ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
     ../lib-universal-canbus/libuniversalcan/SocketCanWrapper.cpp
@@ -23,15 +24,15 @@ set(SOURCES
 )
 
 include(FetchContent)
-FetchContent_Declare(
-    myactuator
-    GIT_REPOSITORY git@github.com:RMIT-Rover-Team/rmit-utils-MyMon.git
-    GIT_TAG main
-    EXCLUDE_FROM_ALL
-    SYSTEM
-)
+# FetchContent_Declare(
+#     myactuator
+#     GIT_REPOSITORY git@github.com:RMIT-Rover-Team/rmit-utils-MyMon.git
+#     GIT_TAG main
+#     EXCLUDE_FROM_ALL
+#     SYSTEM
+# )
 
-FetchContent_MakeAvailable(myactuator)
+# FetchContent_MakeAvailable(myactuator)
 # target_link_libraries(Arm PRIVATE myactuator::MyActuatorMotor)
 add_library(ArmInterface ${SOURCES})
 
@@ -75,8 +76,8 @@ enable_testing()
 
 
 add_executable(ArmTests
-    ../test/ArmTest.cpp
-    ../test/VCanTest.cpp
+    ./test/ArmTests.cpp
+    ./test/VCanTest.cpp
     ${SOURCES}
 )
 
@@ -85,7 +86,6 @@ target_include_directories(ArmTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ArmTests PRIVATE 
     GTest::gtest_main
     GTest::gmock_main
-    myactuator
 )
 
 include(GoogleTest)
