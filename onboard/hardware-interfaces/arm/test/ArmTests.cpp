@@ -3,36 +3,44 @@
 
 
 TEST_F(VCANTest, EStop) {
+    auto expect_msg = [&](size_t index, char group_id, char device_id, char command) {
+        EXPECT_EQ(msgs[index].group_id, group_id);
+        EXPECT_EQ(msgs[index].device_id, device_id);
+        EXPECT_EQ(msgs[index].cmd, command);
+    };
+
     payload.estop();
 
     read_from_vcan();
-    EXPECT_EQ(msgs_recieved, 4);
+    ASSERT_EQ(msgs_recieved, 7);
 
-    // excavator arm actuator
-    EXPECT_EQ(msgs[0].group_id, GroupId::PAYLOAD);
-    EXPECT_EQ(msgs[0].cmd, CommandId::ESTOP);
-    EXPECT_EQ(msgs[0].device_id, 0x0);
+    // estop all 6 myactuators
+    for (int i = 0; i < 6; ++i) {
+        expect_msg(i, 1, i, 0x80);
+    }
+    
+    // end effector
+    expect_msg(6, 2, 0, CommandId::ESTOP);
+}
 
-    // bucket actuator
-    EXPECT_EQ(msgs[1].group_id, GroupId::PAYLOAD);
-    EXPECT_EQ(msgs[1].cmd, CommandId::ESTOP);
-    EXPECT_EQ(msgs[1].device_id, 0x1);
+TEST_F(VCANTest, SetMotorPos) {
+    auto expect_msg = [&](size_t index, char group_id, char device_id, char command) {
+        EXPECT_EQ(msgs[index].group_id, group_id);
+        EXPECT_EQ(msgs[index].device_id, device_id);
+        EXPECT_EQ(msgs[index].cmd, command);
+    };
 
-    //teeth actuator
-    EXPECT_EQ(msgs[2].group_id, GroupId::PAYLOAD);
-    EXPECT_EQ(msgs[2].cmd, CommandId::ESTOP);
-    EXPECT_EQ(msgs[2].device_id, 0x2);
+    double pos = 10.0;
+    payload.motors.at(0).setPosition(pos);
 
-    // paver magnet
-    EXPECT_EQ(msgs[3].group_id, GroupId::PAYLOAD);
-    EXPECT_EQ(msgs[3].cmd, CommandId::TXINT8);
-    EXPECT_EQ(msgs[3].device_id, 0x3);
-    EXPECT_EQ(msgs[3].data[0], 0);
+    read_from_vcan();
+    ASSERT_EQ(msgs_recieved, 1);
 
-    // internal states
-    // EXPECT_EQ(excavator.excavator_tilt.get_velocity(), 0);
-    // EXPECT_EQ(excavator.bucket_tilt.get_velocity(), 0);
-    // EXPECT_EQ(excavator.teeth.get_velocity(), 0);
-    // EXPECT_FALSE(excavator.paver_magnet.get_status());
+    expect_msg(0, 1, 0, 0xA4);
+
+    // [0] is speed limit, [1] is the position
+    int32_t angle[CanDataLength/4] = {0};
+    std::memcpy(&angle, msgs[0].data, CanDataLength);
+    EXPECT_EQ(angle[1], (int32_t)(pos*100));
 }
 

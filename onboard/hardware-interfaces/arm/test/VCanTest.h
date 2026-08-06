@@ -12,9 +12,10 @@
 #define CANBufferLen 32
 
 typedef struct {
-    GroupId group_id;
+    int group_id;
     uint8_t device_id;
-    CommandId cmd;
+    char cmd;
+    bool is_myactuator_reply;
     char data[CanDataLength];
 } CANData;
 

@@ -15,5 +15,8 @@ ArmPayload::ArmPayload(GenericCan &can_bus)
 ArmPayload::~ArmPayload() {}
 
 void ArmPayload::estop() {
-
+    for (MyActuatorMotor& motor : motors) {
+        motor.estop();
+    }
+    end_effector.estop();
 }

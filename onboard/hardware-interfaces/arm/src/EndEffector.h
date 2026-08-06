@@ -12,4 +12,5 @@ public:
 
     void set_grip_velocity(int16_t target_velocity);
     void set_poke_velocity(int16_t target_velocity);
+    void estop();
 };

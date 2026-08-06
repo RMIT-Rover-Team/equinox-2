@@ -14,7 +14,6 @@ include_directories(
 
 set(SOURCES
     src/ArmPayload.cpp
-    src/ArmActuator.cpp
     src/EndEffector.cpp
     src/MyActuatorMotor.cpp
     # TODO: Change libuniversalcan subtree to a submodule or a subrepo. Newer commits in that repo have a CMakeLists so we can import that library like any other
