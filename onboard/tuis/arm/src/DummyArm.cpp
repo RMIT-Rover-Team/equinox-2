@@ -27,7 +27,12 @@ int main() {
         for (int i = 0; i < 6; ++i) {
             if (can_bus.availableFrom(i + SingleMotorMsgIDOffset, MASK_ALL)) {
                 CANFrame msg = can_bus.readMSGFrom(i + SingleMotorMsgIDOffset, MASK_ALL, 100);
-            
+                uint8_t cmd = msg.data[0];
+                if (cmd != 0x92) {
+                    std::printf("Non getpos msg recieved 0x%02X\n", cmd);
+                    continue;
+                }
+
                 struct __attribute__((packed)) CAN_Message {
                     uint8_t command;
                     uint8_t padding[3];
@@ -36,15 +41,13 @@ int main() {
 
                 response_data.command = 0x92;
                 response_data.position = (int32_t)(100*positions[i]);
-                
-                std::cout << "responding to req for motor " << i << std::endl;
-                std::printf("%x %d\n", response_data.command, response_data.position);
-                
-                can_bus.writeMSG(0x0 + SingleMotorReplyIDOffset, (char*)&response_data, sizeof(response_data));
-                
-                // loop around and wait for next response
-                // because get_position is blocking, it will be a while until the next request
-                break;
+
+                std::printf("res motor %d pos %d\n", i, response_data.position);
+                can_bus.writeMSG(i + SingleMotorReplyIDOffset, (char*)&response_data, sizeof(response_data));
+            
+                // get_position is blocking
+                // send our response, then wait for the next request
+                std::this_thread::sleep_for(std::chrono::milliseconds(5));
             }
         }
 

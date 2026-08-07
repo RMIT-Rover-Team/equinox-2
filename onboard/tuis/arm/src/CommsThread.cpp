@@ -57,12 +57,11 @@ void CommsThread::run() {
             // get motor positions
             // note that get_position() is blocking, should probably make it non-blocking
             for (int i = 0; i < 6; ++i) {
-                std::cout << "getpos " << i << std::endl;
                 encoded_motor_positions.at(i) = payload.motors.at(i).getPosition();
             }
         }
 
         std::unique_lock<std::mutex> lock(m_target_state);
-        cv.wait_for(lock, std::chrono::milliseconds(100));
+        cv.wait_for(lock, std::chrono::milliseconds(500));
     }
 }

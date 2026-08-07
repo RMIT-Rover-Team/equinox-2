@@ -80,7 +80,7 @@ void print_controls() {
 }
 
 void print_status(ArmPayloadState &state, std::array<double, 6> encoded_positions, int selected_device) {
-    move_terminal_cursor_up(5);
+    move_terminal_cursor_up(7);
     for (int i = 0; i < 6; ++i) {
         std::cout << "Motor " << i+1
                   << (selected_device == i ? " << " : "    ")
