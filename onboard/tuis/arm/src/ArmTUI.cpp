@@ -30,43 +30,27 @@ int main() {
             std::lock_guard<std::mutex> lock(worker.m_target_state);
             print_status(worker.target_state, worker.encoded_motor_positions, selected_device);
         }
-        // blocks until char
+        // non blocking
         char c = getch();
-
-        switch (c) {
-            // esc key - estop
-            case 27:
-                worker.estop();
-                break;
-
-            case 'w':
-                --selected_device;
-                if (selected_device < 0) selected_device = 7;
-                break;
-
-            case 's':
-                ++selected_device;
-                if (selected_device > 7) selected_device = 0;
-                break;
-
-            case 'a':
-            case 'd':
-                {
-                    std::lock_guard<std::mutex> lock(worker.m_target_state);
-
-                    if (selected_device == 6) worker.target_state.grip_velocity += (c == 'a' ? -1 : 1);
-                    else if (selected_device == 7) worker.target_state.poke_velocity += (c == 'a' ? -1 : 1);
-                    else {
-                        // device 0-5
-                        worker.target_state.motor_positions.at(selected_device) += (c == 'a' ? -0.1 : 0.1);
-                    }
-                    
-                    worker.cv.notify_one();
-                }
-                break;
-
-            default:
-                break;
+        if (c == 0) std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        else if (c == 27) worker.estop();
+        else if (c == 'w') {
+            --selected_device;
+            if (selected_device < 0) selected_device = 7;
+        } else if (c == 's') {
+            ++selected_device;
+            if (selected_device > 7) selected_device = 0;
+        } else if (c == 'a' || c == 'd') {
+            std::lock_guard<std::mutex> lock(worker.m_target_state);
+    
+            if (selected_device == 6) worker.target_state.grip_velocity += (c == 'a' ? -1 : 1);
+            else if (selected_device == 7) worker.target_state.poke_velocity += (c == 'a' ? -1 : 1);
+            else {
+                // device 0-5
+                worker.target_state.motor_positions.at(selected_device) += (c == 'a' ? -0.1 : 0.1);
+            }
+            
+            worker.cv.notify_one();
         }
     }
 
@@ -80,19 +64,19 @@ void print_controls() {
 }
 
 void print_status(ArmPayloadState &state, std::array<double, 6> encoded_positions, int selected_device) {
-    move_terminal_cursor_up(7);
+    // move_terminal_cursor_up(7);
     for (int i = 0; i < 6; ++i) {
         std::cout << "Motor " << i+1
                   << (selected_device == i ? " << " : "    ")
                   << std::fixed << std::setprecision(2) << state.motor_positions.at(i)
                   << (selected_device == i ? "° >> " : "°    ")
-                  << "(" << encoded_positions.at(i) << "°)" << std::endl;
+                  << "(" << encoded_positions.at(i) << "°)" << "\n";
     }
 
     std::cout << "Grip vel"
               << (selected_device == 6 ? " << " : "    ")
               << state.grip_velocity
-              << (selected_device == 6 ? " >> " : "    ") << std::endl;
+              << (selected_device == 6 ? " >> " : "    ") << "\n";
 
     std::cout << "Poke vel"
               << (selected_device == 7 ? " << " : "    ")
@@ -113,7 +97,8 @@ char getch() {
     old.c_lflag &= ~ICANON; // disable canonical mode (input avaliable immediately, dont wait for newline)
     old.c_lflag &= ~ECHO;   // stop echo
 
-    old.c_cc[VMIN] = 1;     // block until char to read
+    // old.c_cc[VMIN] = 1;     // block until char to read
+    old.c_cc[VMIN] = 0;     // dont block if no char to read
     old.c_cc[VTIME] = 0;    // no timeout
 
     if (tcsetattr(0, TCSANOW, &old) < 0) perror("Error setting terminal to non-canonical mode (tcsetattr !ICANON)");
