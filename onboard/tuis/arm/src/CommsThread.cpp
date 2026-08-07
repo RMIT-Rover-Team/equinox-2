@@ -34,24 +34,32 @@ void CommsThread::run() {
             std::lock_guard<std::mutex> lock(m_target_state);
             std::lock_guard<std::mutex> lock2(m_payload);
 
-            // MyActuators
-            for (int i = 0; i < 6; ++i) {
-                if (target_state.motor_positions.at(i) != last_sent_state.motor_positions.at(i)) {
-                    payload.motors.at(i).setPosition(target_state.motor_positions.at(i));
-                    last_sent_state.motor_positions.at(i) = target_state.motor_positions.at(i);
+            if (target_stop_motors) {
+                for (int i = 0; i < 6; ++i) {
+                    payload.motors.at(i).stop();
                 }
-            }
-
-            // end effector grip
-            if (target_state.grip_velocity != last_sent_state.grip_velocity) {
-                payload.end_effector.set_grip_velocity(target_state.grip_velocity);
-                last_sent_state.grip_velocity = target_state.grip_velocity;
-            }
-
-            // end effector poke
-            if (target_state.poke_velocity != last_sent_state.poke_velocity) {
-                payload.end_effector.set_poke_velocity(target_state.poke_velocity);
-                last_sent_state.poke_velocity = target_state.poke_velocity;
+                payload.end_effector.set_grip_velocity(0);
+                payload.end_effector.set_poke_velocity(0);
+            } else {
+                // MyActuators
+                for (int i = 0; i < 6; ++i) {
+                    if (target_state.motor_positions.at(i) != last_sent_state.motor_positions.at(i)) {
+                        payload.motors.at(i).setPosition(target_state.motor_positions.at(i));
+                        last_sent_state.motor_positions.at(i) = target_state.motor_positions.at(i);
+                    }
+                }
+    
+                // end effector grip
+                if (target_state.grip_velocity != last_sent_state.grip_velocity) {
+                    payload.end_effector.set_grip_velocity(target_state.grip_velocity);
+                    last_sent_state.grip_velocity = target_state.grip_velocity;
+                }
+    
+                // end effector poke
+                if (target_state.poke_velocity != last_sent_state.poke_velocity) {
+                    payload.end_effector.set_poke_velocity(target_state.poke_velocity);
+                    last_sent_state.poke_velocity = target_state.poke_velocity;
+                }
             }
 
             // get motor positions

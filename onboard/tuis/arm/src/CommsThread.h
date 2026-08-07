@@ -50,5 +50,6 @@ public:
     std::condition_variable cv;
     std::mutex m_target_state;
     ArmPayloadState target_state = {};
+    bool target_stop_motors = false;
     std::array<double, 6> encoded_motor_positions;
 };

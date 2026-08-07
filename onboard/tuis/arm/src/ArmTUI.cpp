@@ -35,6 +35,7 @@ int main() {
         char c = getch();
         if (c == 0) std::this_thread::sleep_for(std::chrono::milliseconds(50));
         else if (c == 27) worker.estop();
+        else if (c == ' ') worker.target_stop_motors = !worker.target_stop_motors;
         else if (c == 'w') {
             --selected_device;
             if (selected_device < 0) selected_device = 7;
