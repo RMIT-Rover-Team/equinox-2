@@ -21,6 +21,7 @@ int main() {
     WrappedCANBus can_bus("vcan0");
     CommsThread worker(can_bus);
     worker.start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(50)); // wait for myactuators to start up
 
     int selected_device = 0;
 
@@ -60,28 +61,32 @@ int main() {
 
 void print_controls() {
     // 5 newlines at the end so there is room for print_status to overwrite
-    std::cout << "----- Controls -----\n  W/S: Select device\n A/D: Control device\n  Space: Stop\n  Esc: Estop\n\n\n\n\n" << std::endl;
+    std::cout << "----- Controls -----\n  W/S: Select device\n A/D: Control device\n  Space: Stop\n  Esc: Estop\n\n\n\n\n\n\n\n\n" << std::endl;
 }
 
 void print_status(ArmPayloadState &state, std::array<double, 6> encoded_positions, int selected_device) {
-    // move_terminal_cursor_up(7);
+    move_terminal_cursor_up(8);
+    // std::cout << "\033[2J\033[1;1H";
     for (int i = 0; i < 6; ++i) {
         std::cout << "Motor " << i+1
-                  << (selected_device == i ? " << " : "    ")
+                  << (selected_device == i ? "  << " : "     ")
+                  << (state.motor_positions.at(i) >= 0.0 ? " " : "")
                   << std::fixed << std::setprecision(2) << state.motor_positions.at(i)
                   << (selected_device == i ? "° >> " : "°    ")
-                  << "(" << encoded_positions.at(i) << "°)" << "\n";
+                  << "(" << encoded_positions.at(i) << "°)" << "        \n";
     }
 
     std::cout << "Grip vel"
               << (selected_device == 6 ? " << " : "    ")
+              << (state.grip_velocity >= 0 ? " " : "")
               << state.grip_velocity
-              << (selected_device == 6 ? " >> " : "    ") << "\n";
+              << (selected_device == 6 ? " >> " : "    ") << "        \n";
 
     std::cout << "Poke vel"
               << (selected_device == 7 ? " << " : "    ")
+              << (state.poke_velocity >= 0 ? " " : "")
               << state.poke_velocity
-              << (selected_device == 7 ? " >> " : "    ") << std::endl;
+              << (selected_device == 7 ? " >> " : "    ") << "        " << std::endl;
 }
 
 
