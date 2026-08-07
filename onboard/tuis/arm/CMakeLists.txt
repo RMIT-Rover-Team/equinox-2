@@ -10,19 +10,15 @@ project(ArmTUI VERSION 1.0
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ../../hardware-interfaces/lib-universal-canbus/libuniversalcan
-    ../../hardware-interfaces/arm
+    ../../hardware-interfaces/arm/src
 )
 
 set(SOURCES
     src/ArmTUI.cpp
     src/CommsThread.cpp
-    ../../hardware-interfaces/arm/src/CanDevice.cpp
-    ../../hardware-interfaces/arm/src/Drill.cpp
-    ../../hardware-interfaces/arm/src/GenericMotor.cpp
-    ../../hardware-interfaces/arm/src/Heater.cpp
-    ../../hardware-interfaces/arm/src/Microscope.cpp
     ../../hardware-interfaces/arm/src/ArmPayload.cpp
-    ../../hardware-interfaces/arm/src/StepperMotor.cpp
+    ../../hardware-interfaces/arm/src/EndEffector.cpp
+    ../../hardware-interfaces/arm/src/MyActuatorMotor.cpp
 
     ../../hardware-interfaces/lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
     ../../hardware-interfaces/lib-universal-canbus/libuniversalcan/SocketCanWrapper.cpp

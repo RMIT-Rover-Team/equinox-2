@@ -5,7 +5,7 @@
 #include "CommsThread.h"
 
 void print_controls();
-void print_status(SciencePayloadState &state, int selected_device);
+void print_status(ArmPayloadState &state, std::array<double, 6> encoded_positions, int selected_device);
 char getch();
 void move_terminal_cursor_up(int lines);
 
@@ -18,7 +18,8 @@ int main() {
     // std::cout << "-----  Controls -----\n  W: Excavator up\n  S: Excavator down\n  A: Bucket up\n  D: Bucket down\n  Space: Stop\n  Esc: Estop\n" << std::endl;
 
     print_controls();
-    CommsThread worker;
+    WrappedCANBus can_bus("vcan0");
+    CommsThread worker(can_bus);
     worker.start();
 
     int selected_device = 0;
@@ -27,7 +28,7 @@ int main() {
         // std::cout << "\rExcavator velocity: " << worker.get_excavator_velocity() << " Bucket velocity: " << worker.get_bucket_velocity() << std::flush;
         {
             std::lock_guard<std::mutex> lock(worker.m_target_state);
-            print_status(worker.target_state, selected_device);
+            print_status(worker.target_state, worker.encoded_motor_positions, selected_device);
         }
         // blocks until char
         char c = getch();
@@ -40,12 +41,12 @@ int main() {
 
             case 'w':
                 --selected_device;
-                if (selected_device < 0) selected_device = 4;
+                if (selected_device < 0) selected_device = 7;
                 break;
 
             case 's':
                 ++selected_device;
-                if (selected_device > 4) selected_device = 0;
+                if (selected_device > 7) selected_device = 0;
                 break;
 
             case 'a':
@@ -53,11 +54,13 @@ int main() {
                 {
                     std::lock_guard<std::mutex> lock(worker.m_target_state);
 
-                    if (selected_device == 0) worker.target_state.heater_temperature += (c == 'a' ? -1 : 1);
-                    else if (selected_device == 1) worker.target_state.drill_height += (c == 'a' ? -0.1 : 0.1);
-                    else if (selected_device == 2) worker.target_state.drill_enabled = !worker.target_state.drill_enabled;
-                    else if (selected_device == 3) worker.target_state.microscope_height += (c == 'a' ? -0.1 : 0.1);
-                    else if (selected_device == 4) worker.target_state.microscope_swivel += (c == 'a' ? -0.1 : 0.1);
+                    if (selected_device == 6) worker.target_state.grip_velocity += (c == 'a' ? -1 : 1);
+                    else if (selected_device == 7) worker.target_state.poke_velocity += (c == 'a' ? -1 : 1);
+                    else {
+                        // device 0-5
+                        worker.target_state.motor_positions.at(selected_device) += (c == 'a' ? -0.1 : 0.1);
+                    }
+                    
                     worker.cv.notify_one();
                 }
                 break;
@@ -76,13 +79,25 @@ void print_controls() {
     std::cout << "----- Controls -----\n  W/S: Select device\n A/D: Control device\n  Space: Stop\n  Esc: Estop\n\n\n\n\n" << std::endl;
 }
 
-void print_status(SciencePayloadState &state, int selected_device) {
+void print_status(ArmPayloadState &state, std::array<double, 6> encoded_positions, int selected_device) {
     move_terminal_cursor_up(5);
-    std::cout << "Heater Temperature " << (selected_device == 0 ? "<< " : "   ") << std::setw(3) << state.heater_temperature << (selected_device == 0 ? " >>" : "   ") << std::endl;
-    std::cout << "Drill Height       " << (selected_device == 1 ? "<< " : "   ") << std::setw(3) << state.drill_height << (selected_device == 1 ? " >>" : "   ") << std::endl;
-    std::cout << "Drill Enabled      " << (selected_device == 2 ? "<< " : "   ") << std::setw(3) << (state.drill_enabled ? "ON" : "OFF") << (selected_device == 2 ? " >>" : "   ") << std::endl;
-    std::cout << "Microscope Height  " << (selected_device == 3 ? "<< " : "   ") << std::setw(3) << state.microscope_height << (selected_device == 3 ? " >>" : "   ") << std::endl;
-    std::cout << "Microscope Swivel  " << (selected_device == 4 ? "<< " : "   ") << std::setw(3) << state.microscope_swivel << (selected_device == 4 ? " >>" : "   ") << std::endl;
+    for (int i = 0; i < 6; ++i) {
+        std::cout << "Motor " << i+1
+                  << (selected_device == i ? " << " : "    ")
+                  << std::fixed << std::setprecision(2) << state.motor_positions.at(i)
+                  << (selected_device == i ? "° >> " : "°    ")
+                  << "(" << encoded_positions.at(i) << "°)" << std::endl;
+    }
+
+    std::cout << "Grip vel"
+              << (selected_device == 6 ? " << " : "    ")
+              << state.grip_velocity
+              << (selected_device == 6 ? " >> " : "    ") << std::endl;
+
+    std::cout << "Poke vel"
+              << (selected_device == 7 ? " << " : "    ")
+              << state.poke_velocity
+              << (selected_device == 7 ? " >> " : "    ") << std::endl;
 }
 
 

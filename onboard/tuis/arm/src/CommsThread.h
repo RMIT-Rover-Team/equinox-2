@@ -15,12 +15,10 @@ enum ThreadCommand {
 };
 
 typedef struct {
-    int16_t heater_temperature;
-    double drill_height;
-    bool drill_enabled;
-    double microscope_height;
-    double microscope_swivel;
-} SciencePayloadState;
+    std::array<double, 6> motor_positions;
+    int16_t poke_velocity;
+    int16_t grip_velocity;
+} ArmPayloadState;
 
 
 class CommsThread {
@@ -29,7 +27,7 @@ private:
     // worker thread only
 
     /// if != target, need to send new packet
-    SciencePayloadState last_sent_state = {};
+    ArmPayloadState last_sent_state = {};
 
     // both worker and main thread
 
@@ -41,7 +39,7 @@ private:
 
     void run();
 public:
-    CommsThread();
+    CommsThread(GenericCan &can_bus);
     ~CommsThread();
 
     void start();
@@ -50,5 +48,6 @@ public:
 
     std::condition_variable cv;
     std::mutex m_target_state;
-    SciencePayloadState target_state = {};
+    ArmPayloadState target_state = {};
+    std::array<double, 6> encoded_motor_positions;
 };
