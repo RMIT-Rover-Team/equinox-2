@@ -27,7 +27,11 @@ set(SOURCES
 
 add_executable(ArmTUI ${SOURCES})
 
-
+add_executable(
+    DummyArm
+    src/DummyArm.cpp
+    ../../hardware-interfaces/lib-universal-canbus/libuniversalcan/SocketCanWrapper.cpp
+)
 
 #
 # SPDLOG

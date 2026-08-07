@@ -57,6 +57,7 @@ void CommsThread::run() {
             // get motor positions
             // note that get_position() is blocking, should probably make it non-blocking
             for (int i = 0; i < 6; ++i) {
+                std::cout << "getpos " << i << std::endl;
                 encoded_motor_positions.at(i) = payload.motors.at(i).getPosition();
             }
         }
