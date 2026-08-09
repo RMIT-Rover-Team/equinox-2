@@ -14,7 +14,6 @@ include_directories(
 
 set(SOURCES
     src/Gimbal.cpp
-    src/GimbalServo.cpp
     # TODO: Change libuniversalcan subtree to a submodule or a subrepo. Newer commits in that repo have a CMakeLists so we can import that library like any other
     ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
     ../lib-universal-canbus/libuniversalcan/SocketCanWrapper.cpp
