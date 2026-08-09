@@ -2,5 +2,5 @@
 
 
 
-Gimbal::Gimbal() : servo(0x01, RoverCanMaster::get_instance()) {}
+Gimbal::Gimbal(RoverCanMaster& can_master) : can_master(can_master), servo(0x01, can_master) {}
 Gimbal::~Gimbal() {}

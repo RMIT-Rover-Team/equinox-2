@@ -1,7 +1,8 @@
 #pragma once
+
 #include <stdint.h>
-#include "../GenericCan.h"
-#include "../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
+#include "GenericCan.h"
+#include "RoverCanMaster.h"
 #include "spdlog/spdlog.h"
 
 // Controls the gimbal servo via CAN bus
