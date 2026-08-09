@@ -11,14 +11,12 @@ void move_terminal_cursor_up(int lines);
 
 
 int main() {
-    // what tui library are we using
-    // otherwise were using ncurses
-
-    // spdlog::set_level(spdlog::level::off);
-    // std::cout << "-----  Controls -----\n  W: Excavator up\n  S: Excavator down\n  A: Bucket up\n  D: Bucket down\n  Space: Stop\n  Esc: Estop\n" << std::endl;
+    std::cout << "If you're testing this TUI, make sure to also run DummyArm\nEnter name of CAN interface: ";
+    std::string can_interface;
+    std::cin >> can_interface;
 
     print_controls();
-    WrappedCANBus can_bus("vcan0");
+    WrappedCANBus can_bus(can_interface.c_str());
     CommsThread worker(can_bus);
     worker.start();
     std::this_thread::sleep_for(std::chrono::milliseconds(50)); // wait for myactuators to start up
@@ -26,13 +24,17 @@ int main() {
     int selected_device = 0;
 
     while (true) {
-        // std::cout << "\rExcavator velocity: " << worker.get_excavator_velocity() << " Bucket velocity: " << worker.get_bucket_velocity() << std::flush;
         {
             std::lock_guard<std::mutex> lock(worker.m_target_state);
             print_status(worker.target_state, worker.encoded_motor_positions, selected_device);
         }
-        // non blocking
+
+        // unlike the other TUIs, this getch() is non-blocking
+        // although it is still in raw mode
+        // so user doesn't need to press enter to flush the buffer
         char c = getch();
+
+        // if no character typed, sleep
         if (c == 0) std::this_thread::sleep_for(std::chrono::milliseconds(50));
         else if (c == 27) worker.estop();
         else if (c == ' ') worker.target_stop_motors = !worker.target_stop_motors;
@@ -62,12 +64,11 @@ int main() {
 
 void print_controls() {
     // 5 newlines at the end so there is room for print_status to overwrite
-    std::cout << "----- Controls -----\n  W/S: Select device\n A/D: Control device\n  Space: Stop\n  Esc: Estop\n\n\n\n\n\n\n\n\n" << std::endl;
+    std::cout << "----- Controls -----\n  W/S: Select device\n  A/D: Control device\n  Space: Stop\n  Esc: Estop\n\n\n\n\n\n\n\n\n" << std::endl;
 }
 
 void print_status(ArmPayloadState &state, std::array<double, 6> encoded_positions, int selected_device) {
     move_terminal_cursor_up(8);
-    // std::cout << "\033[2J\033[1;1H";
     for (int i = 0; i < 6; ++i) {
         std::cout << "Motor " << i+1
                   << (selected_device == i ? "  << " : "     ")
@@ -93,7 +94,7 @@ void print_status(ArmPayloadState &state, std::array<double, 6> encoded_position
 
 // https://stackoverflow.com/questions/421860/capture-characters-from-standard-input-without-waiting-for-enter-to-be-pressed
 // https://www.man7.org/linux/man-pages/man3/termios.3.html
-/// Gets a character in non-canonical mode (blocks until char)
+/// Gets a character in non-canonical mode, AKA raw mode (non-blocking)
 char getch() {
     char buf = 0;
     struct termios old = {0};

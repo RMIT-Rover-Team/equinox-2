@@ -20,7 +20,6 @@ int main() {
     const double SNAP_DISTANCE = 0.1;
     std::array<double, 6> target_positions = {0};
     std::array<double, 6> positions = {0};
-    
 
     while (true) {
         // update positions towards targets
@@ -53,7 +52,6 @@ int main() {
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
-
 
     return 0;
 }
