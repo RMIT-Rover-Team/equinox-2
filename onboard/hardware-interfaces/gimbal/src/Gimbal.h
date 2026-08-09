@@ -14,4 +14,5 @@ public:
     void estop();
     void set_tilt_speed(int8_t speed);
     void set_pan_position(int8_t position);
+    void set_tilt_and_pan(int8_t target_tilt_speed, int8_t target_pan_position);
 };

@@ -24,7 +24,6 @@ void GimbalServo::estop() {
     spdlog::critical("ESTOP GIMBAL SERVO {0:x}", device_id);
 
     tilt_speed = 0.0;
-    pan_position = 0.0;
     
     can_master.estop(GroupId::ONBOARD, device_id);
 }
