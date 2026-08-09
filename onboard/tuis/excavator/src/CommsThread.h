@@ -45,7 +45,7 @@ private:
 
     void run();
 public:
-    CommsThread();
+    CommsThread(const char *can_interface);
     ~CommsThread();
 
     void start();

@@ -1,7 +1,7 @@
 #include "CommsThread.h"
 
 
-CommsThread::CommsThread() : can_bus("can2"), can_master(can_bus, 0x0), excavator(can_master) {}
+CommsThread::CommsThread(const char *can_interface) : can_bus(can_interface), can_master(can_bus, 0x0), excavator(can_master) {}
 CommsThread::~CommsThread() {
     stop();
 }

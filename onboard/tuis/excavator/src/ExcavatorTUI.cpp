@@ -5,7 +5,7 @@
 
 
 char getch();
-
+void move_terminal_cursor_up(int lines);
 
 int main() {
     // what tui library are we using
@@ -13,13 +13,18 @@ int main() {
 
     spdlog::set_level(spdlog::level::off);
 
-    CommsThread worker;
+    std::cout << "Enter name of CAN interface: ";
+    std::string can_interface;
+    std::cin >> can_interface;
+
+    CommsThread worker(can_interface.c_str());
     worker.start();
 
     std::cout << "----- Controls -----\n  W: Excavator up\n  S: Excavator down\n  A: Bucket up\n  D: Bucket down\n  Space: Stop\n  Esc: Estop\n" << std::endl;
 
     while (true) {
-        std::cout << "\rExcavator velocity: " << worker.get_excavator_velocity() << " Bucket velocity: " << worker.get_bucket_velocity() << std::flush;
+        move_terminal_cursor_up(1);
+        std::cout << "\rExcavator velocity: " << worker.get_excavator_velocity() << " Bucket velocity: " << worker.get_bucket_velocity() << "            " << std::endl;
 
         // blocks until char
         char c = getch();
@@ -99,4 +104,8 @@ char getch() {
         if (tcsetattr(0, TCSADRAIN, &old) < 0) perror("Error resetting terminal to canonical mode (tcsetattr ICANON)");
 
         return buf;
+}
+
+void move_terminal_cursor_up(int lines) {
+    std::cout << "\033[" << lines << "A";
 }
