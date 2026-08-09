@@ -8,9 +8,6 @@ char getch();
 void move_terminal_cursor_up(int lines);
 
 int main() {
-    // what tui library are we using
-    // otherwise were using ncurses
-
     spdlog::set_level(spdlog::level::off);
 
     std::cout << "Enter name of CAN interface: ";
