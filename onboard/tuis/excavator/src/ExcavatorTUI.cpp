@@ -8,9 +8,6 @@ char getch();
 void move_terminal_cursor_up(int lines);
 
 int main() {
-    // what tui library are we using
-    // otherwise were using ncurses
-
     spdlog::set_level(spdlog::level::off);
 
     std::cout << "Enter name of CAN interface: ";
@@ -26,7 +23,7 @@ int main() {
         move_terminal_cursor_up(1);
         std::cout << "\rExcavator velocity: " << worker.get_excavator_velocity() << " Bucket velocity: " << worker.get_bucket_velocity() << "            " << std::endl;
 
-        // blocks until char
+        // blocks until char typed (but user doesnt need to press enter to flush the buffer)
         char c = getch();
 
         int16_t v;

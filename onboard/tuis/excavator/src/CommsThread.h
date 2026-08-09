@@ -18,14 +18,13 @@ enum ThreadCommand {
 class CommsThread {
 private:
     std::thread worker;
-    // worker thread only
+
+    // all accessed on both worker and main thread
 
     /// if != target, need to send new packet
     int16_t last_sent_excavator_velocity;
     int16_t last_sent_bucket_velocity;
 
-    // both worker and main thread
-    
     std::mutex m_target_velocity;
     int16_t excavator_target_velocity = 0;
     int16_t bucket_target_velocity = 0;
