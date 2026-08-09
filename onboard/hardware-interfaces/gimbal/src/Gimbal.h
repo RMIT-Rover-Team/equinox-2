@@ -6,9 +6,12 @@
 class Gimbal {
 private:
     RoverCanMaster can_master;
+    GimbalServo servo;
 
 public:
     Gimbal(RoverCanMaster& can_master);
     ~Gimbal();
-    GimbalServo servo;
+    void estop();
+    void set_tilt_speed(int8_t speed);
+    void set_pan_position(int8_t position);
 };

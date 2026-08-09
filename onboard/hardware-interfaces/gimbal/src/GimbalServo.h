@@ -19,4 +19,7 @@ public:
     ~GimbalServo();
     void set_gimbal_movement(int8_t target_tilt_speed, int8_t target_pan_position);
     void estop();
+
+    int8_t get_tilt_speed() const { return tilt_speed; }
+    int8_t get_pan_position() const { return pan_position; }
 };
