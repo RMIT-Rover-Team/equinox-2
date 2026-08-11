@@ -9,7 +9,7 @@
 # Or if I wanted to use a port number
 #   Name: 1234@localhost
 
-Name: Drive@192.168.40.201
+Name: Drive@localhost
 
 RequestFormat {
     left_stick: float

@@ -32,8 +32,8 @@ if __name__ == "__main__":
 
 
         #Float converstions to int as per defcom file , please remove if dtype is changed to float in defcom file
-        left_stick=int(left_raw*-40) #assuming axis values are between -1.0 and 1.0
-        right_stick=int(right_raw*-40)
+        left_stick=int(left_raw*-500) #assuming axis values are between -1.0 and 1.0
+        right_stick=int(right_raw*-500)
         right_bumper=int(bumper_raw)
         dpad_up=int(dpad_up)
         dpad_down=int(dpad_down)
