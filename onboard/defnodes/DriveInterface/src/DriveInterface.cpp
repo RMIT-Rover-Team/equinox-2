@@ -4,11 +4,12 @@ DriveInterface::DriveInterface (
     TorqueHandler& torque_handler,
     const std::string& defcom_template,
     const char* can_interface
-) : torque_handler(torque_handler), subscriber(defcom_template) {}
-
-void DriveInterface::run() {
+) : torque_handler(torque_handler), subscriber(defcom_template) {
     torque_handler.setMode(TorqueDriveMode::UNLOCKED_VELOCITY);
     torque_handler.setSpeed(0,0);
+}
+
+void DriveInterface::run() {
     torque_handler.enable();
     try {
         std::cout << "Listening for controller input from DEFCOM...\n";
