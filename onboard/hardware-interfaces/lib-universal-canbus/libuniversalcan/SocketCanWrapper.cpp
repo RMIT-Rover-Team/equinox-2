@@ -45,8 +45,8 @@ WrappedCANBus::WrappedCANBus(const char* interfaceName){
 }
 
 CANFrame WrappedCANBus::readFromSocket() {
-    CANFrame temp_frame;
 
+    CANFrame temp_frame;
     struct can_frame rawFrame;
     int nbytes = read(s, &rawFrame, sizeof(can_frame));
 
@@ -61,14 +61,12 @@ CANFrame WrappedCANBus::readFromSocket() {
         return {};
     }
 
-    temp_frame.can_id &= 0xFFF;
-
     //Convert to CANFrame
-    temp_frame.can_id = rawFrame.can_id;
     temp_frame.can_dlc = rawFrame.can_dlc;
     memcpy(temp_frame.data, rawFrame.data, rawFrame.can_dlc);
 
     //printf("IN << ");dumpBuffer(temp_frame.data, temp_frame.can_dlc);
+    temp_frame.can_id = rawFrame.can_id & 0xFFF;
 
     return temp_frame;
 }

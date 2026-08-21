@@ -37,7 +37,7 @@ uint16_t RoverCanMaster::generate_header(uint8_t group, uint8_t device, uint8_t 
 }
 
 void RoverCanMaster::ping(uint8_t group, uint8_t device) {
-  printf("Ping\n");
+  // printf("Ping\n");
   Command myCommand;
 
   // WRITE MSG
@@ -47,7 +47,7 @@ void RoverCanMaster::ping(uint8_t group, uint8_t device) {
 }
 
 void RoverCanMaster::estop(uint8_t group, uint8_t device) {
-  printf("Estop\n");
+  // printf("Estop\n");
   Command myCommand;
 
   // WRITE MSG
@@ -56,33 +56,33 @@ void RoverCanMaster::estop(uint8_t group, uint8_t device) {
 }   
 
 void RoverCanMaster::tx_int8(uint8_t group, uint8_t device, int8_t numbers[8]) {
-  printf("Tx_int8");
+  // printf("Tx_int8");
   Command myCommand;
 
   uint16_t canbus_header = generate_header(group, device, CommandId::TXINT8);
 
   for (int i = 0; i < 8; i++) {
-    myCommand.addInt8(numbers[i]);
+    myCommand.addUInt8((uint8_t)numbers[i]);
   }
 
   can.writeMSG(canbus_header, (char*)myCommand.getBuffer(), myCommand.getBufferLength());
 }
 
 void RoverCanMaster::tx_int16(uint8_t group, uint8_t device, int16_t numbers[4]) {
-  printf("Tx_int16");
+  // printf("Tx_int16");
   Command myCommand;
 
   uint16_t canbus_header = generate_header(group, device, CommandId::TXINT16);
 
   for (int i = 0; i < 4; i++) {
-    myCommand.addInt16(numbers[i]);
+    myCommand.addUInt16((uint16_t)numbers[i]);
   }
 
   can.writeMSG(canbus_header, (char*)myCommand.getBuffer(), myCommand.getBufferLength());
 }
 
 void RoverCanMaster::tx_float(uint8_t group, uint8_t device, float numbers[4]) {
-  printf("Tx_float");
+  // printf("Tx_float");
   Command myCommand;
 
   uint16_t canbus_header = generate_header(group, device, CommandId::TXFLOAT);
@@ -95,7 +95,7 @@ void RoverCanMaster::tx_float(uint8_t group, uint8_t device, float numbers[4]) {
 }
 
 void RoverCanMaster::tx_data(uint8_t group, uint8_t device, uint8_t data[8]) {
-  printf("Tx_data");
+  // printf("Tx_data");
   Command myCommand;
   
   uint16_t canbus_header = generate_header(group, device, CommandId::TXDATA);
