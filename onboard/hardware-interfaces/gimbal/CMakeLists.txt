@@ -3,8 +3,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(Excavator VERSION 1.0
-                  DESCRIPTION "Excavator hardware interface"
+project(Gimbal VERSION 1.0
+                  DESCRIPTION "Gimbal hardware interface"
                   LANGUAGES CXX)
 
 include_directories(
@@ -13,17 +13,14 @@ include_directories(
 )
 
 set(SOURCES
-    src/ExcavatorPayload.cpp
-    src/ExcavatorActuator.cpp
-    src/TeethActuator.cpp
-    src/PaverMagnet.cpp
+    src/Gimbal.cpp
     # TODO: Change libuniversalcan subtree to a submodule or a subrepo. Newer commits in that repo have a CMakeLists so we can import that library like any other
     ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
     ../lib-universal-canbus/libuniversalcan/SocketCanWrapper.cpp
     ../lib-universal-canbus/libuniversalcan/CommandUtils.cpp
 )
 
-add_library(Excavator ${SOURCES})
+add_library(Gimbal ${SOURCES})
 
 
 
@@ -40,7 +37,7 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(spdlog)
-target_link_libraries(Excavator PRIVATE spdlog::spdlog)
+target_link_libraries(Gimbal PRIVATE spdlog::spdlog)
 
 
 
@@ -64,19 +61,19 @@ enable_testing()
 
 
 
-add_executable(ExcavatorTests
-    test/ExcavatorTest.cpp
+add_executable(GimbalTests
+    test/GimbalTest.cpp
     test/VCanTest.cpp
     ${SOURCES}
 )
 
-target_include_directories(ExcavatorTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(GimbalTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(ExcavatorTests PRIVATE 
+target_link_libraries(GimbalTests PRIVATE 
     GTest::gtest_main
     GTest::gmock_main
     spdlog::spdlog
 )
 
 include(GoogleTest)
-gtest_discover_tests(ExcavatorTests)
+gtest_discover_tests(GimbalTests)
