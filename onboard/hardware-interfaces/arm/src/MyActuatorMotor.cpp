@@ -77,7 +77,7 @@ double MyActuatorMotor::getPosition() {
         }
 
         //Check if the command matches
-        printf("Got %02x\n",(uint8_t)recv.data[0]);
+        // printf("Got %02x\n",(uint8_t)recv.data[0]);
         if ((uint8_t)recv.data[0] == 0x92){
             break;
         } 
