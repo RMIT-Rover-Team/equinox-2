@@ -6,13 +6,13 @@
 
 #define CAN_BUS_NAME "can0"
 
-class ExcavatorPayload {
+class ArmPayload {
 private:
     WrappedCANBus can_bus;                  // concrete CAN implementation
     RoverCanMaster can_master;              // CAN logic handler
     ExcavatorActuator actuator1;
     ExcavatorActuator actuator2;
 public:
-    ExcavatorPayload();
-    ~ExcavatorPayload();
+    ArmPayload();
+    ~ArmPayload();
 };
