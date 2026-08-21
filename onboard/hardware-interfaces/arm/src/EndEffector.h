@@ -1,5 +1,5 @@
 #pragma once
-#include "../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
+#include "RoverCanMaster.h"
 
 
 class EndEffector {
