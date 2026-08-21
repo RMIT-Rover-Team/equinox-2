@@ -1,11 +1,14 @@
 #include <iostream>
 #include <iomanip>
+#include <sstream>
+#include <string>
 #include <unistd.h>
 #include <termios.h>
 #include "CommsThread.h"
 
 void print_controls();
 void print_status(SciencePayloadState &state, int selected_device);
+std::string format_number(double number);
 char getch();
 void move_terminal_cursor_up(int lines);
 
@@ -78,13 +81,18 @@ void print_controls() {
 
 void print_status(SciencePayloadState &state, int selected_device) {
     move_terminal_cursor_up(5);
-    std::cout << "Heater Temperature " << (selected_device == 0 ? "<< " : "   ") << std::setw(3) << state.heater_temperature << (selected_device == 0 ? " >>" : "   ") << std::endl;
-    std::cout << "Drill Height       " << (selected_device == 1 ? "<< " : "   ") << std::setw(3) << state.drill_height << (selected_device == 1 ? " >>" : "   ") << std::endl;
-    std::cout << "Drill Enabled      " << (selected_device == 2 ? "<< " : "   ") << std::setw(3) << (state.drill_enabled ? "ON" : "OFF") << (selected_device == 2 ? " >>" : "   ") << std::endl;
-    std::cout << "Microscope Height  " << (selected_device == 3 ? "<< " : "   ") << std::setw(3) << state.microscope_height << (selected_device == 3 ? " >>" : "   ") << std::endl;
-    std::cout << "Microscope Swivel  " << (selected_device == 4 ? "<< " : "   ") << std::setw(3) << state.microscope_swivel << (selected_device == 4 ? " >>" : "   ") << std::endl;
+    std::cout << "Heater Temperature " << (selected_device == 0 ? "<< " : "   ") << format_number(state.heater_temperature) << (selected_device == 0 ? " >>" : "   ") << std::endl;
+    std::cout << "Drill Height       " << (selected_device == 1 ? "<< " : "   ") << format_number(state.drill_height) << (selected_device == 1 ? " >>" : "   ") << std::endl;
+    std::cout << "Drill Enabled      " << (selected_device == 2 ? "<< " : "   ") << std::setw(7) << (state.drill_enabled ? "ON" : "OFF") << (selected_device == 2 ? " >>" : "   ") << std::endl;
+    std::cout << "Microscope Height  " << (selected_device == 3 ? "<< " : "   ") << format_number(state.microscope_height) << (selected_device == 3 ? " >>" : "   ") << std::endl;
+    std::cout << "Microscope Swivel  " << (selected_device == 4 ? "<< " : "   ") << format_number(state.microscope_swivel) << (selected_device == 4 ? " >>" : "   ") << std::endl;
 }
 
+std::string format_number(double number) {
+    std::ostringstream output;
+    output << std::fixed << std::setprecision(1) << std::setw(7) << number;
+    return output.str();
+}
 
 // https://stackoverflow.com/questions/421860/capture-characters-from-standard-input-without-waiting-for-enter-to-be-pressed
 // https://www.man7.org/linux/man-pages/man3/termios.3.html
