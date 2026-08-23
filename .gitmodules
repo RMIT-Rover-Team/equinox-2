@@ -2,3 +2,6 @@
 	path = onboard/hardware-interfaces/lib-universal-canbus
 	url = git@github.com:RMIT-Rover-Team/rmit-lib-universal-canbus.git
 	branch = feat/implement-canbus-v3
+[submodule "onboard/hardware-interfaces/led/external/rpi_ws281x"]
+	path = onboard/hardware-interfaces/led/external/rpi_ws281x
+	url = git@github.com:jgarff/rpi_ws281x.git

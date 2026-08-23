@@ -43,7 +43,7 @@ void APA102C<Count>::rebuild_wire_frame() noexcept {
 template <std::size_t Count>
 void APA102C<Count>::set_static_color(RGB color) {
   for (auto& pixel : pixels_) {
-    pixels_.color = color;
+    pixel.color = color;
   }
   rebuild_wire_frame();
   write(fd_, wire_frame_.data(), wire_frame_.size());

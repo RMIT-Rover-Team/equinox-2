@@ -4,7 +4,7 @@ struct RGB {
   uint8_t red{}, green{}, blue{};
 };
 
-enum LEDStates{
+enum LEDStates {
   Safe = 0,
   Motion = 1,
   AutoPrep = 2,
@@ -23,7 +23,7 @@ namespace LedColors {
   inline constexpr RGB Magenta {255,   0, 255};  // conflict
   inline constexpr RGB Red     {255,   0,   0};  // error
   inline constexpr RGB Black   {  0,   0,   0};  // default
-}
+};
 
 inline RGB get_state_color(LEDStates state) { 
   switch(state) {
@@ -44,4 +44,4 @@ inline RGB get_state_color(LEDStates state) {
     default:
       return LedColors::Black;
   }
-}
+};

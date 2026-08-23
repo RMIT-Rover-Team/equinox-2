@@ -8,11 +8,11 @@
 #include <linux/spi/spidev.h>
 #include <array>
 
-#include "Led.h"
+#include "LedTypes.h"
 
 struct APA102Pixel {
-    RGB color{};
-    std::uint8_t brightness{31};
+  RGB color{};
+  std::uint8_t brightness{31};
 };
 
 template <std::size_t Count>
@@ -21,7 +21,7 @@ private:
   static constexpr std::size_t EndBytes = (Count + 14) / 16;  // Assumes Polulus end frame findings
   static constexpr std::size_t WireFrameSize =
     4 +             // start frame
-    4 * Count +  // LED frames
+    4 * Count +     // LED frames
     4;              // end clocks
   
   int fd_{-1};
@@ -45,5 +45,4 @@ public:
   }
   
   void set_static_color(RGB color);
-  
 };
