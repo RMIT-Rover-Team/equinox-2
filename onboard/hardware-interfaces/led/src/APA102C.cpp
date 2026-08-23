@@ -6,7 +6,7 @@
 #include "APA102C.h"
 
 template <std::size_t Count>
-APA102C<Count>::APA102C(std::string_view device, std::uint32_t speed) {
+APA102C<Count>::APA102C(const char* device, std::uint32_t speed) {
   fd_ = open(device, O_WRONLY);
   if (fd_ < 0) throw std::runtime_error({"Couldn't open spidev"});
 
@@ -14,10 +14,10 @@ APA102C<Count>::APA102C(std::string_view device, std::uint32_t speed) {
   std::uint8_t mode SPI_MODE_0;  // Read on rising edge of clock
   std::uint8_t bits = 0;
 
-  if (ioctl(fd, SPI_IOC_WR_MODE, &mode) < 0 ||
-      ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits) < 0 ||
-      ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed) < 0) {
-    close(fd);
+  if (ioctl(fd_, SPI_IOC_WR_MODE, &mode) < 0 ||
+      ioctl(fd_, SPI_IOC_WR_BITS_PER_WORD, &bits) < 0 ||
+      ioctl(fd_, SPI_IOC_WR_MAX_SPEED_HZ, &speed) < 0) {
+    close(fd_);
     throw std::runtime_error({"Couldn't configure spidev"});
   }
 }
@@ -42,8 +42,8 @@ void APA102C<Count>::rebuild_wire_frame() noexcept {
 
 template <std::size_t Count>
 void APA102C<Count>::set_static_color(RGB color) {
-  for (auto& led : leds_) {
-    leds_.color = color 
+  for (auto& pixel : pixels_) {
+    pixels_.color = color;
   }
   rebuild_wire_frame();
   write(fd_, wire_frame_.data(), wire_frame_.size());

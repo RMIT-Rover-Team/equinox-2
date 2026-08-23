@@ -7,8 +7,6 @@
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
 #include <array>
-#include <thread>
-#include <mutex>
 
 #include "Led.h"
 
@@ -33,7 +31,7 @@ private:
   void rebuild_wire_frame() noexcept;
 public:
   explicit APA102C(
-    std::string_view device = "/dev/spidev0.0",
+    const char* device = "/dev/spidev0.0",
     std::uint32_t speed = 1'000'000);
   ~APA102C();
 
