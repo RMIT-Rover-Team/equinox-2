@@ -15,7 +15,7 @@ add_library(led-hardware-interface
 )
 
 target_compile_features(led-hardware-interface PUBLIC cxx_std_17)
-
+target_compile_options(led-hardware-interface PRIVATE -Wall -Wextra -Wpedantic)
 target_include_directories(led-hardware-interface
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -35,8 +35,8 @@ if(BUILD_TESTING)
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG v1.17.0
-        FIND_PACKAGE_ARGS 1.17.0 NAMES GTest
+        GIT_TAG v1.18.0
+        FIND_PACKAGE_ARGS 1.18.0 NAMES GTest
         EXCLUDE_FROM_ALL
         SYSTEM
     )

@@ -6,30 +6,13 @@
 
 
 template <std::size_t Count>
-WS2812B<Count>::WS2812B() {
-  ledstring_ =
-  {
-    .freq = TargetFreq,
-    .dmanum = Dma,
-    .channel =
-    {
-      [0] =
-      {
-        .gpionum = GPIOPin,
-        .invert = 0,
-        .count = Count,
-        .strip_type = StripType,
-        .brightness = 255,
-      },
-      [1] =
-      {
-        .gpionum = 0,
-        .invert = 0,
-        .count = 0,
-        .brightness = 0,
-      },
-    },
-  };
+WS2812B<Count>::WS2812B() : ledstring_{} {
+  ledstring_.freq = TargetFreq;
+  ledstring_.dmanum = Dma;
+  ledstring_.channel[0].gpionum = GPIOPin;
+  ledstring_.channel[0].count = Count;
+  ledstring_.channel[0].strip_type = StripType;
+  ledstring_.channel[0].brightness = 255;
 
   ws2811_init(&ledstring_);
 }
