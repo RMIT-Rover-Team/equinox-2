@@ -1,0 +1,24 @@
+Name: DriveInterface@localhost
+
+# This is the message format for requests in transactional communications or the boardcast message in multicast
+# Format is a collection of key value pairs in the form of VarName: Type
+# Legal types are:
+#   int
+#   char
+#   string[maxLength] # String Arrays are not supported
+#   bytes[size]
+#   float
+#   long
+# Single Dimensional Arrays can be defined as:
+#   int[30]
+
+RequestFormat {
+    padding: char[10]
+    left_stick: float
+    right_stick: float
+    right_bumper: int
+    dpad_up: int
+    dpad_down: int
+    dpad_left: int
+    dpad_right: int
+}

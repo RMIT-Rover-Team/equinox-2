@@ -1,0 +1,53 @@
+---
+title: Linux Commands
+description: Basic cheatsheet for linux commands
+---
+
+Terminal Basics
+## Navigation
+| Command | Description |
+| ------- | ----------- |
+| `pwd` | Show current directory |
+| `ls` | List files |
+| `ls -la` | List all files (including hidden) |
+| `cd <dir>` | Change directory |
+| `cd ..` | Go up one level |
+| `cd ~` | Go to home directory |
+## File and Directory Management
+| Command | Description |
+| ------- | ----------- |
+| `mkdir <name>` | Create directory |
+| `rm <file>` | Delete file |
+| `rm -r <file>` | Delete directory |
+| `cp <src> <dest>` | Copy files |
+| `mv <src> <dest>` | move/rename |
+| `touch <file>` | Create empty file |
+## Finding things
+| Command | Description |
+| ------- | ----------- |
+| `find . -name "file.txt"` | File file |
+| `grep "text" file.txt` | Search inside file |
+| `grep -r "text" .` | recursively |
+## Package Management
+| Command | Description |
+| ------- | ----------- |
+| `sudo apt update` | Update package list |
+| `sudo apt upgrade` | Upgrade packages |
+| `sudo apt install <pkg>` | Install package |
+| `sudo apt remove <pkg>` | Remove package |
+## Networking
+| Command | Description |
+| ------- | ----------- |
+| `ping google.com` | Test connection |
+| `ipconfig` | Network info (or ip a) |
+| `ip a` | Show IP Addresses |
+| `ssh user@host` | SSH into machine |
+| `scp file user@host:/path` | Copy file over SSH |
+## Process and Safety Management
+| Command | Description |
+| ------- | ----------- |
+| `top` | Live system monitor |
+| `htop` | Better version (install it) |
+| `ps aux` | List processes |
+| `kill <pid>` | Kill process |
+| `kill -9 <pid>` | Force kill |

@@ -18,25 +18,66 @@ export default defineConfig({
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/withastro/starlight",
+          href: "https://github.com/RMIT-Rover-Team/equinox-2",
         },
+        {
+          icon: "linkedin",
+          label: "Linkedin",
+          href: "https://au.linkedin.com/company/rmitroverteam",
+        },
+        {
+          icon: "instagram",
+          label: "Instagram",
+          href: "https://www.instagram.com/rmitrover/"
+        }
       ],
       sidebar: [
         {
-          label: "Standards",
-          items: [{ label: "Git standards", slug: "standards/git" }],
+          label: "Start Here",
+          items: [
+            {
+              label: "Getting started",
+              slug: "start-here/getting-started",
+            },
+          ],
         },
         {
-          label: "Workshops",
+          label: "Standards",
+          items: [
+            { label: "Git standards", slug: "standards/git" },
+            { label: "CANBus standards", slug: "standards/canbus" }
+          ],
+        },
+        {
+          label: "Cheatsheets",
+          items: [
+            { label: "Git cheatsheet", slug: "guides/git-commands" },
+            { label: "Linux cheatsheet", slug: "guides/linux-commands" }
+          ],
+        },
+        {
+          label: "Guides",
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: "Git Basics Workshop", slug: "workshops/git-basics" },
-            { label: "ROS2 Workshop", slug: "workshops/ros2" },
+            { label: "Buzzword Basics", slug: "guides/buzzword-basics" },
+            { label: "Git Basics Workshop", slug: "guides/git-basics" },
+            { label: "ROS2 Workshop", slug: "guides/ros2" },
+            { label: "CAN Bus Guide", slug: "guides/canbus-basics" },
+            { label: "Packing and Unpacking", slug: "guides/pack-and-unpack" },
           ],
         },
         {
           label: "Reference",
-          autogenerate: { directory: "reference" },
+          items: [
+            { autogenerate: { directory: "reference" } }
+          ],
+        },
+        {
+          label: 'Design',
+          items: [
+            { label: "Excavator Hardware Interface", slug: "design/excavator/hardware-interface" },
+            { label: "Science Hardware Interface", slug: "design/science/science-hardware-interface" },
+          ],
         },
       ],
       customCss: ["./src/styles/custom.css"],
