@@ -1,8 +1,15 @@
 use gstreamer as gst;
 use gstreamer::prelude::*;
 
-use std::collections::HashMap;
 use crate::camera_types::{CamError, StreamInstance};
+use std::collections::HashMap;
+
+pub struct StreamInstance {
+    pub pipeline: gst::Pipeline,
+    pub source: gst::Element,
+    pub capsfilter: gst::Element,
+    pub webrtcbin: gst::Element,
+}
 
 pub struct StreamRegistry {
     streams: HashMap<String, StreamInstance>,
@@ -11,13 +18,21 @@ pub struct StreamRegistry {
 // paused is equivilant to play for streams. either be null, ready or playing.
 impl StreamRegistry {
     pub fn new() -> Self {
-        Self { streams: HashMap::new() }
+        Self {
+            streams: HashMap::new(),
+        }
     }
 
-    pub fn create_stream(&mut self, uid: &str, device: &gst::Device, hw_caps: &gst::Caps) -> Result<(), CamError> {
+    pub fn create_stream(
+        &mut self,
+        uid: &str,
+        device: &gst::Device,
+        hw_caps: &gst::Caps,
+    ) -> Result<(), CamError> {
         let pipeline = gst::Pipeline::with_name(uid);
-        
-        let source = device.create_element(Some("source"))
+
+        let source = device
+            .create_element(Some("source"))
             .map_err(|_| CamError::ElementCreationFailed("source".into()))?;
 
         let capsfilter = gst::ElementFactory::make("capsfilter")
@@ -34,47 +49,74 @@ impl StreamRegistry {
             .name(format!("videoscale_{}", uid))
             .build()
             .map_err(|_| CamError::ElementCreationFailed("videoscale".into()))?;
-        
+
         let autovideosink = gst::ElementFactory::make("autovideosink") // for local streaming
             .name(format!("sink_{}", uid))
             .build()
             .map_err(|_| CamError::ElementCreationFailed("sink".into()))?;
-        
+
         let webrtcbin = gst::ElementFactory::make("webrtcbin") // webrtc for later
             .name(format!("webrtc_{}", uid))
             .build()
             .map_err(|_| CamError::ElementCreationFailed("webrtcbin".into()))?;
 
-        pipeline.add_many([source.clone(), capsfilter.clone(), videoconvert.clone(), videoscale.clone(), autovideosink.clone()]);
+        pipeline.add_many([
+            source.clone(),
+            capsfilter.clone(),
+            videoconvert.clone(),
+            videoscale.clone(),
+            autovideosink.clone(),
+        ]);
 
-        gst::Element::link_many([source.clone(), capsfilter.clone(), videoconvert.clone(), videoscale.clone(), autovideosink.clone()])?;
+        gst::Element::link_many([
+            source.clone(),
+            capsfilter.clone(),
+            videoconvert.clone(),
+            videoscale.clone(),
+            autovideosink.clone(),
+        ])?;
 
-        self.streams.insert(uid.to_string(), StreamInstance {
-            pipeline,
-            source,
-            capsfilter,
-            webrtcbin: gst::ElementFactory::make("webrtcbin").build().unwrap(),
-        });
+        self.streams.insert(
+            uid.to_string(),
+            StreamInstance {
+                pipeline,
+                source,
+                capsfilter,
+                webrtcbin,
+            },
+        );
 
         log::info!("Stream pipeline created for UID: {}", uid);
         Ok(())
     }
 
-
-    pub fn configure_stream(&mut self, uid: &str, selected_caps: gst::Caps) -> Result<(), CamError> {
-        let instance = self.streams.get(uid)
+    pub fn configure_stream(
+        &mut self,
+        uid: &str,
+        selected_caps: gst::Caps,
+    ) -> Result<(), CamError> {
+        let instance = self
+            .streams
+            .get(uid)
             .ok_or_else(|| CamError::DeviceNotFound(uid.into()))?;
-        log::info!("Configuring {} with caps: {}", uid, selected_caps.to_string());
+        log::info!(
+            "Configuring {} with caps: {}",
+            uid,
+            selected_caps.to_string()
+        );
         instance.capsfilter.set_property("caps", &selected_caps);
         Ok(())
     }
 
     /// Starts stream based off uid
     pub fn start_stream(&mut self, uid: &str) -> Result<(), CamError> {
-        let instance = self.streams.get(uid)
-            .ok_or_else(|| CamError::DeviceNotFound(format!("Stream not found for UID: {}", uid)))?; 
-            
-        instance.pipeline.set_state(gst::State::Playing)
+        let instance = self.streams.get(uid).ok_or_else(|| {
+            CamError::DeviceNotFound(format!("Stream not found for UID: {}", uid))
+        })?;
+
+        instance
+            .pipeline
+            .set_state(gst::State::Playing)
             .map_err(|_| CamError::PipelineError("pipeline".into()))?;
         Ok(())
     }
