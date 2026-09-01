@@ -1,4 +1,4 @@
-{
+                                                                                                                                     {
   description = "Equinox 2 Camera Streamer & WebRTC Service Environment";
 
   inputs = {
@@ -10,6 +10,21 @@
     utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
+        gst-plugins-rs-livekit =
+          (pkgs.gst_all_1.gst-plugins-rs.override {
+            plugins = [
+              "rtp"
+              "webrtc"
+            ];
+            enableDocumentation = false;
+          }).overrideAttrs (old: {
+            mesonFlags = old.mesonFlags ++ [
+              "-Dwebrtc-livekit=enabled"
+            ];
+
+            doCheck = false;
+            doInstallCheck = false;
+          });
 
         gst-deps = with pkgs.gst_all_1; [
           gstreamer
@@ -17,7 +32,11 @@
           gst-plugins-good
           gst-plugins-bad
           gst-plugins-ugly
+
           gst-libav
+        ] ++ [
+          gst-plugins-rs-livekit
+          pkgs.libnice.out
         ];
       in
       {
@@ -29,6 +48,8 @@
             cargo
 
             gst_all_1.gst-plugins-base
+            livekit
+            livekit-cli
           ];
 
           buildInputs = with pkgs; [

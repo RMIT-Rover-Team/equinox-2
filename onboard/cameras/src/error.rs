@@ -11,10 +11,18 @@ pub enum CamError {
     PropertyNotFound(String),
     #[error("Device not found: {0}")]
     DeviceNotFound(String),
-    // #[error("Failed to create element: {0}")]
-    // ElementCreationFailed(String),
+    #[error("Camera ID is already registered: {0}")]
+    DuplicateDevice(String),
+    #[error("Camera already has an active media branch: {0}")]
+    DuplicateMediaBranch(String),
+    #[error("Failed to create element: {0}")]
+    ElementCreationFailed(String),
+    #[error("Unsupported camera caps: {0}")]
+    UnsupportedCaps(String),
     #[error("Monitor failure: {0}")]
     MonitorError(String),
-    // #[error("Pipeline failure: {0}")]
-    // PipelineError(String),
+    #[error("Failed to remove device: {0}")]
+    RemoveDeviceFailed(String),
+    #[error("Pipeline failure: {0}")]
+    PipelineError(String),
 }

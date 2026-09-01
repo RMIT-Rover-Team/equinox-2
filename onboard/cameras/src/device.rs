@@ -1,7 +1,7 @@
 use crate::error::CamError;
 use gstreamer as gst;
 use gstreamer::prelude::*;
-use std::collections::HashMap;
+use std::collections::{HashMap, hash_map::Entry};
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct CameraId(String);
@@ -12,6 +12,7 @@ impl CameraId {
     }
 }
 
+#[allow(dead_code)]
 pub struct CameraHardware {
     pub name: String,
     pub path: String,
@@ -20,8 +21,8 @@ pub struct CameraHardware {
 }
 
 pub struct DeviceCatalog {
-    pub devices: HashMap<CameraId, CameraHardware>,
-    pub device_to_id: HashMap<gst::Device, CameraId>,
+    devices: HashMap<CameraId, CameraHardware>,
+    device_to_id: HashMap<gst::Device, CameraId>,
 }
 
 impl DeviceCatalog {
@@ -32,14 +33,16 @@ impl DeviceCatalog {
         }
     }
 
+    // TODO: check cameras with same model have different device.serial values
     pub fn add(&mut self, device: gst::Device) -> Result<CameraId, CamError> {
         let properties = device
             .properties()
             .ok_or_else(|| CamError::PropertyNotFound("device properties".into()))?;
 
         let identity = properties
-            .get::<String>("v4l2.device.bus_info")
+            .get::<String>("device.serial")
             .or_else(|_| properties.get::<String>("device.bus_path"))
+            .or_else(|_| properties.get::<String>("v4l2.device.bus_info"))
             .map_err(|_| CamError::PropertyNotFound("stable device identity".into()))?;
 
         let path = properties
@@ -59,13 +62,14 @@ impl DeviceCatalog {
             caps,
         };
 
-        if let Some(previous) = self.devices.insert(id.clone(), hardware) {
-            self.device_to_id.remove(&previous.device);
+        match self.devices.entry(id.clone()) {
+            Entry::Occupied(_) => Err(CamError::DuplicateDevice(id.as_str().to_owned())),
+            Entry::Vacant(entry) => {
+                entry.insert(hardware);
+                self.device_to_id.insert(device, id.clone());
+                Ok(id)
+            }
         }
-
-        self.device_to_id.insert(device, id.clone());
-
-        Ok(id)
     }
 
     pub fn id_for_device(&self, device: &gst::Device) -> Result<CameraId, CamError> {
@@ -75,13 +79,12 @@ impl DeviceCatalog {
             .ok_or_else(|| CamError::DeviceNotFound("device is not registered".into()))
     }
 
-    pub fn hardware(&self, id: &CameraId) -> Option<&CameraHardware> {
+    pub fn get(&self, id: &CameraId) -> Option<&CameraHardware> {
         self.devices.get(id)
     }
 
     pub fn remove(&mut self, id: &CameraId) -> Option<CameraHardware> {
         let hardware = self.devices.remove(id)?;
-
         self.device_to_id.remove(&hardware.device);
 
         Some(hardware)
