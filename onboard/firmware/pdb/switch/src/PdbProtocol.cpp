@@ -51,12 +51,10 @@ static_assert(
 
 namespace PdbProtocol {
 
-// --- SETUP ---
 bool configure_filters(EQUCAN& can_bus) {
   return can_bus.set_socket_filter(CanFilters, CanMasks, FilterCount);
 }
 
-// --- HELPER FUNCTIONS ---
 uint8_t device_id_for_channel(uint8_t local_channel_id) {
   if (local_channel_id < PdbConfig::FirstSwitchboardChannelCount) {
     return
@@ -93,7 +91,6 @@ bool channel_for_device_id(
   return false;
 }
 
-// --- CAN  ---
 void broadcast_telemetry(
     RoverCanSlave& can_slave,
     uint8_t local_channel_id,
