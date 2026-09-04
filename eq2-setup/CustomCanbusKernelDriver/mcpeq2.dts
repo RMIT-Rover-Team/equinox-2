@@ -1,0 +1,98 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835";
+
+    /* REMOVE spidev completely */
+    fragment@0 {
+        target = <&spidev0>;
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+
+    fragment@1 {
+        target = <&spidev1>;
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+
+    /* IRQ pinctrl blocks */
+    fragment@2 {
+        target = <&gpio>;
+        __overlay__ {
+            mcp251xfd0_irq_pins: mcp251xfd0_irq_pins {
+                brcm,pins = <17>;
+                brcm,function = <0>;
+            };
+        };
+    };
+
+    fragment@3 {
+        target = <&gpio>;
+        __overlay__ {
+            mcp251xfd1_irq_pins: mcp251xfd1_irq_pins {
+                brcm,pins = <27>;
+                brcm,function = <0>;
+            };
+        };
+    };
+
+    /* Oscillator */
+    fragment@4 {
+        target-path = "/clocks";
+        __overlay__ {
+            clk_mcp251xfd_osc: mcp251xfd-osc {
+                #clock-cells = <0>;
+                compatible = "fixed-clock";
+                clock-frequency = <20000000>;
+            };
+        };
+    };
+
+    /* SPI0 overlay with correct cs-gpios */
+    fragment@5 {
+        target = <&spi0>;
+        __overlay__ {
+            status = "okay";
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            /* CAN0 */
+            mcp251xfd0: mcp251xfd@0 {
+                compatible = "microchip,mcp251xfd";
+                reg = <0>;
+                cs-gpios = <&gpio 24 0>;
+                pinctrl-names = "default";
+                pinctrl-0 = <&mcp251xfd0_irq_pins>;
+                spi-max-frequency = <20000000>;
+                interrupt-parent = <&gpio>;
+                interrupts = <17 8>;
+                clocks = <&clk_mcp251xfd_osc>;
+            };
+
+            /* CAN1 */
+            mcp251xfd1: mcp251xfd@1 {
+                compatible = "microchip,mcp251xfd";
+                reg = <1>;
+                cs-gpios = <&gpio 26 0>;
+                pinctrl-names = "default";
+                pinctrl-0 = <&mcp251xfd1_irq_pins>;
+                spi-max-frequency = <20000000>;
+                interrupt-parent = <&gpio>;
+                interrupts = <27 8>;
+                clocks = <&clk_mcp251xfd_osc>;
+            };
+        };
+    };
+
+    __overrides__ {
+        can0 = <&mcp251xfd0>, "status=okay";
+        can1 = <&mcp251xfd1>, "status=okay";
+        oscillator = <&clk_mcp251xfd_osc>, "clock-frequency:0";
+    };
+};
