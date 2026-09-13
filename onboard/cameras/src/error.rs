@@ -25,4 +25,6 @@ pub enum CamError {
     RemoveDeviceFailed(String),
     #[error("Pipeline failure: {0}")]
     PipelineError(String),
+    #[error("Pipeline rebuild failure: {0}")]
+    PipelineRebuildError(String),
 }

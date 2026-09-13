@@ -1,15 +1,18 @@
 use config::LiveKitConfig;
 use gstreamer as gst;
+use std::{sync::mpsc, time::Duration};
 
 mod app;
 mod config;
 mod device;
 mod discovery;
 mod error;
+mod events;
 mod media;
 
 use app::CameraApp;
 use discovery::DeviceDiscovery;
+use events::AppEvent;
 
 fn main() -> anyhow::Result<()> {
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
@@ -22,15 +25,22 @@ fn main() -> anyhow::Result<()> {
         ws_url: std::env::var("LIVEKIT_WS_URL")?,
         auth_token: std::env::var("LIVEKIT_AUTH_TOKEN")?,
     };
-    let mut app = CameraApp::start(&config)?;
+    let (event_tx, event_rx) = mpsc::channel::<AppEvent>();
+    let mut app = CameraApp::start(&config, event_tx.clone())?;
 
     log::info!("Starting device discovery...");
 
-    let _discovery = DeviceDiscovery::start(move |event| {
-        if let Err(error) = app.handle_discovery(event) {
-            log::error!("Failed to handle discovery event: {error}");
+    let _discovery = DeviceDiscovery::start(event_tx)?;
+    let _event_pump = glib::timeout_add_local(Duration::from_millis(50), move || {
+        while let Ok(event) = event_rx.try_recv() {
+            if let Err(error) = app.handle_event(event) {
+                log::error!("Failed to handle application event: {error}");
+            }
         }
-    })?;
+
+        app.poll();
+        glib::ControlFlow::Continue
+    });
 
     main_loop.run();
     Ok(())

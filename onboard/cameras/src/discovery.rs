@@ -1,14 +1,12 @@
 //! Camera hotplug discovery using GStreamer's [`gst::DeviceMonitor`].
 
-use crate::error::CamError;
+use crate::{
+    error::CamError,
+    events::{AppEvent, DiscoveryEvent},
+};
 use gstreamer as gst;
 use gstreamer::prelude::*;
-
-/// A raw device change reported by GStreamer.
-pub enum DiscoveryEvent {
-    Added(gst::Device),
-    Removed(gst::Device),
-}
+use std::sync::mpsc::Sender;
 
 /// An active camera discovery service.
 ///
@@ -21,10 +19,7 @@ pub struct DeviceDiscovery {
 
 impl DeviceDiscovery {
     /// Starts monitoring video source devices.
-    pub fn start<F>(mut on_event: F) -> Result<Self, CamError>
-    where
-        F: FnMut(DiscoveryEvent) + 'static,
-    {
+    pub fn start(event_tx: Sender<AppEvent>) -> Result<Self, CamError> {
         let monitor = gst::DeviceMonitor::new();
         monitor.add_filter(Some("Video/Source"), None);
 
@@ -33,10 +28,22 @@ impl DeviceDiscovery {
             .add_watch_local(move |_, message| {
                 match message.view() {
                     gst::MessageView::DeviceAdded(message) => {
-                        on_event(DiscoveryEvent::Added(message.device()));
+                        if event_tx
+                            .send(AppEvent::Discovery(DiscoveryEvent::Added(message.device())))
+                            .is_err()
+                        {
+                            return glib::ControlFlow::Break;
+                        }
                     }
                     gst::MessageView::DeviceRemoved(message) => {
-                        on_event(DiscoveryEvent::Removed(message.device()));
+                        if event_tx
+                            .send(AppEvent::Discovery(DiscoveryEvent::Removed(
+                                message.device(),
+                            )))
+                            .is_err()
+                        {
+                            return glib::ControlFlow::Break;
+                        }
                     }
                     _ => {}
                 }

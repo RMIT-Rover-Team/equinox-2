@@ -40,6 +40,7 @@ impl DeviceCatalog {
             .ok_or_else(|| CamError::PropertyNotFound("device properties".into()))?;
 
         let identity = properties
+            // .get::<String>("device.serial")
             .get::<String>("device.serial")
             .or_else(|_| properties.get::<String>("device.bus_path"))
             .or_else(|_| properties.get::<String>("v4l2.device.bus_info"))
@@ -81,6 +82,10 @@ impl DeviceCatalog {
 
     pub fn get(&self, id: &CameraId) -> Option<&CameraHardware> {
         self.devices.get(id)
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = (&CameraId, &CameraHardware)> {
+        self.devices.iter()
     }
 
     pub fn remove(&mut self, id: &CameraId) -> Option<CameraHardware> {
