@@ -1,0 +1,26 @@
+multimeter reading: 3.907v
+cell 0: 3.867188
+1.0102948191
+cell 1: 3.857422
+1.012852625
+cell 2: 3.876953 
+1.007750158
+cell 3: 3.867188
+1.010294819
+cell 4: 3.828125
+1.020604082
+cell 5: 3.867188
+1.010294819
+cell 6: 3.876953
+1.007750158
+cell 7: 3.867188
+1.010294819
+cell 8: 3.876953
+1.007750158
+cell 9:3.886719
+1.005218026
+cell 10:3.886719
+1.005218026
+cell 11:3.867188
+1.010294819
+for documentation: for the connection of the first cell of the second battery (J1 pin 2). the ground connection will need to be connected the top of bat 1 (J2 pin 7)
