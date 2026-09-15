@@ -1,0 +1,28 @@
+
+# Define the service name. This is either a port number (numeric) or text name that will be hashed to a port number
+# followed by the @ symbol and the Fully Qualified Domain Name of the service: EG: System Hostname, localhost or an IP address
+# For example, my computer is called Odysseus in the hosts file and I want a port number to be generated from the service Test
+# Therefore
+#   Name: Test@Odysseus
+# If I wanted to use an IP
+#   Name: Test@192.168.1.38
+# Or if I wanted to use a port number
+#   Name: 1234@localhost
+
+Name: Drive@192.168.40.201
+
+RequestFormat {
+    left_stick: float
+    right_stick: float
+    right_bumper: int
+    dpad_up: int
+    dpad_down: int
+    dpad_left: int
+    dpad_right: int
+}
+
+
+# This is used for transactional communications in the same format as above
+ResponseFormat {
+
+}
