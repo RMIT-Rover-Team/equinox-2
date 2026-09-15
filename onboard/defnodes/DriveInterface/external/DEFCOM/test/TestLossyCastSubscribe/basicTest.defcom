@@ -1,0 +1,11 @@
+Name: TestSimpleService@localhost
+
+
+RequestFormat {
+    One: int
+    Two: float
+}
+
+ResponseFormat {
+    Three: string[10]
+}
