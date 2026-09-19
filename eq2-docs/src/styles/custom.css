@@ -1,61 +1,62 @@
-/* For more info regarding css styling, refer to:
-starlight css docs: https://starlight.astro.build/guides/css-and-tailwind/
-editable props: https://github.com/withastro/starlight/blob/main/packages/starlight/style/props.css
+/* For more info regarding CSS styling, refer to:
+Starlight CSS docs: https://starlight.astro.build/guides/css-and-tailwind/
+Editable props: https://github.com/withastro/starlight/blob/main/packages/starlight/src/style/props.css
 */
 :root {
-	--ui-red: 0, 68.5%, 49.8%;
-	--ui-red-low: 0, 50%, 15%;
-	--ui-red-high: 0, 80%, 75%;
+	--ui-white: #edeced;
+	--ui-black: #1d1c1d;
 
-	--sl-color-accent-low: hsl(var(--ui-red-low));
-	--sl-color-accent: hsl(var(--ui-red));
-	--sl-color-accent-high: hsl(var(--ui-red-high));
-	
+	--ui-gray-1: color-mix(in oklab, var(--ui-black) 93.3%, var(--ui-white));
+	--ui-gray-2: color-mix(in oklab, var(--ui-black) 85.6%, var(--ui-white));
+	--ui-gray-3: color-mix(in oklab, var(--ui-black) 71.1%, var(--ui-white));
+	--ui-gray-4: color-mix(in oklab, var(--ui-black) 48.9%, var(--ui-white));
+	--ui-gray-5: color-mix(in oklab, var(--ui-black) 25.6%, var(--ui-white));
+	--ui-gray-6: color-mix(in oklab, var(--ui-black) 6.7%, var(--ui-white));
+	--ui-gray-7: color-mix(in oklab, var(--ui-black) 3.3%, var(--ui-white));
+
+	/*--ui-red: 0, 68.5%, 49.8%;
+	--ui-red-low: 0, 50%, 15%;
+	--ui-red-high: 0, 80%, 75%;*/
+
+	--ui-red: #f11b1c;
+	--ui-red-low: color-mix(in oklab, var(--ui-red) 75%, var(--ui-black));
+	--ui-red-on-light: color-mix(in oklab, var(--ui-red) 80%, var(--ui-black));
+	--ui-red-high: color-mix(in oklab, var(--ui-red) 40%, var(--ui-white));
+
 	--sl-content-width: 75rem;
 }
 
 :root[data-theme='dark'] {
+	--sl-color-white: var(--ui-white);
+	--sl-color-gray-1: var(--ui-gray-6);
+	--sl-color-gray-2: var(--ui-gray-5);
+	--sl-color-gray-3: var(--ui-gray-4);
+	--sl-color-gray-4: var(--ui-gray-3);
+	--sl-color-gray-5: var(--ui-gray-2);
+	--sl-color-gray-6: var(--ui-gray-1);
+	--sl-color-black: var(--ui-black);
+	--sl-color-bg: var(--sl-color-black);
+
+	--sl-color-accent-low: var(--ui-red-low);
+	--sl-color-accent: var(--ui-red);
+	--sl-color-accent-high: var(--ui-red-high);
 	--sl-color-text-accent: var(--sl-color-accent-high);
 }
 
 :root[data-theme='light'] {
+	--sl-color-white: var(--ui-black);
+	--sl-color-black: var(--ui-white);
+	--sl-color-bg: var(--sl-color-black);
+	--sl-color-gray-1: var(--ui-gray-1);
+	--sl-color-gray-2: var(--ui-gray-2);
+	--sl-color-gray-3: var(--ui-gray-3);
+	--sl-color-gray-4: var(--ui-gray-4);
+	--sl-color-gray-5: var(--ui-gray-5);
+	--sl-color-gray-6: var(--ui-gray-6);
+	--sl-color-gray-7: var(--ui-gray-7);
+
+	--sl-color-accent-low: var(--ui-red-high);
+	--sl-color-accent: var(--ui-red-on-light);
+	--sl-color-accent-high: var(--ui-red-low);
 	--sl-color-text-accent: var(--sl-color-accent);
-	--sl-color-white: #1d1715;
-	--sl-color-gray-1: #302321;
-	--sl-color-gray-2: #423432;
-	--sl-color-gray-3: #635451;
-	--sl-color-gray-4: #978784;
-	--sl-color-gray-5: #c8c0be;
-	--sl-color-gray-6: #f3ecea;
-	--sl-color-gray-7: #f9f5f5;
-	--sl-color-black: #ffffff;
 }
-/* Dark mode colors. */
-/* :root {
-	--sl-color-accent-low: #460b05;
-	--sl-color-accent: #c60e00;
-	--sl-color-accent-high: #feb3a6;
-	--sl-color-white: #ffffff;
-	--sl-color-gray-1: #f3ecea;
-	--sl-color-gray-2: #c8c0be;
-	--sl-color-gray-3: #978784;
-	--sl-color-gray-4: #635451;
-	--sl-color-gray-5: #423432;
-	--sl-color-gray-6: #302321;
-	--sl-color-black: #1d1715;
-}
-/* Light mode colors. */
-/* :root[data-theme='light'] {
-	--sl-color-accent-low: #ffc8be;
-	--sl-color-accent: #c90e00;
-	--sl-color-accent-high: #640300;
-	--sl-color-white: #1d1715;
-	--sl-color-gray-1: #302321;
-	--sl-color-gray-2: #423432;
-	--sl-color-gray-3: #635451;
-	--sl-color-gray-4: #978784;
-	--sl-color-gray-5: #c8c0be;
-	--sl-color-gray-6: #f3ecea;
-	--sl-color-gray-7: #f9f5f5;
-	--sl-color-black: #ffffff;
-} */

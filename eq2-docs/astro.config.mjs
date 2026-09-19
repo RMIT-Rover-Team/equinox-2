@@ -33,11 +33,11 @@ export default defineConfig({
       ],
       sidebar: [
         {
-          label: "Start Here",
+          label: "Getting Started",
           items: [
             {
-              label: "Getting started",
-              slug: "start-here/getting-started",
+              label: "Quick start",
+              slug: "getting-started/quick-start",
             },
           ],
         },
@@ -49,34 +49,32 @@ export default defineConfig({
           ],
         },
         {
-          label: "Cheatsheets",
-          items: [
-            { label: "Git cheatsheet", slug: "guides/git-commands" },
-            { label: "Linux cheatsheet", slug: "guides/linux-commands" }
-          ],
-        },
-        {
           label: "Guides",
           items: [
-            // Each item here is one entry in the navigation menu.
-            { label: "Buzzword Basics", slug: "guides/buzzword-basics" },
-            { label: "Git Basics Workshop", slug: "guides/git-basics" },
-            { label: "ROS2 Workshop", slug: "guides/ros2" },
+            { label: "Git Cheatsheet", slug: "guides/git-commands" },
+            { label: "Linux Cheatsheet", slug: "guides/linux-commands" },
+            { label: "Glossary", slug: "guides/glossary" },
             { label: "CAN Bus Guide", slug: "guides/canbus-basics" },
             { label: "Packing and Unpacking", slug: "guides/pack-and-unpack" },
+            {
+              label: "Workshops",
+              items: [
+                { label: "Git Basics Workshop", slug: "guides/git-basics" },
+                { label: "ROS2 Workshop", slug: "guides/ros2" },
+              ],
+            },
           ],
         },
         {
-          label: "Reference",
+          label: "Architecture",
           items: [
-            { autogenerate: { directory: "reference" } }
-          ],
-        },
-        {
-          label: 'Design',
-          items: [
-            { label: "Excavator Hardware Interface", slug: "design/excavator/hardware-interface" },
-            { label: "Science Hardware Interface", slug: "design/science/science-hardware-interface" },
+            {
+              label: "Design",
+              items: [
+                { label: "Excavator Hardware Interface", slug: "design/excavator/hardware-interface" },
+                { label: "Science Hardware Interface", slug: "design/science/science-hardware-interface" },
+              ],
+            }
           ],
         },
       ],
