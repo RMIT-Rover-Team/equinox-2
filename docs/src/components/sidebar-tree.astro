@@ -160,12 +160,14 @@ const containsCurrentPage = (items: SidebarEntry[]): boolean =>
         block-size: 0;
         overflow: clip;
         transition:
-            block-size 260ms cubic-bezier(0.6, 0, 0.1, 1),
-            content-visibility 260ms allow-discrete;
+            block-size 520ms cubic-bezier(0.2, 0, 0.4, 1),
+            content-visibility 520ms allow-discrete;
     }
 
     .sidebar-group[open]::details-content {
         block-size: auto;
+        transition-duration: 260ms;
+        transition-timing-function: bezier(0.2, 0, 1, 1);
     }
 
     @media (prefers-reduced-motion: reduce) {
