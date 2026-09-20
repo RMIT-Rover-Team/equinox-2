@@ -75,10 +75,7 @@ export default defineConfig({
           items: [
             {
               label: "Design",
-              items: [
-                { label: "Excavator Hardware Interface", slug: "design/excavator/hardware-interface" },
-                { label: "Science Hardware Interface", slug: "design/science/science-hardware-interface" },
-              ],
+              items: [],
             }
           ],
         },
