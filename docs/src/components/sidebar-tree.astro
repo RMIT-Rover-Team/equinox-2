@@ -89,7 +89,7 @@ const containsCurrentPage = (items: SidebarEntry[]): boolean =>
         margin-block-start: 0.25rem;
         margin-inline-start: 0.65rem;
         padding-inline-start: 0.65rem;
-        border-inline-start: 1px solid var(--sl-color-accent-high);
+        border-inline-start: 1px solid var(--sl-color-accent-low);
     }
 
     .sidebar-item {
@@ -140,13 +140,9 @@ const containsCurrentPage = (items: SidebarEntry[]): boolean =>
             color 260ms ease;
     }
 
-    .li {
-        background-color: #ffffff;
-    }
-
     [open] > summary .caret {
         transform: rotate(90deg);
-        color: var(--ui-red);
+        color: var(--sl-color-accent-high);
     }
 
     [open] > summary .badge {
