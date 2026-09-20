@@ -52,7 +52,6 @@ const containsCurrentPage = (items: SidebarEntry[]): boolean =>
                     }
                 >
                     <summary>
-                        <Icon name="right-caret" class="caret" size="1.1rem" />
                         <span class="group-label">
                             <span>{entry.label}</span>
                             {entry.badge && (
@@ -63,6 +62,7 @@ const containsCurrentPage = (items: SidebarEntry[]): boolean =>
                                 />
                             )}
                         </span>
+                        <Icon name="right-caret" class="caret" size="1.1rem" />
                     </summary>
                     <SidebarRestorePoint />
                     <Astro.self entries={entry.entries} nested />
@@ -99,6 +99,7 @@ const containsCurrentPage = (items: SidebarEntry[]): boolean =>
     summary,
     .sidebar-link {
         display: flex;
+        justify-content: space-between;
         align-items: center;
         gap: 0.1rem;
         border-radius: 0.6rem;
