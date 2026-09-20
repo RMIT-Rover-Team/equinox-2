@@ -57,15 +57,15 @@ export default defineConfig({
             {
               label: "Workshops",
               items: [
-                { label: "Git Basics Workshop", slug: "guides/git-basics" },
-                { label: "ROS2 Workshop", slug: "guides/ros2" },
+                { label: "Git Basics Workshop", slug: "guides/workshops/git-basics" },
+                { label: "ROS2 Workshop", slug: "guides/workshops/ros2" },
               ],
             },
             {
               label: "Cheatsheet",
               items: [
-                { label: "Git Cheatsheet", slug: "guides/git-commands" },
-                { label: "Linux Cheatsheet", slug: "guides/linux-commands" },
+                { label: "Git Cheatsheet", slug: "guides/cheatsheets/git-commands" },
+                { label: "Linux Cheatsheet", slug: "guides/cheatsheets/linux-commands" },
               ],
             },
           ],

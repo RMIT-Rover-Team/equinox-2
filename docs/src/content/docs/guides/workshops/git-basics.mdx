@@ -9,14 +9,14 @@ import { Steps } from '@astrojs/starlight/components';
 {/* todo: run through SSH keys, add all the users to organization */}
 This page will run through the git workshop for Software.
 
-By completing this exercise, you will: 
+By completing this exercise, you will:
 - Be added to the github organization
 - Create an SSH key so your computer can access repositories
-- Clone a repo 
-- Create and assign yourself to a task 
-- Work on a feature branch 
-- Make commits linked to an issue 
-- Open a Pull Request (PR) 
+- Clone a repo
+- Create and assign yourself to a task
+- Work on a feature branch
+- Make commits linked to an issue
+- Open a Pull Request (PR)
 
 ## Workshop Start
 Firstly, what is Git?
@@ -24,7 +24,7 @@ Firstly, what is Git?
 Git is an open source version control software system. It allows users to collaborate effectively on projects and maintain version history. We use Git to manage responsibilities (through GitHub Projects), automatically deploy our documentation (through GitHub Actions) and keep everyone up to date with the latest version of our projects.
 
 ## Setup GitHub
-To get started, we first need to add you to the GitHub repository. Within the appropriate thread in [#software](https://discord.com/channels/891173197951696957/1238080456797323357) (in the discord server), add your GitHub username.  
+To get started, we first need to add you to the GitHub repository. Within the appropriate thread in [#software](https://discord.com/channels/891173197951696957/1238080456797323357) (in the discord server), add your GitHub username.
 ![Gif navigating to the thread on Discord](assets/Git-DiscordThread.gif)
 
 You will also need to install `git`. How this is done depends on your operating system.
@@ -49,10 +49,10 @@ You will also need to install `git`. How this is done depends on your operating 
         1. Install Homebrew if you dont have it already, then run:
             ```sh
             $ brew install git
-            ```  
-        2. Optional:  
+            ```
+        2. Optional:
             If you prefer a graphical user interface (GUI), [GitHub Desktop](https://desktop.github.com/beta/) includes a command-line version of Git as part of its installation.
-        </Steps>  
+        </Steps>
     </TabItem>
 </Tabs>
 
@@ -104,7 +104,7 @@ git add .
 ```
 The `.` indicates the files you want to add to the commit, so in this case, this command adds every changed file to the commit. Typically you will be adding all your changes to the repository, so you'll generally run this command.
 
-To then commit your changes formally, run: 
+To then commit your changes formally, run:
 ```sh
 git commit -m "<message_name`>"
 ```
@@ -127,9 +127,9 @@ A lot of this may not make sense, given all the buzz-words, but you'll pick up o
 #### Branching
 do this later
 #### GitHub Projects and GitHub Issues
-GitHub Projects is a project management tool, which aids in planning and tracking work on GitHub. We'll be using GitHub Projects to help track and plan tasks. 
+GitHub Projects is a project management tool, which aids in planning and tracking work on GitHub. We'll be using GitHub Projects to help track and plan tasks.
 ![Image of Equinox 2's GitHub project page](assets/Git-Projects.png)
-Each task on GitHub Projects is called an "Issue", so every time you work on a task, it'll be linked to an issue on the Github Project. Your commits can (and should!) be linked to issues by appending the issue number to the end of the Git commit (i.e. `git commit -m "blah blah blah (#67)"` would be linked to issue #67). 
+Each task on GitHub Projects is called an "Issue", so every time you work on a task, it'll be linked to an issue on the Github Project. Your commits can (and should!) be linked to issues by appending the issue number to the end of the Git commit (i.e. `git commit -m "blah blah blah (#67)"` would be linked to issue #67).
 ![Image of issue on Equinox 2. Issue number is higlighted](assets/Git-Issues.png)
 
 When working on anything, you should always have an issue for it. If it doesn't exist, create an issue (and appropriately give it correct labels) or create a sub-issue of an existing issue if it's a smaller part of a bigger issue and you believe it deserves its own issue.
@@ -142,18 +142,18 @@ It's time to make your first commits!
     git clone git@github.com:RMIT-Rover-Team/workshop-git.git
     ```
 
-2. Create / Assign Yourself to a Task 
+2. Create / Assign Yourself to a Task
     - Go to GitHub → Projects → Git workshop project
-    - Find the onboarding parent issue ("Update README.md to include new members") 
-    - Create a sub-issue under it, titled: 
+    - Find the onboarding parent issue ("Update README.md to include new members")
+    - Create a sub-issue under it, titled:
         ```
             Add <your-name> to contributors in README.md
         ```
     - Assign the issue to yourself. Apply the appropriate types and labels.
 
-3. Create a new branch for your task: 
+3. Create a new branch for your task:
     ```sh
-    git checkout -b feature/add-<your-name>-readme 
+    git checkout -b feature/add-<your-name>-readme
     ```
 
 4. Make a change to Readme
@@ -161,28 +161,28 @@ It's time to make your first commits!
     - Add your name to the file
     - Commit your change
 
-5. Stage and commit your changes 
+5. Stage and commit your changes
     ```sh
     git add .  # This adds every file that has been modified by you to the commit.
     git commit -m "feat: add <your-name> to readme (#123)"  # This makes a "local" commit, along with a message.
     ```
-    (Replace #123 with your actual issue number) 
+    (Replace #123 with your actual issue number)
 
-    Push your branch 
-
-    ```sh
-    git push origin feature/add-<your-name>-readme 
-    ```
-6. Open a pull request 
-
-    Go to GitHub → Open a PR 
-
-    Title: 
+    Push your branch
 
     ```sh
-    Add <your-name> to readme 
+    git push origin feature/add-<your-name>-readme
     ```
-    Description: 
+6. Open a pull request
+
+    Go to GitHub → Open a PR
+
+    Title:
+
+    ```sh
+    Add <your-name> to readme
+    ```
+    Description:
     ```
     Closes <issues_name>
     ```
