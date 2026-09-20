@@ -83,6 +83,7 @@ export default defineConfig({
       customCss: ["./src/styles/custom.css"],
       components: {
         Head: "./src/components/head.astro",
+        Header: "./src/components/header.astro",
         Sidebar: "./src/components/sidebar.astro",
       },
     }),

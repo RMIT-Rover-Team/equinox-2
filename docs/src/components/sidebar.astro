@@ -2,11 +2,13 @@
 import MobileMenuFooter from "@astrojs/starlight/components/MobileMenuFooter.astro";
 import SidebarPersister from "@astrojs/starlight/components/SidebarPersister.astro";
 import SidebarTree from "./sidebar-tree.astro";
+import Search from "@astrojs/starlight/components/Search.astro";
 
 const { sidebar } = Astro.locals.starlightRoute;
 ---
 
 <SidebarPersister>
+    <Search />
     <div class="equinox-sidebar">
         <SidebarTree entries={sidebar} />
     </div>

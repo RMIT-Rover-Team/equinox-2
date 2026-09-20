@@ -14,10 +14,6 @@ Editable props: https://github.com/withastro/starlight/blob/main/packages/starli
 	--ui-gray-6: color-mix(in oklab, var(--ui-black) 6.7%, var(--ui-white));
 	--ui-gray-7: color-mix(in oklab, var(--ui-black) 3.3%, var(--ui-white));
 
-	/*--ui-red: 0, 68.5%, 49.8%;
-	--ui-red-low: 0, 50%, 15%;
-	--ui-red-high: 0, 80%, 75%;*/
-
 	--ui-red: #f11b1c;
 	--ui-red-low: color-mix(in oklab, var(--ui-red) 75%, var(--ui-black));
 	--ui-red-on-light: color-mix(in oklab, var(--ui-red) 80%, var(--ui-black));
