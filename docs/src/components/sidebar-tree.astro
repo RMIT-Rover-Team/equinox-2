@@ -138,11 +138,6 @@ const containsCurrentPage = (items: SidebarEntry[]): boolean =>
         transition: transform 260ms ease;
     }
 
-    [open] > summary {
-        background-color: var(--sl-color-gray-5);
-        transition: background-color 130ms ease;
-    }
-
     [open] > summary .caret {
         transform: rotate(90deg);
         color: var(--ui-red);

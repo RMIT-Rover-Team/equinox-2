@@ -24,12 +24,26 @@ There are multiple ways to install Ubuntu 24.04. The recommended approach would 
             You don't need to worry too hard about partitioning, just know that by dualbooting it creates "partitions" to separate your different Operating Systems and the logic used to boot them up.
         </Aside>
 
+        ### Partioning your drive
+        <Steps>
+            1. WORK ON LATER
+            2. WORK ON LATER
+
+        </Steps>
+
         <Steps>
             1. [Download Ubuntu 24.04](https://releases.ubuntu.com/jammy/ubuntu-24.04.5-desktop-amd64.iso)
-            2. [Download Ventoy](https://www.ventoy.net/en/index.html)
-            3. Open Ventoy, choose your USB stick and add the Ubuntu 24.04 flash to Ventoy
-            4.
+            2. [Download Rufus](https://rufus.ie/en/#download)
+            3. Open Rufus, choose your USB device and add the Ubuntu 24.04 flash to Rufus by clicking `SELECT` next to Boot selection and selecting Ubuntu 24.04.
+            4. Click `Start` to flash to your USB device.
+            5. Rufus will prompt that your Ubuntu image is an ISOHybrid image. Confirm `Write in ISO Image mode` option.
+            6. If Rufus prompts to download additional files select `Yes`.
+            7. Rufus will destroy all your files on your USB device, so double check the contents are backed up before confirming `Ok`.
+            8. Once done, insert the USB stick into the device to flash, then restart the computer. Bring up the system boot menu for the computer (this depends, but it's typically done by holding F12 on system startup).
+            9. Follow the installer and Ubuntu will do the rest.
         </Steps>
+
+        If any of the following instructions do not work, please refer to the [official Ubuntu install tutorial](https://ubuntu.com/desktop/docs/en/24.04/tutorial/install-ubuntu-desktop/)
     </TabItem>
     <TabItem label="WSL">
         <Steps>
