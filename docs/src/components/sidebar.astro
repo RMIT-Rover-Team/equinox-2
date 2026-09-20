@@ -1,0 +1,23 @@
+---
+import MobileMenuFooter from "@astrojs/starlight/components/MobileMenuFooter.astro";
+import SidebarPersister from "@astrojs/starlight/components/SidebarPersister.astro";
+import SidebarTree from "./sidebar-tree.astro";
+
+const { sidebar } = Astro.locals.starlightRoute;
+---
+
+<SidebarPersister>
+    <div class="equinox-sidebar">
+        <SidebarTree entries={sidebar} />
+    </div>
+</SidebarPersister>
+
+<div class="md:sl-hidden">
+    <MobileMenuFooter />
+</div>
+
+<style>
+    .equinox-sidebar {
+        padding-block: 0.25rem;
+    }
+</style>

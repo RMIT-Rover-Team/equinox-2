@@ -1,0 +1,182 @@
+---
+import { Badge, Icon } from "@astrojs/starlight/components";
+import SidebarRestorePoint from "@astrojs/starlight/components/SidebarRestorePoint.astro";
+import type { StarlightRouteData } from "@astrojs/starlight/route-data";
+import { encode } from "astro:schema";
+
+type SidebarEntry = StarlightRouteData["sidebar"][number];
+
+interface Props {
+    entries: SidebarEntry[];
+    nested?: boolean;
+}
+
+const { entries, nested = false } = Astro.props;
+
+const containsCurrentPage = (items: SidebarEntry[]): boolean =>
+    items.some((item) =>
+        item.type === "link"
+            ? item.isCurrent
+            : containsCurrentPage(item.entries),
+    );
+
+// entries.map((entry) => {
+//     console.log(entry);
+// });
+---
+
+<ul class:list={["sidebar-list", { nested, root: !nested }]}>
+    {entries.map((entry) => (
+        <li class="sidebar-item">
+            {entry.type === "link" ? (
+                <a
+                    href={entry.href}
+                    aria-current={entry.isCurrent ? "page" : undefined}
+                    class:list={["sidebar-link", entry.attrs.class]}
+                    {...entry.attrs}
+                >
+                    <span>{entry.label}</span>
+                    {entry.badge && (
+                        <Badge
+                            variant={entry.badge.variant}
+                            class={entry.badge.class}
+                            text={entry.badge.text}
+                        />
+                    )}
+                </a>
+            ) : (
+                <details
+                    class="sidebar-group"
+                    open={
+                        containsCurrentPage(entry.entries) || !entry.collapsed
+                    }
+                >
+                    <summary>
+                        <Icon name="right-caret" class="caret" size="1.1rem" />
+
+                        <span class="group-label">
+                            <span>{entry.label}</span>
+                            {entry.badge && (
+                                <Badge
+                                    variant={entry.badge.variant}
+                                    class={entry.badge.class}
+                                    text={entry.badge.text}
+                                />
+                            )}
+                        </span>
+                    </summary>
+                    <SidebarRestorePoint />
+                    <Astro.self entries={entry.entries} nested />
+                </details>
+            )}
+        </li>
+    ))}
+</ul>
+
+<style>
+    .sidebar-list {
+        display: grid;
+        gap: 0.2rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .sidebar-list.root {
+        gap: 0.65rem;
+    }
+
+    .sidebar-list.nested {
+        margin-block-start: 0.25rem;
+        margin-inline-start: 0.65rem;
+        padding-inline-start: 0.65rem;
+        border-inline-start: 1px solid var(--sl-color-gray-5);
+    }
+
+    .sidebar-item {
+        min-width: 0;
+    }
+
+    summary,
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.1rem;
+        border-radius: 0.45rem;
+        padding: 0.4rem 0.55rem;
+        line-height: 1.35;
+    }
+
+    summary {
+        color: var(--sl-color-white);
+        font-weight: 650;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    summary::marker,
+    summary::-webkit-details-marker {
+        display: none;
+    }
+
+    summary:hover,
+    summary:focus-visible,
+    .sidebar-link:hover,
+    .sidebar-link:focus-visible {
+        background: var(--sl-color-gray-6);
+    }
+
+    .group-label {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        min-width: 0;
+    }
+
+    .caret {
+        flex: none;
+        transition: transform 260ms ease;
+    }
+
+    [open] > summary {
+        background-color: var(--sl-color-gray-5);
+        transition: background-color 130ms ease;
+    }
+
+    [open] > summary .caret {
+        transform: rotate(90deg);
+        color: var(--ui-red);
+        transition: color 130ms ease;
+    }
+
+    :global([dir="rtl"]) .caret {
+        transform: rotate(180deg);
+    }
+
+    :global([dir="rtl"]) [open] > summary .caret {
+        transform: rotate(90deg);
+    }
+
+    .sidebar-link {
+        color: var(--sl-color-gray-2);
+        font-size: var(--sl-text-sm);
+        text-decoration: none;
+    }
+
+    .sidebar-link[aria-current="page"] {
+        color: var(--sl-color-white);
+        background: var(--sl-color-black);
+        font-weight: 650;
+    }
+
+    .sidebar-link > :global(*:not(:last-child)),
+    .group-label > :global(*:not(:last-child)) {
+        margin-inline-end: 0.25rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .caret {
+            transition: none;
+        }
+    }
+</style>

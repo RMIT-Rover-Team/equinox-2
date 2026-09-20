@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "test:sidebar": "astro build && node --test tests/sidebar-render.test.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
