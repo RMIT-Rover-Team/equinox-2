@@ -21,7 +21,7 @@ Editable props: https://github.com/withastro/starlight/blob/main/packages/starli
 	--ui-red: #f11b1c;
 	--ui-red-low: color-mix(in oklab, var(--ui-red) 75%, var(--ui-black));
 	--ui-red-on-light: color-mix(in oklab, var(--ui-red) 80%, var(--ui-black));
-	--ui-red-high: color-mix(in oklab, var(--ui-red) 40%, var(--ui-white));
+	--ui-red-high: color-mix(in oklab, var(--ui-red) 25%, var(--ui-white));
 
 	--sl-content-width: 75rem;
 }
@@ -41,6 +41,8 @@ Editable props: https://github.com/withastro/starlight/blob/main/packages/starli
 	--sl-color-accent: var(--ui-red);
 	--sl-color-accent-high: var(--ui-red-high);
 	--sl-color-text-accent: var(--sl-color-accent-high);
+
+	--sl-color-accent-opaque: color-mix(in srgb, var(--sl-color-accent) 50%, transparent);
 }
 
 :root[data-theme='light'] {
@@ -59,4 +61,6 @@ Editable props: https://github.com/withastro/starlight/blob/main/packages/starli
 	--sl-color-accent: var(--ui-red-on-light);
 	--sl-color-accent-high: var(--ui-red-low);
 	--sl-color-text-accent: var(--sl-color-accent);
+
+	--sl-color-accent-opaque: color-mix(in srgb, var(--sl-color-accent) 20%, transparent);
 }
