@@ -51,8 +51,6 @@ export default defineConfig({
         {
           label: "Guides",
           items: [
-            { label: "Git Cheatsheet", slug: "guides/git-commands" },
-            { label: "Linux Cheatsheet", slug: "guides/linux-commands" },
             { label: "Glossary", slug: "guides/glossary" },
             { label: "CAN Bus Guide", slug: "guides/canbus-basics" },
             { label: "Packing and Unpacking", slug: "guides/pack-and-unpack" },
@@ -61,6 +59,13 @@ export default defineConfig({
               items: [
                 { label: "Git Basics Workshop", slug: "guides/git-basics" },
                 { label: "ROS2 Workshop", slug: "guides/ros2" },
+              ],
+            },
+            {
+              label: "Cheatsheet",
+              items: [
+                { label: "Git Cheatsheet", slug: "guides/git-commands" },
+                { label: "Linux Cheatsheet", slug: "guides/linux-commands" },
               ],
             },
           ],
