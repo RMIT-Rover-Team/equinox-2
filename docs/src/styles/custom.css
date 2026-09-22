@@ -20,6 +20,19 @@ Editable props: https://github.com/withastro/starlight/blob/main/packages/starli
 	--ui-red-high: color-mix(in oklab, var(--ui-red) 25%, var(--ui-white));
 
 	--sl-content-width: 75rem;
+	--sl-nav-height: 0rem
+}
+
+header.header {
+  display: none;
+}
+
+.site-title {
+  --sl-nav-height: 5.5rem;
+}
+
+.sl-menu-button {
+  top: 1rem;
 }
 
 :root[data-theme='dark'] {

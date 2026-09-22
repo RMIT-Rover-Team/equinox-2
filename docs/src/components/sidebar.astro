@@ -1,17 +1,25 @@
 ---
 import MobileMenuFooter from "@astrojs/starlight/components/MobileMenuFooter.astro";
 import SidebarPersister from "@astrojs/starlight/components/SidebarPersister.astro";
+import SiteTitle from "@astrojs/starlight/components/SiteTitle.astro";
 import SidebarTree from "./sidebar-tree.astro";
 import Search from "@astrojs/starlight/components/Search.astro";
+import SocialIcons from "@astrojs/starlight/components/SocialIcons.astro";
+import ThemeSelect from "@astrojs/starlight/components/ThemeSelect.astro";
 
 const { sidebar } = Astro.locals.starlightRoute;
 ---
 
 <SidebarPersister>
+    <SiteTitle />
     <Search />
     <div class="equinox-sidebar">
         <SidebarTree entries={sidebar} />
     </div>
+    <div class="sl-flex social-icons">
+        <SocialIcons />
+    </div>
+    <ThemeSelect />
 </SidebarPersister>
 
 <div class="md:sl-hidden">
@@ -21,5 +29,12 @@ const { sidebar } = Astro.locals.starlightRoute;
 <style>
     .equinox-sidebar {
         padding-block: 0.25rem;
+    }
+    .social-icons {
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: auto;
+        padding-block: 1rem;
+        border-top: 1px solid var(--sl-color-gray-5);
     }
 </style>
