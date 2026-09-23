@@ -13,21 +13,14 @@ const int myID = 0x8;
 int volatile counter = 0; 
 int currentstate = 0;
 
-typedef enum {
-  idleState,
-  estop1,
-  estop2,
-  estopOn
-} BMSState;
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Global objects to be initialised
-EQUCAN* my_can = nullptr;
-RoverCanSlave* my_slave = nullptr;
+EQUCAN* can_bus = nullptr;
+RoverCanSlave* can_slave = nullptr;
 
 void handle_ping() {
     // TODO
-    // my_slave->
+    // can_slave->
 }
 
 void handle_estop() {
@@ -44,11 +37,27 @@ void handle_tx8(uint8_t device_id, int8_t nums[8]) {
 }
 
 // run every second
-void broadcast_status() {
-    // TODO
+void send_telemetry() {
+    // send cells 0-5
+    uint8_t data[6] = {0};
+
+    for (size_t i = 0; i < 6; i++) {
+        data[i] = read_cell(i);
+    }
+    
+    // [segment: 2 bits = 1] [channel: 3 bits = 0]
+    can_slave->br_int8(GroupID::Onboard, 0b01_000, data);
+
+    // send cells 6-11
+    for (size_t i = 0; i < 6; i++) {
+        data[i] = read_cell(i+6);
+    }
+    
+    // [segment: 2 bits = 1] [channel: 3 bits = 1]
+    can_slave->br_int8(GroupID::Onboard, 0b01_001, data);
 }
 
-double read_cell(int stream_id, int cell_id){
+double read_cell(int cell_id){
     const double CELL_SCALERS[12] = {1.0102948191,1.012852625,1.007750158,1.020604082,1.010294819,1.007750158,1.010294819,1.010294819,1.007750158,1.005218026,1.005218026,1.010294819};
     double cell = 0.0;
 
@@ -135,22 +144,22 @@ void setup() {
 
     //Start the EQUCAN
     // Serial.println("Init EQUCAN\n");
-    my_can = new EQUCAN();
+    can_bus = new EQUCAN();
 
     //Start the Slave
     Serial.println("Prepare Slave\n");
-    my_slave = new RoverCanSlave(myID, my_can);
+    can_slave = new RoverCanSlave(myID, can_bus);
 
     //Add the hooks where needed
     // [ID Segment - 2 bits][Channel ID - 3 bits]
-    my_slave->handle_ping = &handle_ping;
-    my_slave->handle_estop = &handle_estop;
-    my_slave->handle_tx_int8 = &handle_tx8;
+    can_slave->handle_ping = &handle_ping;
+    can_slave->handle_estop = &handle_estop;
+    can_slave->handle_tx_int8 = &handle_tx8;
 
     Serial.println("BMS Ready!\n");
 }
 
-
+// DOES NOTHING??
 ISR(TIMER1_COMPA_vect) { // 4 interrupts every 4 seconds
     // Serial.println("estop timed out");
     // mutexlock
@@ -158,6 +167,8 @@ ISR(TIMER1_COMPA_vect) { // 4 interrupts every 4 seconds
     // Serial.println("message correctly recieved");
     // Serial.println(cell_id);
     // mutexunlock
+
+    send_telemetry();
 }
 
 void loop(){
