@@ -25,6 +25,16 @@ typedef enum {
 EQUCAN* my_can = nullptr;
 RoverCanSlave* my_slave = nullptr;
 
+void handle_ping() {
+    // TODO
+    my_slave->listen
+}
+
+void handle_estop() {
+    // TODO: make sure this is all there is to do to shut down
+    TCNT1 = 0;              // reset counter
+    digitalWrite(8, LOW);   //shuts power to rover (according to kaelan)
+}
 
 //Function Handlers to be hooked into, Make sure to match the templates exactly
 void cut_power(uint8_t estopState, uint8_t position) { //function uses setmotor position command 0x02
@@ -66,6 +76,15 @@ void cut_power(uint8_t estopState, uint8_t position) { //function uses setmotor 
     sei();
 }
 
+// toggles each cell
+void handle_tx8(uint8_t device_id, int8_t nums[8]) {
+    // TODO
+}
+
+// run every second
+void broadcast_status() {
+    // TODO
+}
 
 double read_cell(int stream_id, int cell_id){
     const double CELL_SCALERS[12] = {1.0102948191,1.012852625,1.007750158,1.020604082,1.010294819,1.007750158,1.010294819,1.010294819,1.007750158,1.005218026,1.005218026,1.010294819};
@@ -88,8 +107,8 @@ double read_cell(int stream_id, int cell_id){
     //   10    | --       | --    | --    | A3
     //   11    | --       | --    | --    | A4
     if (cell_id >= 0 && cell_id <= 7) {
-        if (cell_id & 0b100)    PORTB |=  (1 << PB6);       // PB6 = bit 2 (HIGH)
-        else                    PORTB &= ~(1 << PB6);       // PB6 = bit 2. (LOW)
+        if (cell_id & 0b100)    PORTB |=  bit(PB6);       // PB6 = bit 2 (HIGH)
+        else                    PORTB &= ~bit(PB6);       // PB6 = bit 2. (LOW)
         
         digitalWrite(S1, ((cell_id & 0b010) ? HIGH : LOW)); // S1 = bit 1        
         digitalWrite(S0, ((cell_id & 0b001) ? HIGH : LOW)); // S0 = bit 0
@@ -161,8 +180,10 @@ void setup() {
     my_slave = new RoverCanSlave(myID, my_can);
 
     //Add the hooks where needed
-    my_slave->handleRequestDataPoint = &read_cell;
-    my_slave->handleSetMotorPosition = &cut_power;
+    // [ID Segment - 2 bits][Channel ID - 3 bits]
+    my_slave->handle_ping = &handle_ping;
+    my_slave->handle_estop = &handle_estop;
+    my_slave->handle_tx_int8 = &handle_tx8;
 
     Serial.println("BMS Ready!\n");
 }
