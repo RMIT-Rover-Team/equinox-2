@@ -9,6 +9,7 @@ import d2 from "astro-d2";
 export default defineConfig({
   integrations: [starlight({
     title: "Equinox 2",
+    favicon: "/rover-logo.png",
     logo: {
       light: "./public/equinox-logo-light.png",
       dark: "./public/equinox-logo-dark.png",
