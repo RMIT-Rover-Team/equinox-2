@@ -27,52 +27,14 @@ RoverCanSlave* my_slave = nullptr;
 
 void handle_ping() {
     // TODO
-    my_slave->listen
+    // my_slave->
 }
 
 void handle_estop() {
+    cli();
     // TODO: make sure this is all there is to do to shut down
     TCNT1 = 0;              // reset counter
     digitalWrite(8, LOW);   //shuts power to rover (according to kaelan)
-}
-
-//Function Handlers to be hooked into, Make sure to match the templates exactly
-void cut_power(uint8_t estopState, uint8_t position) { //function uses setmotor position command 0x02
-    //set pin 8 high
-
-    cli();
-    
-    // statemachine
-    if(currentstate == idleState) {
-        if(estopState == 1) {
-            TCNT1 = 0;                      //initialize counter value to 0
-            currentstate = estop1;
-            //  Serial.println("estop msg1 received");
-        }
-    }
-    else if(currentstate == estop1) {
-        if(estopState == 2) {
-            TCNT1 = 0;                      //initialize counter value to 0
-            currentstate = estop2;
-            //  Serial.println("estop msg2 received");
-        }
-    } else if(currentstate == estop2) {
-        if(estopState == 3) {
-            TCNT1 = 0;                      //initialize counter value to 0
-            currentstate = estopOn; 
-            my_slave->broadcastDP(2, 1, 1);
-            digitalWrite(8, HIGH);          //shuts power to rover
-            //  Serial.println("estop msg3 received shutting power to rover");
-        }
-    } else if(currentstate == estopOn) {
-        TCNT1 = 0;                          //initialize counter value to 0
-        digitalWrite(8, LOW);               //shuts power to rover
-        currentstate = idleState;
-    }
-    else {
-        currentstate = idleState;// something has gone wrong
-    }
-
     sei();
 }
 
