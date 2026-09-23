@@ -4,14 +4,10 @@
 #include "EQUCAN.h"
 #include <SPI.h>
 
-#define S0 9
-#define S1 10
+#define SELECT0 9
+#define SELECT1 10
 // #define S2 11
 struct CANFrame128;
-const int myID = 0x8;
-
-int volatile counter = 0; 
-int currentstate = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Global objects to be initialised
@@ -38,9 +34,9 @@ void handle_tx8(uint8_t device_id, int8_t nums[8]) {
 
 // run every second
 void send_telemetry() {
-    // send cells 0-5
     uint8_t data[6] = {0};
 
+    // send cells 0-5
     for (size_t i = 0; i < 6; i++) {
         data[i] = read_cell(i);
     }
@@ -61,9 +57,9 @@ double read_cell(int cell_id){
     const double CELL_SCALERS[12] = {1.0102948191,1.012852625,1.007750158,1.020604082,1.010294819,1.007750158,1.010294819,1.010294819,1.007750158,1.005218026,1.005218026,1.010294819};
     double cell = 0.0;
 
-    // 0..7 are muxed on pin A0, with (PB6, S1, S0) being the address pins
+    // 0..7 are muxed on pin A0, with (PB6, SELECT1, SELECT0) being the address pins
     //
-    // cell_id | PB6 / S2 | S1    | S0    | Analog input
+    // cell_id | PB6 / S2 | SELECT1    | SELECT0    | Analog input
     // --------+----------+-------+-------+------------
     //    0    | LOW      | LOW   | LOW   | A0
     //    1    | LOW      | LOW   | HIGH  | A0
@@ -81,9 +77,10 @@ double read_cell(int cell_id){
         if (cell_id & 0b100)    PORTB |=  bit(PB6);       // PB6 = bit 2 (HIGH)
         else                    PORTB &= ~bit(PB6);       // PB6 = bit 2. (LOW)
         
-        digitalWrite(S1, ((cell_id & 0b010) ? HIGH : LOW)); // S1 = bit 1        
-        digitalWrite(S0, ((cell_id & 0b001) ? HIGH : LOW)); // S0 = bit 0
+        digitalWrite(SELECT1, ((cell_id & 0b010) ? HIGH : LOW)); // SELECT1 = bit 1        
+        digitalWrite(SELECT0, ((cell_id & 0b001) ? HIGH : LOW)); // SELECT0 = bit 0
 
+        // TODO: figure out if we need to delay to wait for the muliplexxed analog signal to switch
         cell = analogRead(A0);
     }
     else if (cell_id == 8) cell = analogRead(A1);
@@ -113,8 +110,8 @@ void setup() {
 
     DDRB  |=  (1 << PB6);  // output s2
     // pinMode(S2, OUTPUT);//s2
-    pinMode(S1, OUTPUT);//s1
-    pinMode(S0, OUTPUT);//s0
+    pinMode(SELECT1, OUTPUT);//s1
+    pinMode(SELECT0, OUTPUT);//s0
     
     digitalWrite(8, LOW);
     pinMode(8, OUTPUT);// control for PB0 (controls a relay to cut power to rover)
@@ -148,7 +145,7 @@ void setup() {
 
     //Start the Slave
     Serial.println("Prepare Slave\n");
-    can_slave = new RoverCanSlave(myID, can_bus);
+    can_slave = new RoverCanSlave(can_bus);
 
     //Add the hooks where needed
     // [ID Segment - 2 bits][Channel ID - 3 bits]
@@ -161,14 +158,9 @@ void setup() {
 
 // DOES NOTHING??
 ISR(TIMER1_COMPA_vect) { // 4 interrupts every 4 seconds
-    // Serial.println("estop timed out");
-    // mutexlock
-    currentstate = 0; // clear our counter
-    // Serial.println("message correctly recieved");
-    // Serial.println(cell_id);
-    // mutexunlock
-
+    Serial.println("Tick");
     send_telemetry();
+    can_slave->noBlockListenTick();
 }
 
 void loop(){
