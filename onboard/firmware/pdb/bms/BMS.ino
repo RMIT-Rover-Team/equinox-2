@@ -4,10 +4,10 @@
 #include "EQUCAN.h"
 #include <SPI.h>
 
-#define SELECT0 9
-#define SELECT1 10
-// #define S2 11
-struct CANFrame128;
+#define PIN_ESTOP PD6   // (controls a relay to cut power to rover)
+#define PIN_SELECT0 PD7
+#define PIN_SELECT1 PB0
+#define PIN_SELECT2 PB1 // unused?
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Global objects to be initialised
@@ -22,8 +22,8 @@ void handle_ping() {
 void handle_estop() {
     cli();
     // TODO: make sure this is all there is to do to shut down
-    TCNT1 = 0;              // reset counter
-    digitalWrite(8, LOW);   //shuts power to rover (according to kaelan)
+    TCNT1 = 0;                      // reset counter
+    digitalWrite(PIN_ESTOP, LOW);   //shuts power to rover (according to kaelan)
     sei();
 }
 
@@ -54,31 +54,36 @@ void send_telemetry() {
 }
 
 double read_cell(int cell_id){
-    const double CELL_SCALERS[12] = {1.0102948191,1.012852625,1.007750158,1.020604082,1.010294819,1.007750158,1.010294819,1.010294819,1.007750158,1.005218026,1.005218026,1.010294819};
+    constexpr double CELL_SCALERS[12] = {1.0102948191,1.012852625,1.007750158,1.020604082,1.010294819,1.007750158,1.010294819,1.010294819,1.007750158,1.005218026,1.005218026,1.010294819};
+    constexpr double REFERENCE_VOLTAGE = 5.0;
+    constexpr double ADC_BIT_RESOLUTION = 10.0;
+    constexpr double ADC_RANGE = (1 << ADC_BIT_RESOLUTION) - 1; // (2^10)-1 = 1023
+
     double cell = 0.0;
 
-    // 0..7 are muxed on pin A0, with (PB6, SELECT1, SELECT0) being the address pins
-    //
-    // cell_id | PB6 / S2 | SELECT1    | SELECT0    | Analog input
-    // --------+----------+-------+-------+------------
-    //    0    | LOW      | LOW   | LOW   | A0
-    //    1    | LOW      | LOW   | HIGH  | A0
-    //    2    | LOW      | HIGH  | LOW   | A0
-    //    3    | LOW      | HIGH  | HIGH  | A0
-    //    4    | HIGH     | LOW   | LOW   | A0
-    //    5    | HIGH     | LOW   | HIGH  | A0
-    //    6    | HIGH     | HIGH  | LOW   | A0
-    //    7    | HIGH     | HIGH  | HIGH  | A0
-    //    8    | --       | --    | --    | A1
-    //    9    | --       | --    | --    | A2
-    //   10    | --       | --    | --    | A3
-    //   11    | --       | --    | --    | A4
+    // 0..7 are muxed on pin A0, with (SELECT2, SELECT1, SELECT0) being the address pins
+    // Note that IDs are 1..12 in the schematic
+    // cell_id | SELECT2 | SELECT1 | SELECT0 | Analog input
+    // --------+---------+---------+---------+------------
+    //    0    | LOW     | LOW     | LOW     | A0
+    //    1    | LOW     | LOW     | HIGH    | A0
+    //    2    | LOW     | HIGH    | LOW     | A0
+    //    3    | LOW     | HIGH    | HIGH    | A0
+    //    4    | HIGH    | LOW     | LOW     | A0
+    //    5    | HIGH    | LOW     | HIGH    | A0
+    //    6    | HIGH    | HIGH    | LOW     | A0
+    //    7    | HIGH    | HIGH    | HIGH    | A0
+    //    8    | --      | --      | --      | A1
+    //    9    | --      | --      | --      | A2
+    //   10    | --      | --      | --      | A3
+    //   11    | --      | --      | --      | A4
     if (cell_id >= 0 && cell_id <= 7) {
         if (cell_id & 0b100)    PORTB |=  bit(PB6);       // PB6 = bit 2 (HIGH)
         else                    PORTB &= ~bit(PB6);       // PB6 = bit 2. (LOW)
         
-        digitalWrite(SELECT1, ((cell_id & 0b010) ? HIGH : LOW)); // SELECT1 = bit 1        
-        digitalWrite(SELECT0, ((cell_id & 0b001) ? HIGH : LOW)); // SELECT0 = bit 0
+        digitalWrite(PIN_SELECT0, ((cell_id & 0b001) ? HIGH : LOW)); // SELECT0 = bit 0
+        digitalWrite(PIN_SELECT1, ((cell_id & 0b010) ? HIGH : LOW)); // SELECT1 = bit 1
+        digitalWrite(PIN_SELECT2, ((cell_id & 0b100) ? HIGH : LOW)); // SELECT2 = bit 2
 
         // TODO: figure out if we need to delay to wait for the muliplexxed analog signal to switch
         cell = analogRead(A0);
@@ -88,39 +93,30 @@ double read_cell(int cell_id){
     else if (cell_id == 10) cell = analogRead(A3);
     else if (cell_id == 11) cell = analogRead(A4);
     else return -1.0;
-      
-    return cell * CELL_SCALERS[cell_id] / 102.4; // 102.4 used to be 2.0 * 5.0 / 1024.0 ??
+    
+    // convert analog signal to actual voltage
+    return (cell * CELL_SCALERS[cell_id]) * REFERENCE_VOLTAGE / ADC_RANGE; // 102.4 used to be 2.0 * 5.0 / 1024.0 ??
 }
 
 
-//Init stuff
 void setup() {
-
-    DDRB &= ~(1 << PB7);  // input
-    //DDRB  |=  (1 << PB7);  // output
-    //PORTB |=  (1 << PB7);  // high
-    //PORTB &= ~(1 << PB7);  // low
-
-    delay(100); // ensures PB7 is set at input
     pinMode(A0, INPUT);  // cells 0-7
     pinMode(A1, INPUT);  // cell 8
     pinMode(A2, INPUT);  // cell 9
     pinMode(A3, INPUT);  // cell 10
     pinMode(A4, INPUT);  // cell 11
 
-    DDRB  |=  (1 << PB6);  // output s2
-    // pinMode(S2, OUTPUT);//s2
-    pinMode(SELECT1, OUTPUT);//s1
-    pinMode(SELECT0, OUTPUT);//s0
+    pinMode(PIN_ESTOP, OUTPUT);     // estop
+    pinMode(PIN_SELECT0, OUTPUT);   // s0
+    pinMode(PIN_SELECT1, OUTPUT);   // s1
+    pinMode(PIN_SELECT2, OUTPUT);   // s2
     
-    digitalWrite(8, LOW);
-    pinMode(8, OUTPUT);// control for PB0 (controls a relay to cut power to rover)
-    digitalWrite(8, LOW);
+    digitalWrite(PIN_ESTOP, HIGH);  // TODO: check estop is default HIGH
 
     cli();
 
     //set timer1 interrupt at 1Hz
-    TCNT1  = 0;                 //initialize counter value to 0
+    TCNT1  = 0;                 // initialize counter value to 0
     TCCR1A = 0;                 // set entire TCCR1A register to 0
 
     // set WGM12 (bit 3) enabling CTC mode
