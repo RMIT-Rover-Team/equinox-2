@@ -120,23 +120,22 @@ void setup() {
     cli();
 
     //set timer1 interrupt at 1Hz
-    TCCR1A = 0;// set entire TCCR1A register to 0
-    TCCR1B = 0;// same for TCCR1B
-    TCNT1  = 0;//initialize counter value to 0
-    // set compare match register for 1hz increments
-    OCR1A = 15624*2;// = (16*10^6) / (1*1024) - 1 (must be <65536)
-    // turn on CTC mode
-    TCCR1B |= (1 << WGM12);
-    // Set CS12 and CS10 bits for 1024 prescaler
-    TCCR1B |= (1 << CS12) | (1 << CS10);  
-    // enable timer compare interrupt
-    TIMSK1 |= (1 << OCIE1A);
+    TCNT1  = 0;                 //initialize counter value to 0
+    TCCR1A = 0;                 // set entire TCCR1A register to 0
+
+    // set WGM12 (bit 3) enabling CTC mode
+    // set CS12..CS10 clock select (bits 2..0) to divide by 1024
+    TCCR1B = 0b0000_1101
+    
+    // set compare match register A for 1hz increments
+    OCR1A = 15624*2;            // = (16*10^6) / (1*1024) - 1 (must be <65536)
+    TIMSK1 |= (1 << OCIE1A);    // enable timer compare interrupt for register OCR1A
 
     sei();
     
-    Serial.begin(9600);
     
     //If you need to configure SPI pins, do it here (Pico Specific)
+    Serial.begin(9600);
     SPI.begin();
 
     //Start the EQUCAN
@@ -147,7 +146,7 @@ void setup() {
     Serial.println("Prepare Slave\n");
     can_slave = new RoverCanSlave(can_bus);
 
-    //Add the hooks where needed
+    // Add the hooks where needed
     // [ID Segment - 2 bits][Channel ID - 3 bits]
     can_slave->handle_ping = &handle_ping;
     can_slave->handle_estop = &handle_estop;
@@ -156,13 +155,12 @@ void setup() {
     Serial.println("BMS Ready!\n");
 }
 
-// DOES NOTHING??
+// ran every 1 second
 ISR(TIMER1_COMPA_vect) { // 4 interrupts every 4 seconds
     Serial.println("Tick");
     send_telemetry();
     can_slave->noBlockListenTick();
 }
 
-void loop(){
-  myslave->noBlockListenTick();
-}
+// void loop(){
+// }
