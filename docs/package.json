@@ -6,6 +6,8 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "test:components": "astro build && node --test tests/component-overrides.test.mjs",
+    "test:theme": "astro build && node --test tests/theme-select.test.mjs",
     "test:sidebar": "astro build && node --test tests/sidebar-render.test.mjs",
     "preview": "astro preview",
     "astro": "astro"
