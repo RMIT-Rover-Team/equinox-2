@@ -27,11 +27,6 @@ void handle_estop() {
     sei();
 }
 
-// toggles each cell
-void handle_tx8(uint8_t device_id, int8_t nums[8]) {
-    // TODO
-}
-
 // run every second
 void send_telemetry() {
     uint8_t data[6] = {0};
@@ -146,7 +141,6 @@ void setup() {
     // [ID Segment - 2 bits][Channel ID - 3 bits]
     can_slave->handle_ping = &handle_ping;
     can_slave->handle_estop = &handle_estop;
-    can_slave->handle_tx_int8 = &handle_tx8;
 
     Serial.println("BMS Ready!\n");
 }
