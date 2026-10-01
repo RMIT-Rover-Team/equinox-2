@@ -3,24 +3,32 @@
 #include "RoverCanSlave.h"
 #include "EQUCAN.h"
 #include <SPI.h>
+#include <stdint.h>
 
 #define PIN_ESTOP PD6   // (controls a relay to cut power to rover)
 #define PIN_SELECT0 PD7
 #define PIN_SELECT1 PB0
-#define PIN_SELECT2 PB1 // unused?
+#define PIN_SELECT2 PB1
+
+#define TIMEOUT_MS 2000
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Global objects to be initialised
+// Global objects to be initialised
+bool did_estop = false;
+unsigned long last_ping_time = 0;
+
 EQUCAN* can_bus = nullptr;
 RoverCanSlave* can_slave = nullptr;
 
 void handle_ping() {
-    // TODO
-    // can_slave->
-}
+    last_ping_time = millis();
+    Serial.println("Ping");
 
 void handle_estop() {
+    if (did_estop) return;
+    
     cli();
+    did_estop = true;
     // TODO: make sure this is all there is to do to shut down
     TCNT1 = 0;                      // reset counter
     digitalWrite(PIN_ESTOP, LOW);   //shuts power to rover (according to kaelan)
@@ -29,7 +37,10 @@ void handle_estop() {
 
 // run every second
 void send_telemetry() {
-    uint8_t data[6] = {0};
+    // 2 packets sent, 1 for first 6 cell voltages, 1 for last 6
+
+    // 8 u8's, only 6 used
+    uint8_t data[8] = {0};
 
     // send cells 0-5
     for (size_t i = 0; i < 6; i++) {
@@ -130,6 +141,7 @@ void setup() {
     SPI.begin();
 
     //Start the EQUCAN
+    last_ping_time = millis();
     // Serial.println("Init EQUCAN\n");
     can_bus = new EQUCAN();
 
@@ -150,6 +162,11 @@ ISR(TIMER1_COMPA_vect) { // 4 interrupts every 4 seconds
     Serial.println("Tick");
     send_telemetry();
     can_slave->noBlockListenTick();
+
+    if (millis() - last_ping_time > TIMEOUT_MS) {
+        Serial.println("BMS EStop from timeout");
+        handle_estop();
+    }
 }
 
 // void loop(){
