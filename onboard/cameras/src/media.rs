@@ -557,14 +557,18 @@ impl RoverMediaPipeline {
     }
 
     fn build_h264_encoder() -> Result<gst::Element, CamError> {
-        let encoder_factory = gst::ElementFactory::find("v4l2h264enc")
+        // Raspberry Pi 5 exposes a V4L2 encoder element but has no hardware
+        // H.264 encoder. Prefer libx264 so that selecting the element does
+        // not succeed only for streaming to fail on the first frame.
+        let encoder_factory = gst::ElementFactory::find("x264enc")
             .or_else(|| {
-                log::warn!("can't find v4l2h264enc, falling back to x264enc");
-                gst::ElementFactory::find("x264enc")
+                log::warn!("can't find x264enc, falling back to v4l2h264enc");
+                gst::ElementFactory::find("v4l2h264enc")
             })
             .ok_or_else(|| {
                 CamError::ElementCreationFailed(
-                    "v4l2h264enc or x264enc could not be found (hint: install v4l2".into(),
+                    "x264enc or v4l2h264enc could not be found (hint: install GStreamer encoder plugins)"
+                        .into(),
                 )
             })?;
 
