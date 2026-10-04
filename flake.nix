@@ -13,10 +13,12 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
-        gst-plugins-rs = pkgs.gst_all_1.gst-plugins-rs;
-        gst-plugins-rs-livekit =
-          assert pkgs.lib.assertMsg
-            (pkgs.lib.versionAtLeast gst-plugins-rs.version "0.15.3")
+        makeGstPluginsRsLivekit = packageSet:
+          let
+            gst-plugins-rs = packageSet.gst_all_1.gst-plugins-rs;
+          in
+          assert packageSet.lib.assertMsg
+            (packageSet.lib.versionAtLeast gst-plugins-rs.version "0.15.3")
             "eq2-cameras requires gst-plugins-rs 0.15.3 or newer for LiveKit protocol compatibility";
           (gst-plugins-rs.override {
             # The upstream WebRTC plugin has a Meson-level dependency on the
@@ -36,17 +38,49 @@
             doCheck = false;
           });
 
-        gst-deps = with pkgs.gst_all_1; [
-          gstreamer
-          gst-plugins-base
-          gst-plugins-good
-          gst-plugins-bad
-          gst-plugins-ugly
-          gst-libav
-        ] ++ [
-          gst-plugins-rs-livekit
-          pkgs.libnice.out
-        ];
+        makeCameraPackage = packageSet:
+          let
+            gst-plugins-rs-livekit = makeGstPluginsRsLivekit packageSet;
+            gst-deps = with packageSet.gst_all_1; [
+              gstreamer
+              gst-plugins-base
+              gst-plugins-good
+              gst-plugins-bad
+              gst-plugins-ugly
+              gst-libav
+            ] ++ [
+              gst-plugins-rs-livekit
+              packageSet.libnice.out
+            ];
+          in
+          packageSet.rustPlatform.buildRustPackage {
+            pname = "eq2-cameras";
+            version = "0.1.0";
+
+            # Avoid copying Cargo's local build directory into the derivation.
+            src = packageSet.lib.cleanSource ./onboard/cameras;
+            cargoLock.lockFile = ./onboard/cameras/Cargo.lock;
+
+            # These are programs executed by the build machine. buildPackages
+            # keeps them x86_64 when this package is cross-compiled.
+            nativeBuildInputs = [
+              packageSet.buildPackages.pkg-config
+              packageSet.buildPackages.makeWrapper
+            ];
+            buildInputs = [ packageSet.glib ] ++ gst-deps;
+
+            # GStreamer discovers codecs and the LiveKit sink dynamically, so
+            # make every required plugin directory explicit at runtime.
+            postFixup = ''
+              wrapProgram $out/bin/eq2-cameras \\
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-base}/lib/gstreamer-1.0" \\
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-good}/lib/gstreamer-1.0" \\
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-bad}/lib/gstreamer-1.0" \\
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-ugly}/lib/gstreamer-1.0" \\
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-libav}/lib/gstreamer-1.0" \\
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${gst-plugins-rs-livekit}/lib/gstreamer-1.0"
+            '';
+          };
 
         backendShell = pkgs.mkShell {
           packages = with pkgs; [
@@ -62,6 +96,13 @@
         };
       in
       {
+        packages = {
+          eq2-cameras = makeCameraPackage pkgs;
+        } // pkgs.lib.optionalAttrs (system == "x86_64-linux") {
+          # A runnable ARM64 Linux package built from an x86_64 Linux builder.
+          eq2-cameras-aarch64 = makeCameraPackage pkgs.pkgsCross.aarch64-multiplatform;
+        };
+
         devShells = {
           cameras = pkgs.mkShell {
             nativeBuildInputs = with pkgs; [
@@ -77,7 +118,20 @@
             buildInputs = with pkgs; [
               glib
               libclang.lib
-            ] ++ gst-deps;
+            ] ++ (let
+              gst-plugins-rs-livekit = makeGstPluginsRsLivekit pkgs;
+            in
+              (with pkgs.gst_all_1; [
+                gstreamer
+                gst-plugins-base
+                gst-plugins-good
+                gst-plugins-bad
+                gst-plugins-ugly
+                gst-libav
+              ]) ++ [
+                gst-plugins-rs-livekit
+                pkgs.libnice.out
+              ]);
           };
         } // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
           backend = backendShell;

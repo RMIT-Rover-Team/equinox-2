@@ -1,0 +1,60 @@
+name: Build ARM64 camera package
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "flake.nix"
+      - "flake.lock"
+      - "onboard/cameras/**"
+      - ".github/workflows/build-cameras-aarch64.yml"
+  pull_request:
+    paths:
+      - "flake.nix"
+      - "flake.lock"
+      - "onboard/cameras/**"
+      - ".github/workflows/build-cameras-aarch64.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Nix closure (aarch64-linux)
+    # This builds natively, avoiding a long GStreamer cross-compilation.
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: NixOS/nix-installer-action@main
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
+
+      - name: Build the camera package
+        run: nix build --print-build-logs .#eq2-cameras
+
+      - name: Export the complete Nix closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          nix-store --export $(nix-store --query --requisites ./result) | zstd -T0 -19 -o eq2-cameras-aarch64.nar.zst
+          sha256sum eq2-cameras-aarch64.nar.zst > eq2-cameras-aarch64.nar.zst.sha256
+          printf '%s\n' \
+            'Import on the Raspberry Pi with:' \
+            '  zstd -dc eq2-cameras-aarch64.nar.zst | nix-store --import' \
+            'Then run the printed /nix/store/...-eq2-cameras/bin/eq2-cameras path.' \
+            > README.txt
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: eq2-cameras-aarch64-nix-closure
+          path: |
+            eq2-cameras-aarch64.nar.zst
+            eq2-cameras-aarch64.nar.zst.sha256
+            README.txt
+          if-no-files-found: error
+          retention-days: 14
