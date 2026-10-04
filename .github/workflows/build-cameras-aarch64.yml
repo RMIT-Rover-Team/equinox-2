@@ -2,7 +2,7 @@ name: Build ARM64 camera package
 
 on:
   push:
-    branches: [main]
+    branches: [feat/cameras-backend-rs]
     paths:
       - "flake.nix"
       - "flake.lock"
