@@ -43,16 +43,18 @@ impl DeviceCatalog {
             .properties()
             .ok_or_else(|| CamError::PropertyNotFound("device properties".into()))?;
 
-        let identity = properties
-            // .get::<String>("device.serial")
-            .get::<String>("device.serial")
-            .or_else(|_| properties.get::<String>("device.bus_path"))
-            .or_else(|_| properties.get::<String>("v4l2.device.bus_info"))
-            .map_err(|_| CamError::PropertyNotFound("stable device identity".into()))?;
-
         let path = properties
             .get::<String>("device.path")
             .map_err(|_| CamError::PropertyNotFound("device.path".into()))?;
+
+        // Some UVC cameras do not report a serial or bus identifier through
+        // GStreamer. The V4L2 path is still sufficient to keep their branch
+        // stable for the process lifetime and to handle remove events.
+        let identity = properties
+            .get::<String>("device.serial")
+            .or_else(|_| properties.get::<String>("device.bus_path"))
+            .or_else(|_| properties.get::<String>("v4l2.device.bus_info"))
+            .unwrap_or_else(|_| path.clone());
 
         let caps = device
             .caps()
