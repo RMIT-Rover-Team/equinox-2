@@ -14,6 +14,7 @@ pub enum DiscoveryEvent {
 
 #[derive(Debug)]
 pub enum MediaEvent {
-    LiveKitDisconnected { reason: String },
-    EndOfStream,
+    CameraFailed { id: String, reason: String },
+    PipelineFailed { reason: String },
+    PipelineEos,
 }

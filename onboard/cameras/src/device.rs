@@ -1,7 +1,7 @@
 use crate::error::CamError;
 use gstreamer as gst;
 use gstreamer::prelude::*;
-use std::collections::{HashMap, hash_map::Entry};
+use std::collections::{hash_map::Entry, HashMap};
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct CameraId(String);

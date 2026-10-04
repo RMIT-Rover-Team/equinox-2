@@ -15,10 +15,29 @@ const INITIAL_RECONNECT_DELAY: Duration = Duration::from_secs(1);
 const MAX_RECONNECT_DELAY: Duration = Duration::from_secs(30);
 const STABLE_CONNECTION_TIME: Duration = Duration::from_secs(60);
 
+#[derive(Debug, Eq, PartialEq)]
 pub enum AppState {
     Running,
+    Backoff,
     Rebuilding,
     Down,
+}
+
+#[derive(Debug, Eq, PartialEq)]
+pub enum RecoveryTarget {
+    Pipeline,
+    Camera(String),
+}
+
+struct PendingRecovery {
+    target: RecoveryTarget,
+    retry_at: Instant,
+}
+
+impl PendingRecovery {
+    fn is_due(&self, now: Instant) -> bool {
+        now >= self.retry_at
+    }
 }
 
 pub struct CameraApp {
@@ -27,7 +46,7 @@ pub struct CameraApp {
     event_tx: Sender<AppEvent>,
     media: RoverMediaPipeline,
     state: AppState,
-    reconnect_at: Option<Instant>,
+    pending_recovery: Option<PendingRecovery>,
     reconnect_delay: Duration,
     last_media_failure: Option<Instant>,
 }
@@ -39,10 +58,10 @@ impl CameraApp {
         Ok(Self {
             catalog: DeviceCatalog::new(),
             config: config.clone(),
-            event_tx: event_tx,
-            media: media,
+            event_tx,
+            media,
             state: AppState::Running,
-            reconnect_at: None,
+            pending_recovery: None,
             reconnect_delay: INITIAL_RECONNECT_DELAY,
             last_media_failure: None,
         })
@@ -88,38 +107,69 @@ impl CameraApp {
 
     fn handle_media_event(&mut self, event: MediaEvent) -> Result<(), CamError> {
         match event {
-            MediaEvent::LiveKitDisconnected { reason } => self.schedule_rebuild_media(&reason),
-            MediaEvent::EndOfStream => {
-                self.schedule_rebuild_media("the media pipeline reached end-of-stream")
+            MediaEvent::PipelineEos => {
+                log::info!("PIPELINE EOS");
+                self.schedule_recovery(RecoveryTarget::Pipeline, "pipeline reached EOS");
+            }
+
+            MediaEvent::PipelineFailed { reason } => {
+                log::error!("Media pipeline requires a full rebuild: {reason}");
+                self.schedule_recovery(RecoveryTarget::Pipeline, &reason);
+            }
+
+            MediaEvent::CameraFailed { id, reason } => {
+                log::info!("CAMERA FAIL");
+                self.schedule_recovery(RecoveryTarget::Camera(id), &reason);
+            }
+        }
+
+        Ok(())
+    }
+
+    pub fn poll(&mut self) -> Result<(), CamError> {
+        let Some(pending) = self.pending_recovery.as_ref() else {
+            return Ok(());
+        };
+
+        if !pending.is_due(Instant::now()) {
+            return Ok(());
+        }
+
+        let pending = self
+            .pending_recovery
+            .take()
+            .expect("pending recovery was checked above");
+        self.set_state(AppState::Rebuilding);
+
+        let result = match &pending.target {
+            RecoveryTarget::Pipeline => self.rebuild_pipeline(),
+            RecoveryTarget::Camera(id) => {
+                log::warn!(
+                    "Targeted recovery for camera {id} is not implemented; rebuilding the pipeline"
+                );
+                self.rebuild_pipeline()
+            }
+        };
+
+        match result {
+            Ok(()) => {
+                self.set_state(AppState::Running);
+                Ok(())
+            }
+            Err(error) => {
+                self.set_state(AppState::Down);
+                let reason = error.to_string();
+                self.schedule_recovery(pending.target, &reason);
+                Err(error)
             }
         }
     }
 
-    pub fn poll(&mut self) -> Result<(), CamError>{
-        let Some(reconnect_at) = self.reconnect_at else {
-            return Ok(())
-        };
-
-        if Instant::now() < reconnect_at {
-            return Ok(());
-        }
-
-        let _ = self.rebuild_media()
-            .map_err(|_| CamError::PipelineRebuildError("Failed to rebuild media pipeline".into()));
-        self.reconnect_at = None;
-        Ok(())
-    }
-
-    fn set_state(&mut self, state: AppState) -> Result<(), CamError> {
+    fn set_state(&mut self, state: AppState) {
         self.state = state;
-        Ok(())
     }
 
-    fn schedule_rebuild_media(&mut self, reason: &str) -> Result<(), CamError> {
-        self.set_state(AppState::Rebuilding).map_err(|_| {
-            CamError::PipelineRebuildError("Failed to set app state to rebuilding".into())
-        })?;
-
+    fn schedule_recovery(&mut self, target: RecoveryTarget, reason: &str) {
         let now = Instant::now();
 
         if self
@@ -130,27 +180,34 @@ impl CameraApp {
         }
         self.last_media_failure = Some(now);
 
-        if self.reconnect_at.is_some() {
-            log::debug!("A media rebuild is already scheduled; ignoring: {reason}");
-            return Ok(());
+        if let Some(pending) = self.pending_recovery.as_mut() {
+            if matches!(&target, RecoveryTarget::Pipeline) {
+                pending.target = RecoveryTarget::Pipeline;
+            }
+
+            log::debug!("A media recovery is already scheduled; coalescing: {reason}");
+            return;
         }
 
         let delay = self.reconnect_delay;
-        self.reconnect_at = Some(now + delay);
+        self.pending_recovery = Some(PendingRecovery {
+            target,
+            retry_at: now + delay,
+        });
         self.reconnect_delay = self
             .reconnect_delay
             .saturating_mul(2)
             .min(MAX_RECONNECT_DELAY);
+        self.set_state(AppState::Backoff);
 
         log::warn!(
-            "LiveKit media failed ({reason}); rebuilding in {:.1}s",
+            "LiveKit media failed ({reason}); attempting recovery in {:.1}s",
             delay.as_secs_f32()
         );
-
-        Ok(())
     }
 
-    fn rebuild_media(&mut self) -> Result<(), CamError> {
+    fn rebuild_pipeline(&mut self) -> Result<(), CamError> {
+        self.set_state(AppState::Rebuilding);
         self.media.stop()?;
 
         let mut replacement = RoverMediaPipeline::start(&self.config, self.event_tx.clone())?;
@@ -159,7 +216,8 @@ impl CameraApp {
         }
 
         self.media = replacement;
-        log::info!("Rebuilt the LiveKit media pipeline");
+        log::info!("Rebuilt the pipeline");
+
         Ok(())
     }
 }

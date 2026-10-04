@@ -38,7 +38,10 @@ fn main() -> anyhow::Result<()> {
             }
         }
 
-        app.poll();
+        if let Err(error) = app.poll() {
+            log::error!("Failed to recover camera media: {error}");
+        }
+
         glib::ControlFlow::Continue
     });
 
