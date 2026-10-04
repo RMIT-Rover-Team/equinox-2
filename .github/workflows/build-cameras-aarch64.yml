@@ -43,7 +43,16 @@ jobs:
           set -euo pipefail
           nix-store --export $(nix-store --query --requisites ./result) | zstd -T0 -19 -o eq2-cameras-aarch64.nar.zst
           sha256sum eq2-cameras-aarch64.nar.zst > eq2-cameras-aarch64.nar.zst.sha256
-          cp onboard/cameras/eq2-cameras.env.example eq2-cameras.env.example
+          printf '%s\n' \
+            '# Copy this file to eq2-cameras.env on the Raspberry Pi, then set real values.' \
+            '# Do not commit eq2-cameras.env: the token grants access to your LiveKit room.' \
+            '' \
+            '# WebSocket endpoint of the LiveKit server reachable from the rover.' \
+            "export LIVEKIT_WS_URL='ws://livekit-hostname-or-ip:7880'" \
+            '' \
+            '# A LiveKit JWT for this camera identity with canPublish=true.' \
+            "export LIVEKIT_AUTH_TOKEN='replace-with-a-livekit-jwt'" \
+            > eq2-cameras.env.example
           printf '%s\n' \
             'Import on the Raspberry Pi with:' \
             '  zstd -dc eq2-cameras-aarch64.nar.zst | nix-store --import' \
