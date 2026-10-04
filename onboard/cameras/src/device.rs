@@ -1,12 +1,16 @@
 use crate::error::CamError;
 use gstreamer as gst;
 use gstreamer::prelude::*;
-use std::collections::{hash_map::Entry, HashMap};
+use std::collections::{HashMap, hash_map::Entry};
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct CameraId(String);
 
 impl CameraId {
+    pub fn libcamera(camera_name: &str) -> Self {
+        Self(format!("libcamera:{camera_name}"))
+    }
+
     pub fn as_str(&self) -> &str {
         &self.0
     }

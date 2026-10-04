@@ -149,11 +149,27 @@ impl RoverMediaPipeline {
     }
 
     pub fn add_camera(&mut self, id: CameraId, hardware: &CameraHardware) -> Result<(), CamError> {
+        let branch = Self::build_webrtc(&id, hardware)?;
+        self.add_camera_branch(id, branch)
+    }
+
+    pub fn add_libcamera_camera(
+        &mut self,
+        id: CameraId,
+        device: &gst::Device,
+    ) -> Result<(), CamError> {
+        let branch = Self::build_libcamera_webrtc(device)?;
+        self.add_camera_branch(id, branch)
+    }
+
+    fn add_camera_branch(
+        &mut self,
+        id: CameraId,
+        mut branch: CameraBranch,
+    ) -> Result<(), CamError> {
         if self.branches.contains_key(&id) {
             return Err(CamError::DuplicateMediaBranch(id.as_str().to_owned()));
         }
-
-        let mut branch = Self::build_webrtc(&id, hardware)?;
 
         let branch_src = branch
             .bin
@@ -432,44 +448,7 @@ impl RoverMediaPipeline {
         let videoconvert = gst::ElementFactory::make("videoconvert")
             .build()
             .map_err(|_| CamError::ElementCreationFailed("failed to create videoconvert".into()))?;
-        let encoder_factory = gst::ElementFactory::find("v4l2h264enc")
-            .or_else(|| {
-                log::warn!("can't find v4l2h264enc, falling back to x264enc");
-                gst::ElementFactory::find("x264enc")
-            })
-            .ok_or_else(|| {
-                CamError::ElementCreationFailed(
-                    "v4l2h264enc or x264enc could not be found (hint: install v4l2".into(),
-                )
-            })?;
-
-        let encoder: gst::Element = match encoder_factory.name().as_str() {
-            "v4l2h264enc" => encoder_factory
-                .create()
-                .build()
-                .map_err(|_| CamError::ElementCreationFailed("failed to create encoder".into()))?,
-            "x264enc" => {
-                let bitrate_kbps: u32 = 6_000;
-                encoder_factory
-                    .create()
-                    .property_from_str("tune", "zerolatency") // these properties are more cpu intensive, discard if required
-                    .property("bitrate", bitrate_kbps) // kbit/sec, tune later
-                    // .property_from_str("speed-preset", "ultrafast") // test speed-presets later
-                    .build()
-                    .map_err(|_| {
-                        CamError::ElementCreationFailed("failed to create encoder".into())
-                    })?
-            }
-            name => {
-                log::warn!(
-                    "Could not find {} encoder, falling back to default encoder",
-                    name
-                );
-                encoder_factory.create().build().map_err(|_| {
-                    CamError::ElementCreationFailed("failed to create encoder".into())
-                })?
-            }
-        };
+        let encoder = Self::build_h264_encoder()?;
 
         let h264parse = gst::ElementFactory::make("h264parse")
             .build()
@@ -499,6 +478,118 @@ impl RoverMediaPipeline {
             supported_caps: hardware.caps.clone(),
             valve,
         })
+    }
+
+    fn build_libcamera_webrtc(device: &gst::Device) -> Result<CameraBranch, CamError> {
+        // IMX708's lowest native mode is 1536x864. Libcamera configures the
+        // sensor/ISP; unlike Unicam's raw V4L2 node, it produces video/x-raw.
+        let source_caps = gst::Caps::builder("video/x-raw")
+            .field("width", 1536i32)
+            .field("height", 864i32)
+            .build();
+        let output_caps = gst::Caps::builder("video/x-raw")
+            .field("framerate", gst::Fraction::new(30, 1))
+            .build();
+
+        // The Libcamera device provider creates libcamerasrc with the exact
+        // camera-name selected during discovery, rather than relying on a
+        // board-specific camera path.
+        let source = device.create_element(Some("source")).map_err(|_| {
+            CamError::ElementCreationFailed(
+                "failed to create Libcamera camera source; ensure the Libcamera GStreamer plugin is installed"
+                    .into(),
+            )
+        })?;
+        let capsfilter = gst::ElementFactory::make("capsfilter")
+            .property("caps", &source_caps)
+            .build()
+            .map_err(|_| CamError::ElementCreationFailed("failed to create capsfilter".into()))?;
+        let queue = gst::ElementFactory::make("queue")
+            .property("max-size-buffers", 2u32)
+            .property("max-size-bytes", 0u32)
+            .property("max-size-time", 0u64)
+            .property_from_str("leaky", "downstream")
+            .build()
+            .map_err(|_| CamError::ElementCreationFailed("failed to create queue".into()))?;
+        let videoconvert = gst::ElementFactory::make("videoconvert")
+            .build()
+            .map_err(|_| CamError::ElementCreationFailed("failed to create videoconvert".into()))?;
+        let videorate = gst::ElementFactory::make("videorate")
+            .build()
+            .map_err(|_| CamError::ElementCreationFailed("failed to create videorate".into()))?;
+        let framerate_filter = gst::ElementFactory::make("capsfilter")
+            .property("caps", &output_caps)
+            .build()
+            .map_err(|_| {
+                CamError::ElementCreationFailed("failed to create framerate capsfilter".into())
+            })?;
+        let encoder = Self::build_h264_encoder()?;
+        let h264parse = gst::ElementFactory::make("h264parse")
+            .build()
+            .map_err(|_| CamError::ElementCreationFailed("failed to make h264 parse".into()))?;
+        let valve = gst::ElementFactory::make("valve")
+            .build()
+            .map_err(|_| CamError::ElementCreationFailed("failed to make valve".into()))?;
+
+        let elements = [
+            &source,
+            &capsfilter,
+            &queue,
+            &videoconvert,
+            &videorate,
+            &framerate_filter,
+            &encoder,
+            &h264parse,
+            &valve,
+        ];
+        let bin = Self::build_source_bin(&elements)?;
+        log::info!(
+            "Successfully made Libcamera branch for {}",
+            device.display_name()
+        );
+
+        Ok(CameraBranch {
+            bin,
+            capsfilter,
+            supported_caps: source_caps,
+            valve,
+        })
+    }
+
+    fn build_h264_encoder() -> Result<gst::Element, CamError> {
+        let encoder_factory = gst::ElementFactory::find("v4l2h264enc")
+            .or_else(|| {
+                log::warn!("can't find v4l2h264enc, falling back to x264enc");
+                gst::ElementFactory::find("x264enc")
+            })
+            .ok_or_else(|| {
+                CamError::ElementCreationFailed(
+                    "v4l2h264enc or x264enc could not be found (hint: install v4l2".into(),
+                )
+            })?;
+
+        match encoder_factory.name().as_str() {
+            "v4l2h264enc" => encoder_factory
+                .create()
+                .build()
+                .map_err(|_| CamError::ElementCreationFailed("failed to create encoder".into())),
+            "x264enc" => encoder_factory
+                .create()
+                .property_from_str("tune", "zerolatency")
+                .property("bitrate", 6_000u32)
+                .build()
+                .map_err(|_| CamError::ElementCreationFailed("failed to create encoder".into())),
+            name => {
+                log::warn!(
+                    "Could not find {} encoder, falling back to default encoder",
+                    name
+                );
+                encoder_factory
+                    .create()
+                    .build()
+                    .map_err(|_| CamError::ElementCreationFailed("failed to create encoder".into()))
+            }
+        }
     }
 
     fn install_bus_watch(

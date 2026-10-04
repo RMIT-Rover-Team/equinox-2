@@ -21,13 +21,18 @@ impl DeviceDiscovery {
     /// Starts monitoring video source devices.
     pub fn start(event_tx: Sender<AppEvent>) -> Result<Self, CamError> {
         let monitor = gst::DeviceMonitor::new();
-        monitor.add_filter(Some("Video/Source"), None);
+        // Libcamera advertises CSI cameras as `Source/Video`, while USB V4L2
+        // cameras typically use `Video/Source`. Filter events below so both
+        // providers are discovered.
 
         let watch_guard = monitor
             .bus()
             .add_watch_local(move |_, message| {
                 match message.view() {
                     gst::MessageView::DeviceAdded(message) => {
+                        if !message.device().device_class().contains("Video") {
+                            return glib::ControlFlow::Continue;
+                        }
                         if event_tx
                             .send(AppEvent::Discovery(DiscoveryEvent::Added(message.device())))
                             .is_err()
@@ -36,6 +41,9 @@ impl DeviceDiscovery {
                         }
                     }
                     gst::MessageView::DeviceRemoved(message) => {
+                        if !message.device().device_class().contains("Video") {
+                            return glib::ControlFlow::Continue;
+                        }
                         if event_tx
                             .send(AppEvent::Discovery(DiscoveryEvent::Removed(
                                 message.device(),

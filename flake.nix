@@ -51,6 +51,9 @@
             ] ++ [
               gst-plugins-rs-livekit
               packageSet.libnice.out
+              # Libcamera provides the libcamerasrc plugin for Raspberry Pi
+              # CSI sensors such as the IMX708.
+              packageSet.libcamera
             ];
           in
           packageSet.rustPlatform.buildRustPackage {
@@ -73,6 +76,8 @@
             # make every required plugin directory explicit at runtime.
             postFixup = ''
               wrapProgram $out/bin/eq2-cameras \
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gstreamer}/lib/gstreamer-1.0" \
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.libcamera}/lib/gstreamer-1.0" \
                 --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-base}/lib/gstreamer-1.0" \
                 --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-good}/lib/gstreamer-1.0" \
                 --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-bad}/lib/gstreamer-1.0" \
@@ -131,7 +136,7 @@
               ]) ++ [
                 gst-plugins-rs-livekit
                 pkgs.libnice.out
-              ]);
+              ] ++ pkgs.lib.optional pkgs.stdenv.hostPlatform.isLinux pkgs.libcamera);
           };
         } // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
           backend = backendShell;

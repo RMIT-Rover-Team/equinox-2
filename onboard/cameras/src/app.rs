@@ -1,11 +1,14 @@
+use gstreamer as gst;
+use gstreamer::prelude::*;
 use std::{
+    collections::HashMap,
     sync::mpsc::Sender,
     time::{Duration, Instant},
 };
 
 use crate::{
     config::LiveKitConfig,
-    device::DeviceCatalog,
+    device::{CameraId, DeviceCatalog},
     error::CamError,
     events::{AppEvent, DiscoveryEvent, MediaEvent},
     media::RoverMediaPipeline,
@@ -42,6 +45,7 @@ impl PendingRecovery {
 
 pub struct CameraApp {
     catalog: DeviceCatalog,
+    libcamera_devices: HashMap<gst::Device, CameraId>,
     config: LiveKitConfig,
     event_tx: Sender<AppEvent>,
     media: RoverMediaPipeline,
@@ -57,6 +61,7 @@ impl CameraApp {
 
         Ok(Self {
             catalog: DeviceCatalog::new(),
+            libcamera_devices: HashMap::new(),
             config: config.clone(),
             event_tx,
             media,
@@ -77,6 +82,14 @@ impl CameraApp {
     fn handle_discovery(&mut self, event: DiscoveryEvent) -> Result<(), CamError> {
         match event {
             DiscoveryEvent::Added(device) => {
+                if Self::is_imx708(&device) {
+                    let id = CameraId::libcamera(device.display_name().as_str());
+                    self.media.add_libcamera_camera(id.clone(), &device)?;
+                    self.libcamera_devices.insert(device, id.clone());
+                    log::info!("Registered IMX708 camera: {}", id.as_str());
+                    return Ok(());
+                }
+
                 let id = self.catalog.add(device)?;
 
                 let media_result = self
@@ -85,15 +98,35 @@ impl CameraApp {
                     .ok_or_else(|| CamError::DeviceNotFound(format!("camera {}", id.as_str())))
                     .and_then(|hardware| self.media.add_camera(id.clone(), hardware));
 
-                if let Err(error) = media_result {
-                    self.catalog.remove(&id);
-                    return Err(error);
+                match media_result {
+                    Ok(()) => {
+                        log::info!("Registered camera: {}", id.as_str());
+                    }
+                    // DeviceMonitor also reports the Raspberry Pi's internal
+                    // CSI/codec endpoints. They are not MJPEG cameras and are
+                    // intentionally unsupported by the current pipeline.
+                    Err(CamError::UnsupportedCaps(reason)) => {
+                        self.catalog.remove(&id);
+                        log::debug!("Skipping unsupported camera {}: {reason}", id.as_str());
+                    }
+                    Err(error) => {
+                        self.catalog.remove(&id);
+                        return Err(error);
+                    }
                 }
-
-                log::info!("Registered camera: {}", id.as_str());
             }
             DiscoveryEvent::Removed(device) => {
-                let id = self.catalog.id_for_device(&device)?;
+                if let Some(id) = self.libcamera_devices.remove(&device) {
+                    self.media.remove_camera(&id)?;
+                    log::info!("Removed IMX708 camera: {}", id.as_str());
+                    return Ok(());
+                }
+
+                let Ok(id) = self.catalog.id_for_device(&device) else {
+                    // This includes devices skipped on addition because their
+                    // caps are unsupported by the MJPEG pipeline.
+                    return Ok(());
+                };
                 self.media.remove_camera(&id)?;
                 self.catalog
                     .remove(&id)
@@ -103,6 +136,17 @@ impl CameraApp {
         }
 
         Ok(())
+    }
+
+    fn is_imx708(device: &gst::Device) -> bool {
+        let model = device
+            .properties()
+            .and_then(|properties| properties.get::<String>("Model").ok());
+
+        model
+            .unwrap_or_else(|| device.display_name().to_string())
+            .to_ascii_lowercase()
+            .contains("imx708")
     }
 
     fn handle_media_event(&mut self, event: MediaEvent) -> Result<(), CamError> {
@@ -211,6 +255,9 @@ impl CameraApp {
         self.media.stop()?;
 
         let mut replacement = RoverMediaPipeline::start(&self.config, self.event_tx.clone())?;
+        for (device, id) in &self.libcamera_devices {
+            replacement.add_libcamera_camera(id.clone(), device)?;
+        }
         for (id, hardware) in self.catalog.iter() {
             replacement.add_camera(id.clone(), hardware)?;
         }

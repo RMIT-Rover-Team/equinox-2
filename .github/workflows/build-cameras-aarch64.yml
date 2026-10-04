@@ -43,11 +43,20 @@ jobs:
           set -euo pipefail
           nix-store --export $(nix-store --query --requisites ./result) | zstd -T0 -19 -o eq2-cameras-aarch64.nar.zst
           sha256sum eq2-cameras-aarch64.nar.zst > eq2-cameras-aarch64.nar.zst.sha256
+          cp onboard/cameras/eq2-cameras.env.example eq2-cameras.env.example
           printf '%s\n' \
             'Import on the Raspberry Pi with:' \
             '  zstd -dc eq2-cameras-aarch64.nar.zst | nix-store --import' \
+            '' \
+            'Configure and load LiveKit credentials:' \
+            '  cp eq2-cameras.env.example eq2-cameras.env' \
+            '  chmod 600 eq2-cameras.env' \
+            '  # Edit eq2-cameras.env, then run:' \
+            '  set -a; . ./eq2-cameras.env; set +a' \
+            '' \
             'Then run the printed /nix/store/...-eq2-cameras/bin/eq2-cameras path.' \
             > README.txt
+          du -h eq2-cameras-aarch64.nar.zst
 
       - uses: actions/upload-artifact@v7
         with:
@@ -55,6 +64,10 @@ jobs:
           path: |
             eq2-cameras-aarch64.nar.zst
             eq2-cameras-aarch64.nar.zst.sha256
+            eq2-cameras.env.example
             README.txt
           if-no-files-found: error
           retention-days: 14
+          # The closure is already zstd-compressed. Avoid spending time trying
+          # to ZIP-compress it again; that does not make the download smaller.
+          compression-level: 0
