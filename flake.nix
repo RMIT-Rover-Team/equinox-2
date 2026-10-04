@@ -72,12 +72,12 @@
             # GStreamer discovers codecs and the LiveKit sink dynamically, so
             # make every required plugin directory explicit at runtime.
             postFixup = ''
-              wrapProgram $out/bin/eq2-cameras \\
-                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-base}/lib/gstreamer-1.0" \\
-                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-good}/lib/gstreamer-1.0" \\
-                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-bad}/lib/gstreamer-1.0" \\
-                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-ugly}/lib/gstreamer-1.0" \\
-                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-libav}/lib/gstreamer-1.0" \\
+              wrapProgram $out/bin/eq2-cameras \
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-base}/lib/gstreamer-1.0" \
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-good}/lib/gstreamer-1.0" \
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-bad}/lib/gstreamer-1.0" \
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-ugly}/lib/gstreamer-1.0" \
+                --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-libav}/lib/gstreamer-1.0" \
                 --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${gst-plugins-rs-livekit}/lib/gstreamer-1.0"
             '';
           };
