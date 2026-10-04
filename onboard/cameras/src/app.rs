@@ -90,6 +90,15 @@ impl CameraApp {
                     return Ok(());
                 }
 
+                if !Self::supports_mjpeg(&device) {
+                    log::debug!(
+                        "Skipping non-MJPEG video device: {} ({})",
+                        device.display_name(),
+                        device.device_class()
+                    );
+                    return Ok(());
+                }
+
                 let id = self.catalog.add(device)?;
 
                 let media_result = self
@@ -147,6 +156,13 @@ impl CameraApp {
             .unwrap_or_else(|| device.display_name().to_string())
             .to_ascii_lowercase()
             .contains("imx708")
+    }
+
+    fn supports_mjpeg(device: &gst::Device) -> bool {
+        let mjpeg_caps = gst::Caps::builder("image/jpeg").build();
+        device
+            .caps()
+            .is_some_and(|caps| caps.can_intersect(&mjpeg_caps))
     }
 
     fn handle_media_event(&mut self, event: MediaEvent) -> Result<(), CamError> {

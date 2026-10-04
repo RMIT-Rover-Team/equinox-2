@@ -76,6 +76,7 @@
             # make every required plugin directory explicit at runtime.
             postFixup = ''
               wrapProgram $out/bin/eq2-cameras \
+                --prefix GST_PLUGIN_PATH_1_0 : "${packageSet.gst_all_1.gstreamer}/lib/gstreamer-1.0" \
                 --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gstreamer}/lib/gstreamer-1.0" \
                 --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.libcamera}/lib/gstreamer-1.0" \
                 --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${packageSet.gst_all_1.gst-plugins-base}/lib/gstreamer-1.0" \

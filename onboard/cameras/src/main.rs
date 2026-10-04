@@ -19,6 +19,15 @@ fn main() -> anyhow::Result<()> {
 
     gst::init()?;
 
+    for element in ["capsfilter", "queue", "videoconvert", "h264parse", "valve"] {
+        if gst::ElementFactory::find(element).is_none() {
+            anyhow::bail!(
+                "Required GStreamer element {element:?} is unavailable. Run the Nix-wrapped \
+                 /nix/store/...-eq2-cameras/bin/eq2-cameras executable from the imported closure."
+            );
+        }
+    }
+
     let main_loop = glib::MainLoop::new(None, false);
 
     let config = LiveKitConfig {
