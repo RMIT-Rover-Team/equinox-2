@@ -26,7 +26,7 @@ mkdir -p "$bundle_dir"
 
 cd "$repo_root"
 echo "Building the ARM64 package..."
-package_path="$(nix build --print-build-logs --print-out-paths .#eq2-cameras-aarch64)"
+package_path="$(nix build --print-build-logs --print-out-paths .#eq2-cameras-aarch64 --extra-experimental-features nix-command --extra-experimental-features flakes)"
 
 echo "Exporting the complete runtime closure..."
 # Export every store path the wrapped executable needs, including GStreamer
