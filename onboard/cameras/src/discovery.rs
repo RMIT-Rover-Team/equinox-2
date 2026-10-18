@@ -21,6 +21,11 @@ impl DeviceDiscovery {
     /// Starts monitoring video source devices.
     pub fn start(event_tx: Sender<AppEvent>) -> Result<Self, CamError> {
         let monitor = gst::DeviceMonitor::new();
+        // With the libcamera plugin installed, the V4L2 provider is hidden
+        // and USB cameras are only reported through libcamera, which gives no
+        // V4L2 device.path. Show hidden providers so USB cameras come through
+        // V4L2; their libcamera duplicates are skipped in `CameraApp`.
+        monitor.set_show_all_devices(true);
         // Libcamera advertises CSI cameras as `Source/Video`, while USB V4L2
         // cameras typically use `Video/Source`. Filtering on both keeps audio
         // providers (ALSA, PulseAudio, OSS) from probing and logging errors.
