@@ -64,9 +64,9 @@ impl DeviceCatalog {
 
         let hardware = CameraHardware {
             name: device.display_name().to_string(),
-            path,
+            path: path,
             device: device.clone(),
-            caps,
+            caps: caps,
         };
 
         match self.devices.entry(id.clone()) {

@@ -76,9 +76,10 @@
             # set one complete Nix-owned plugin search path at runtime.  Do not
             # inherit a host GST_PLUGIN_* value: an OS GStreamer installation
             # can otherwise take precedence and hide coreelements (which
-            # provides capsfilter).
+            # provides capsfilter). getLib matters: gstreamer's default output
+            # is "bin", but its plugins live in "out".
             postFixup = ''
-              gstPluginPath="${packageSet.lib.makeSearchPath "lib/gstreamer-1.0" gst-deps}"
+              gstPluginPath="${packageSet.lib.makeSearchPath "lib/gstreamer-1.0" (map packageSet.lib.getLib gst-deps)}"
               wrapProgram $out/bin/eq2-cameras \
                 --set GST_PLUGIN_PATH_1_0 "$gstPluginPath" \
                 --set GST_PLUGIN_SYSTEM_PATH_1_0 "$gstPluginPath"

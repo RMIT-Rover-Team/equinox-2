@@ -458,16 +458,9 @@ impl RoverMediaPipeline {
             .build()
             .map_err(|_| CamError::ElementCreationFailed("failed to make valve".into()))?;
 
-        let elements = [
-            &source,
-            &capsfilter,
-            &queue,
-            &decoder,
-            &videoconvert,
-            &encoder,
-            &h264parse,
-            &valve,
-        ];
+        let mut elements = vec![&source, &capsfilter, &queue, &decoder, &videoconvert];
+        elements.extend(&encoder);
+        elements.extend([&h264parse, &valve]);
 
         let bin = Self::build_source_bin(&elements)?;
         log::info!("Successfully made camera branch for {}", hardware.name);
@@ -531,17 +524,16 @@ impl RoverMediaPipeline {
             .build()
             .map_err(|_| CamError::ElementCreationFailed("failed to make valve".into()))?;
 
-        let elements = [
+        let mut elements = vec![
             &source,
             &capsfilter,
             &queue,
             &videoconvert,
             &videorate,
             &framerate_filter,
-            &encoder,
-            &h264parse,
-            &valve,
         ];
+        elements.extend(&encoder);
+        elements.extend([&h264parse, &valve]);
         let bin = Self::build_source_bin(&elements)?;
         log::info!(
             "Successfully made Libcamera branch for {}",
@@ -556,7 +548,8 @@ impl RoverMediaPipeline {
         })
     }
 
-    fn build_h264_encoder() -> Result<gst::Element, CamError> {
+    /// Returns the encoder followed by any caps it needs downstream.
+    fn build_h264_encoder() -> Result<Vec<gst::Element>, CamError> {
         // Raspberry Pi 5 exposes a V4L2 encoder element but has no hardware
         // H.264 encoder. Prefer libx264 so that selecting the element does
         // not succeed only for streaming to fail on the first frame.
@@ -573,15 +566,38 @@ impl RoverMediaPipeline {
             })?;
 
         match encoder_factory.name().as_str() {
-            "v4l2h264enc" => encoder_factory
-                .create()
-                .build()
-                .map_err(|_| CamError::ElementCreationFailed("failed to create encoder".into())),
+            "v4l2h264enc" => {
+                // Without an explicit level, negotiation settles on the lowest
+                // one and the Pi 4 firmware rejects 1536x864@30 at STREAMON.
+                // Repeating SPS/PPS lets late WebRTC subscribers decode.
+                let controls = gst::Structure::builder("controls")
+                    .field("repeat_sequence_header", 1i32)
+                    .field("video_bitrate", 6_000_000i32)
+                    .build();
+                let encoder = encoder_factory
+                    .create()
+                    .property("extra-controls", controls)
+                    .build()
+                    .map_err(|_| CamError::ElementCreationFailed("failed to create encoder".into()))?;
+                let level = gst::ElementFactory::make("capsfilter")
+                    .property(
+                        "caps",
+                        gst::Caps::builder("video/x-h264")
+                            .field("level", "4")
+                            .build(),
+                    )
+                    .build()
+                    .map_err(|_| {
+                        CamError::ElementCreationFailed("failed to create H.264 level filter".into())
+                    })?;
+                Ok(vec![encoder, level])
+            }
             "x264enc" => encoder_factory
                 .create()
                 .property_from_str("tune", "zerolatency")
                 .property("bitrate", 6_000u32)
                 .build()
+                .map(|encoder| vec![encoder])
                 .map_err(|_| CamError::ElementCreationFailed("failed to create encoder".into())),
             name => {
                 log::warn!(
@@ -591,6 +607,7 @@ impl RoverMediaPipeline {
                 encoder_factory
                     .create()
                     .build()
+                    .map(|encoder| vec![encoder])
                     .map_err(|_| CamError::ElementCreationFailed("failed to create encoder".into()))
             }
         }
