@@ -34,6 +34,32 @@ import { Icon } from "@astrojs/starlight/components";
     </button>
 </starlight-theme-select>
 
+{/* Restore the indicator before paint, without waiting for the deferred controller. */}
+<script is:inline>
+    {
+        const selector = document.currentScript.previousElementSibling;
+        const storedTheme = localStorage.getItem("starlight-theme");
+        const theme =
+            storedTheme === "light" || storedTheme === "dark"
+                ? storedTheme
+                : "auto";
+        selector.dataset.selected = theme;
+        selector.querySelectorAll("[data-theme-choice]").forEach((button) => {
+            button.setAttribute(
+                "aria-pressed",
+                String(button.dataset.themeChoice === theme),
+            );
+        });
+
+        // Let the restored position paint before enabling interaction animations.
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                selector.dataset.ready = "true";
+            });
+        });
+    }
+</script>
+
 <script>
     type Theme = "auto" | "light" | "dark";
 
@@ -136,10 +162,13 @@ import { Icon } from "@astrojs/starlight/components";
         background-color: var(--sl-color-accent-opaque);
         transform: translateX(var(--slide));
         padding: 0rem;
+        pointer-events: none;
+    }
+
+    starlight-theme-select[data-ready]::before {
         transition:
             transform 180ms ease,
             padding 180ms ease;
-        pointer-events: none;
     }
 
     button {
@@ -155,6 +184,9 @@ import { Icon } from "@astrojs/starlight/components";
         cursor: pointer;
         font: inherit;
         align-items: center;
+    }
+
+    starlight-theme-select[data-ready] button {
         transition: color 180ms ease;
     }
 
@@ -210,8 +242,8 @@ import { Icon } from "@astrojs/starlight/components";
         --slide: 200%;
     }
     @media (prefers-reduced-motion: reduce) {
-        button,
-        starlight-theme-select::before {
+        starlight-theme-select[data-ready] button,
+        starlight-theme-select[data-ready]::before {
             transition: none;
         }
     }
