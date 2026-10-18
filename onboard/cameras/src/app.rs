@@ -90,6 +90,17 @@ impl CameraApp {
                     return Ok(());
                 }
 
+                // libcamera also exposes USB cameras through its uvcvideo
+                // handler, but without a V4L2 device.path. The same camera is
+                // reported by the V4L2 provider, so use that one instead.
+                if Self::is_libcamera(&device) {
+                    log::debug!(
+                        "Skipping libcamera duplicate of V4L2 device: {}",
+                        device.display_name()
+                    );
+                    return Ok(());
+                }
+
                 if !Self::supports_mjpeg(&device) {
                     log::debug!(
                         "Skipping non-MJPEG video device: {} ({})",
@@ -156,6 +167,11 @@ impl CameraApp {
             .unwrap_or_else(|| device.display_name().to_string())
             .to_ascii_lowercase()
             .contains("imx708")
+    }
+
+    // Libcamera advertises its devices as `Source/Video`; V4L2 uses `Video/Source`.
+    fn is_libcamera(device: &gst::Device) -> bool {
+        device.device_class() == "Source/Video"
     }
 
     fn supports_mjpeg(device: &gst::Device) -> bool {

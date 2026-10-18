@@ -550,17 +550,19 @@ impl RoverMediaPipeline {
 
     /// Returns the encoder followed by any caps it needs downstream.
     fn build_h264_encoder() -> Result<Vec<gst::Element>, CamError> {
-        // Raspberry Pi 5 exposes a V4L2 encoder element but has no hardware
-        // H.264 encoder. Prefer libx264 so that selecting the element does
-        // not succeed only for streaming to fail on the first frame.
-        let encoder_factory = gst::ElementFactory::find("x264enc")
+        // Use the Pi 4's hardware encoder (v4l2h264enc). Encoding every camera
+        // with x264 on the Pi 4's CPU saturates it and makes the streams lag
+        // by seconds. x264enc is only a fallback for machines without the
+        // element. Caveat: the Pi 5 has no hardware H.264 encoder, so if a
+        // v4l2h264enc element is present there it fails on the first frame.
+        let encoder_factory = gst::ElementFactory::find("v4l2h264enc")
             .or_else(|| {
-                log::warn!("can't find x264enc, falling back to v4l2h264enc");
-                gst::ElementFactory::find("v4l2h264enc")
+                log::warn!("can't find v4l2h264enc, falling back to software x264enc");
+                gst::ElementFactory::find("x264enc")
             })
             .ok_or_else(|| {
                 CamError::ElementCreationFailed(
-                    "x264enc or v4l2h264enc could not be found (hint: install GStreamer encoder plugins)"
+                    "v4l2h264enc or x264enc could not be found (hint: install GStreamer encoder plugins)"
                         .into(),
                 )
             })?;
@@ -569,7 +571,8 @@ impl RoverMediaPipeline {
             "v4l2h264enc" => {
                 // Without an explicit level, negotiation settles on the lowest
                 // one and the Pi 4 firmware rejects 1536x864@30 at STREAMON.
-                // Repeating SPS/PPS lets late WebRTC subscribers decode.
+                // Repeating SPS/PPS lets WebRTC subscribers that join late
+                // start decoding without waiting for a new stream.
                 let controls = gst::Structure::builder("controls")
                     .field("repeat_sequence_header", 1i32)
                     .field("video_bitrate", 6_000_000i32)
@@ -592,9 +595,12 @@ impl RoverMediaPipeline {
                     })?;
                 Ok(vec![encoder, level])
             }
+            // x264's default "medium" preset is far too slow for live video on
+            // a Pi; ultrafast trades compression for keeping up in real time.
             "x264enc" => encoder_factory
                 .create()
                 .property_from_str("tune", "zerolatency")
+                .property_from_str("speed-preset", "ultrafast")
                 .property("bitrate", 6_000u32)
                 .build()
                 .map(|encoder| vec![encoder])

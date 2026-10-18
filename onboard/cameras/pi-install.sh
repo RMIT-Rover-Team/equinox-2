@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Install the eq2-cameras bundle on 64-bit Raspberry Pi OS (trixie).
-# Works offline: uses the Pi's apt-installed GStreamer and libcamera, and only
-# adds the bundled .debs, our binary, and the LiveKit GStreamer plugins.
+# Installs GStreamer and libcamera from apt, plus our binary and the LiveKit
+# GStreamer plugins. Works offline if the apt packages are already installed;
+# the bundled .debs cover the ones a stock Pi lacks.
 set -euo pipefail
 
 bundle_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -9,8 +10,20 @@ bin_dir="$HOME/.local/bin"
 # GStreamer scans this per-user directory automatically; no env vars needed.
 plugin_dir="${XDG_DATA_HOME:-$HOME/.local/share}/gstreamer-1.0/plugins"
 
-echo "==> Installing bundled packages"
-sudo apt-get install -y --no-download "$bundle_dir"/debs/*.deb
+packages=(
+  gstreamer1.0-tools
+  gstreamer1.0-libcamera
+  gstreamer1.0-plugins-base
+  gstreamer1.0-plugins-good
+  gstreamer1.0-plugins-bad
+  gstreamer1.0-nice
+)
+
+echo "==> Installing GStreamer, libcamera and bundled packages"
+# Offline, apt-get update fails but install still succeeds when everything is
+# already present or bundled.
+sudo apt-get update || echo "    apt-get update failed; using cached package lists" >&2
+sudo apt-get install -y "${packages[@]}" "$bundle_dir"/debs/*.deb
 
 echo "==> Installing eq2-cameras and plugins"
 mkdir -p "$bin_dir" "$plugin_dir"
