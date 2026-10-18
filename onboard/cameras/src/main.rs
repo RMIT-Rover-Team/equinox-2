@@ -22,8 +22,8 @@ fn main() -> anyhow::Result<()> {
     for element in ["capsfilter", "queue", "videoconvert", "h264parse", "valve"] {
         if gst::ElementFactory::find(element).is_none() {
             anyhow::bail!(
-                "Required GStreamer element {element:?} is unavailable. Run the Nix-wrapped \
-                 /nix/store/...-eq2-cameras/bin/eq2-cameras executable from the imported closure."
+                "Required GStreamer element {element:?} is unavailable. Check that the \
+                 GStreamer base plugins are installed (gst-inspect-1.0 {element})."
             );
         }
     }

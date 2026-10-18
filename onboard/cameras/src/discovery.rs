@@ -22,8 +22,15 @@ impl DeviceDiscovery {
     pub fn start(event_tx: Sender<AppEvent>) -> Result<Self, CamError> {
         let monitor = gst::DeviceMonitor::new();
         // Libcamera advertises CSI cameras as `Source/Video`, while USB V4L2
-        // cameras typically use `Video/Source`. Filter events below so both
-        // providers are discovered.
+        // cameras typically use `Video/Source`. Filtering on both keeps audio
+        // providers (ALSA, PulseAudio, OSS) from probing and logging errors.
+        for classes in ["Video/Source", "Source/Video"] {
+            if monitor.add_filter(Some(classes), None).is_none() {
+                return Err(CamError::MonitorError(format!(
+                    "failed to add device filter {classes}"
+                )));
+            }
+        }
 
         let watch_guard = monitor
             .bus()
