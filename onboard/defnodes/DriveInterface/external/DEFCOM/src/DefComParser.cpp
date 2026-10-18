@@ -206,6 +206,14 @@ ConnectionSpecification loadConfFile(std::string filename){
         myCon.ResponseMessageFormat = tempStructure;
     }
 
+    // Check if a priority is specified
+    if (FileConfig.children.find("Priority") != FileConfig.children.end()){
+        myCon.Priority = std::stoi(FileConfig.children["Priority"].value);
+    }
+    else {
+        myCon.Priority = 0;
+    }
+
     std::cout << "DEFCOM Load Complete" << std::endl;
 
     return myCon;

@@ -56,3 +56,12 @@ void GenericNetWrapper::closeCon() {
 ConnInfo GenericNetWrapper::report(){
     return info;
 }
+
+void GenericNetWrapper::setPriority(int priority) {
+    if (priority > 7){
+        throw std::runtime_error("Priority must be between 0 and 7");
+    }
+    // Set the priority
+    unsigned char tos = priMap[priority];
+    setsockopt(this->sockfd, IPPROTO_IP, IP_TOS, &tos, sizeof(tos));
+}

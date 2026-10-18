@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <iomanip>
 #include "FlexibleMessageStructure.hpp"
-#include "ChannelMulticast.hpp"
+#include "ChannelLossycast.hpp"
 
 struct ControllerState {
     float right_stick;

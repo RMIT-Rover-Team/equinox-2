@@ -6,6 +6,7 @@ struct ConnectionSpecification {
     std::string ResolvedIP;
     int NumericPort;
     std::string Name;
+    int Priority;
 
     MessageStructure RequestMessageFormat;
     MessageStructure ResponseMessageFormat;

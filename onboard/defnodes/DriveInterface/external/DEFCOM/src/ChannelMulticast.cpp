@@ -41,6 +41,7 @@ void MulticastPublisher::acceptorTCP(){
     while(true){
         //Accept the connection
         TCPServerCon* client = new TCPServerCon(this->tcpServer);
+        client->setPriority(this->definition.Priority);
 
         //Log the connection
         std::cout << "Accepted TCP connection" << std::endl;
@@ -165,6 +166,7 @@ MulticastSubscriber::MulticastSubscriber(std::string defComFile){
     }
     else {
         this->con = new TCPClientCon(this->definition.ResolvedIP, this->definition.NumericPort);
+        this->con->setPriority(this->definition.Priority);
         std::cout << "Connected TCP to " << this->definition.ResolvedIP << ":" << this->definition.NumericPort << std::endl;
     }
 

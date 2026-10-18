@@ -20,7 +20,7 @@ void hexDump(uint8_t* buffer, int size){
 int main() {
     cout << "Testing MulticastReceiver" << endl;
 
-    udpsend myCom("239.0.0.1", 5000, 10);
+    udpsend myCom("127.0.0.1", 5000, 10);
 
     while (true) {
         cout << "Sending..." << endl;

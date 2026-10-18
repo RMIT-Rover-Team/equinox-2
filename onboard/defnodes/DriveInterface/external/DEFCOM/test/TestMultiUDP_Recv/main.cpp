@@ -18,7 +18,7 @@ void hexDump(uint8_t* buffer, int size){
 int main() {
     cout << "Testing MulticastReceiver" << endl;
 
-    udpget myCom("239.0.0.1", 5000, 10);
+    udpget myCom("127.0.0.1", 5000, 10);
 
     while (true) {
         unsigned char* buffer = myCom.getdat();
