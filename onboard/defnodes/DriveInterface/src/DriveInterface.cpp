@@ -10,6 +10,8 @@ DriveInterface::DriveInterface (
 }
 
 void DriveInterface::run() {
+    torque_handler.setMode(TorqueDriveMode::UNLOCKED_VELOCITY);
+    torque_handler.setSpeed(0,0);
     torque_handler.enable();
     try {
         std::cout << "Listening for controller input from DEFCOM...\n";
