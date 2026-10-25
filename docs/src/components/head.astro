@@ -1,0 +1,21 @@
+---
+import DefaultHead from "@astrojs/starlight/components/Head.astro";
+---
+
+<DefaultHead />
+
+<script>
+    import Lenis from "lenis";
+    import "lenis/dist/lenis.css";
+
+    new Lenis({
+        autoRaf: true,
+        anchors: true,
+        stopInertiaOnNavigate: true,
+
+        // Keep Starlight’s independently scrollable UI working normally.
+        prevent: (node) =>
+            node.closest("#starlight__sidebar, dialog, [role='dialog']") !==
+            null,
+    });
+</script>
