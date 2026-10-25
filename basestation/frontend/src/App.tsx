@@ -9,18 +9,18 @@ function App() {
     <>
       <nav>
         <button onClick={() => setPage('Cameras')}>Cameras</button>
-        <button onClick={() => setPage('Drive')}>Cameras</button>
-        <button onClick={() => setPage('Arm')}>Cameras</button>
-        <button onClick={() => setPage('Science')}>Cameras</button>
-        <button onClick={() => setPage('Excavator')}>Cameras</button>
+        <button onClick={() => setPage('Drive')}>Drive</button>
+        <button onClick={() => setPage('Arm')}>Arm</button>
+        <button onClick={() => setPage('Science')}>Science</button>
+        <button onClick={() => setPage('Excavator')}>Excavator</button>
       </nav>
 
 
-      {/*{page == 'Cameras' && <Cameras />}
-      {page == 'Drive' && <Drive />}
-      {page == 'Arm' && <Arm />}
-      {page == 'Science' && <Science />}
-      {page == 'Excavator' && <Excavator />}*/}
+      {page == 'Cameras' && <>Cameras</>}
+      {page == 'Drive' && <>Drive</>}
+      {page == 'Arm' && <>Arm</>}
+      {page == 'Science' && <>Science</>}
+      {page == 'Excavator' && <>Excavator</>}
 
     </>
   )
