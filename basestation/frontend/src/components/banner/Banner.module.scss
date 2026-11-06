@@ -1,0 +1,58 @@
+.banner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--space-md);
+	min-height: var(--banner-min-height);
+	padding: var(--space-sm) var(--space-md);
+	background: var(--color-surface);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+	display: flex;
+	gap: var(--space-sm);
+	min-width: 180px;
+}
+
+.marker {
+	flex: none;
+	width: 20px;
+	background: var(--color-danger);
+	border-radius: var(--radius);
+}
+
+.pageName {
+	font-size: var(--font-size-xl);
+	font-weight: 600;
+}
+
+.station {
+	color: var(--color-text-muted);
+	font-size: var(--font-size-sm);
+}
+
+.infoBoxes {
+	display: flex;
+	flex: 1;
+	gap: var(--space-sm);
+}
+
+.infoBox {
+	flex: 1;
+	min-width: 0;
+	padding: var(--space-sm) var(--space-md);
+	background: var(--color-surface-raised);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius);
+}
+
+.infoLabel {
+	color: var(--color-text-muted);
+	font-size: var(--font-size-sm);
+}
+
+.infoValue {
+	font-family: var(--font-mono);
+	font-size: var(--font-size-lg);
+}

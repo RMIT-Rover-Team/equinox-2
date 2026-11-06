@@ -1,0 +1,15 @@
+.estop {
+	align-self: stretch;
+	min-width: 140px;
+	padding: var(--space-sm) var(--space-lg);
+	border: none;
+	border-radius: var(--radius);
+	background: var(--color-danger);
+	color: var(--color-on-danger);
+	font-size: var(--font-size-lg);
+	font-weight: 700;
+
+	&:hover {
+		background: var(--color-danger-hover);
+	}
+}
