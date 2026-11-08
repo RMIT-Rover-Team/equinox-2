@@ -1,0 +1,23 @@
+[build-system]
+requires = ["uv_build>=0.12.10,<0.13"]
+build-backend = "uv_build"
+
+[project]
+name = "eq2-basestation"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "eclipse-zenoh>=1.10.1",
+    "fastapi>=0.141.1",
+    "livekit-api>=1.2.1",
+    "uvicorn>=0.52.4",
+]
+
+[project.scripts]
+eq2-basestation = "eq2_basestation.main:main"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.6",
+    "ty>=0.0.79",
+]

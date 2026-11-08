@@ -1,0 +1,95 @@
+name: Build camera bundle (Debian/apt, arm64)
+
+# Builds eq2-cameras and the LiveKit GStreamer plugins against Debian trixie's
+# GStreamer, matching 64-bit Raspberry Pi OS (trixie). The Pi keeps using its
+# own apt-installed GStreamer and libcamera; this bundle only adds our binaries
+# plus the few .debs the Pi lacks, so it can be installed offline.
+
+on:
+  push:
+    branches: [feat/cameras-backend-rs]
+    paths:
+      - "onboard/cameras/**"
+      - ".github/workflows/build-cameras-debian.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # Must match the LiveKit protocol version the rover's server expects.
+  GST_PLUGINS_RS_VERSION: "0.15.3"
+
+jobs:
+  build:
+    name: Build bundle (debian trixie arm64)
+    runs-on: ubuntu-24.04-arm
+    container: debian:trixie
+
+    steps:
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            build-essential pkg-config git curl ca-certificates zstd libssl-dev \
+            libglib2.0-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+            libgstreamer-plugins-bad1.0-dev
+
+      - uses: actions/checkout@v6
+
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+
+      - name: Cache gst-plugins-rs build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            gst-plugins-rs/target
+          key: gst-plugins-rs-${{ env.GST_PLUGINS_RS_VERSION }}-debian-trixie-arm64
+
+      - name: Build LiveKit GStreamer plugins
+        run: |
+          if [ ! -f gst-plugins-rs/Cargo.toml ]; then
+            rm -rf gst-plugins-rs
+            git clone --depth 1 --branch "$GST_PLUGINS_RS_VERSION" \
+              https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs.git gst-plugins-rs
+          fi
+          cargo build --release --lib --manifest-path gst-plugins-rs/Cargo.toml \
+            -p gst-plugin-webrtc --no-default-features --features livekit
+          # webrtcsink uses rtpgccbwe from this plugin for congestion control.
+          cargo build --release --lib --manifest-path gst-plugins-rs/Cargo.toml \
+            -p gst-plugin-rtp
+
+      - name: Build eq2-cameras
+        run: cargo build --release --manifest-path onboard/cameras/Cargo.toml
+
+      - name: Assemble bundle
+        run: |
+          set -eu
+          b=eq2-cameras-debian-arm64
+          mkdir -p "$b/bin" "$b/plugins" "$b/debs"
+          install -m 755 onboard/cameras/target/release/eq2-cameras "$b/bin/"
+          install -m 644 gst-plugins-rs/target/release/libgstrswebrtc.so \
+            gst-plugins-rs/target/release/libgstrsrtp.so "$b/plugins/"
+          # Runtime packages a stock Raspberry Pi OS install may lack.
+          (cd "$b/debs" && apt-get download gstreamer1.0-nice libnice10)
+          cp onboard/cameras/pi-install.sh "$b/install.sh"
+          chmod 755 "$b/install.sh"
+          cat > "$b/eq2-cameras.env.example" <<'EOF'
+          # Copy to eq2-cameras.env and set real values. Do not commit it.
+          export LIVEKIT_WS_URL='ws://livekit-hostname-or-ip:7880'
+          export LIVEKIT_AUTH_TOKEN='replace-with-a-livekit-jwt'
+          EOF
+          tar -czf "$b.tar.gz" "$b"
+          du -h "$b.tar.gz"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: eq2-cameras-debian-arm64
+          path: eq2-cameras-debian-arm64.tar.gz
+          if-no-files-found: error
+          retention-days: 14
