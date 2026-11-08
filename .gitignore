@@ -79,6 +79,11 @@ vcpkg_installed/
 Testing/
 .cache/
 
+<<<<<<< HEAD
+=======
+
+## Bun Ignores for frontend
+>>>>>>> main
 # Logs
 logs
 *.log
@@ -192,3 +197,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+
+## DEFCOM
+**pyenv
+**external/DEFCOM

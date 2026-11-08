@@ -1,0 +1,22 @@
+#This is a comment
+
+Name: 123@127.0.0.1
+
+MyVar: 1
+ My2Var:    3
+
+
+ABC: 123
+
+hello {
+
+ world: 1
+ good: 2
+
+}
+
+mm {
+ aa {
+  b: c
+ }
+}

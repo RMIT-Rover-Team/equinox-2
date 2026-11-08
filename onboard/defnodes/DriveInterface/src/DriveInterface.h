@@ -10,7 +10,7 @@
 class DriveInterface {
     private:
         TorqueHandler& torque_handler;
-        MulticastSubscriber subscriber;
+        LossyCastSubscriber subscriber;
     public:
         DriveInterface (
             TorqueHandler& torque_handler, const std::string& defcom_template, const char* can_interface

@@ -1,4 +1,4 @@
-Name: DriveInterface@localhost
+Name: DriveInterface@192.168.40.2
 
 # This is the message format for requests in transactional communications or the boardcast message in multicast
 # Format is a collection of key value pairs in the form of VarName: Type
@@ -13,7 +13,7 @@ Name: DriveInterface@localhost
 #   int[30]
 
 RequestFormat {
-    padding: char[10]
+#    padding: char[10]
     left_stick: float
     right_stick: float
     right_bumper: int
@@ -21,4 +21,7 @@ RequestFormat {
     dpad_down: int
     dpad_left: int
     dpad_right: int
+}
+ResponseFormat {
+
 }
