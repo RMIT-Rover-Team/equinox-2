@@ -1,3 +1,7 @@
+.compass {
+    transform: rotate(var(--yaw));
+    transition: transform 30ms linear;
+}
 .horizon {
     transform: rotate(var(--roll)) translateY(calc(var(--pitch) * 1px));
     transition: transform 30ms linear;
