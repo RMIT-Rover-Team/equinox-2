@@ -79,8 +79,11 @@ vcpkg_installed/
 Testing/
 .cache/
 
+<<<<<<< HEAD
+=======
 
 ## Bun Ignores for frontend
+>>>>>>> main
 # Logs
 logs
 *.log
