@@ -13,6 +13,7 @@
 	display: flex;
 	gap: var(--space-sm);
 	min-width: 180px;
+	width: '35%'
 }
 
 .marker {
@@ -25,11 +26,7 @@
 .pageName {
 	font-size: var(--font-size-xl);
 	font-weight: 600;
-}
-
-.station {
-	color: var(--color-text-muted);
-	font-size: var(--font-size-sm);
+	text-transform: uppercase;
 }
 
 .infoBoxes {

@@ -8,26 +8,20 @@ export type InfoBox = {
 
 type BannerProps = {
 	pageName: string;
-	stationNumber: number;
 	infoBoxes: InfoBox[];
 };
 
-function Banner({ pageName, stationNumber, infoBoxes }: BannerProps) {
+function Banner({ pageName, infoBoxes }: BannerProps) {
 	return (
 		<header className={styles.banner}>
 			<div
 				className={styles.title}
-				style={{ width: '35%' }}
 			>
 				<div className={styles.marker}></div>
 				<div>
-					<h1
-						className={styles.pageName}
-						style={{ textTransform: 'uppercase' }}
-					>
+					<h1 className={styles.pageName} >
 						RMIT ROVER TEAM - {pageName}
 					</h1>
-					<p className={styles.station}>OPERATOR STATION {stationNumber}</p>
 				</div>
 			</div>
 

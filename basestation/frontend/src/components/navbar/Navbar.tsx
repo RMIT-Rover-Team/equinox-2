@@ -1,8 +1,6 @@
 import styles from './Navbar.module.scss';
+import { pages, type Page } from '../../types/Pages';
 
-const pages = ['Drive', 'Arm', 'Science', 'Excavator'] as const;
-
-export type Page = (typeof pages)[number];
 
 type NavbarProps = {
 	page: Page;

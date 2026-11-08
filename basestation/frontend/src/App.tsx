@@ -1,10 +1,11 @@
 import './styles/global.scss';
 
-import { useState } from 'react';
+import { useState, createContext } from 'react';
+import type { ReactNode } from 'react';
 
 import type { InfoBox } from './components/banner/Banner';
 import Layout from './components/layout/Layout';
-import type { Page } from './components/navbar/Navbar';
+import type { Page } from './types/Pages';
 import Drive from './views/drive/Drive';
 import Arm from './views/arm/Arm';
 import Science from './views/science/Science';
@@ -17,21 +18,25 @@ const infoBoxes: InfoBox[] = [
 	{ label: 'Info 3', value: '--' },
 ];
 
+const views: Record<Page, ReactNode> = {
+	Drive: <Drive />,
+	Arm: <Arm />,
+	Science: <Science />,
+	Excavator: <Excavator />,
+};
+
+type Theme = 'Dark' | 'Light';
+
 function App() {
 	const [page, setPage] = useState<Page>('Drive');
-	const stationNumber = page === 'Drive' ? 1 : 2;
-
+  const themeContext = createContext<Theme>('Dark');
 	return (
 		<Layout
 			page={page}
 			onPageChange={setPage}
-			stationNumber={stationNumber}
 			infoBoxes={infoBoxes}
 		>
-			{page === 'Drive' && <Drive />}
-			{page === 'Arm' && <Arm />}
-			{page === 'Science' && <Science />}
-			{page === 'Excavator' && <Excavator />}
+			{views[page]}
 		</Layout>
 	);
 }
