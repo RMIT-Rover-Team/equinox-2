@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
-import styles from './IMU.module.scss'
+import { useState, useEffect } from "react";
+import styles from "./IMU.module.scss";
+import { ArtificialHorizon } from "../../components/artificialHorizon/artificialHorizon";
 
 function IMU() {
   const [roll, setRoll] = useState<number>(0);
@@ -7,32 +8,26 @@ function IMU() {
   const [yaw, setYaw] = useState<number>(0);
 
   useEffect(() => {
-  	const start = performance.now();
-  	const id = setInterval(() => {
+    const start = performance.now();
+    const id = setInterval(() => {
       const t = (performance.now() - start) / 1000;
-  		setRoll(70 * Math.sin(t));
+      setRoll(70 * Math.sin(t));
       setPitch(80 * Math.sin(t * 0.7));
-      setYaw(180 * Math.sin(t))
-  	}, 30);
-  	return () => clearInterval(id);
+      setYaw(180 * Math.sin(t));
+    }, 30);
+    return () => clearInterval(id);
   }, []);
 
   return (
     <div id="IMU">
-
-      <img className={styles.compass} src="troll_face.png" width='100px' style={{'--yaw': `${yaw}deg`} as React.CSSProperties} />
-      <div style={{ 'overflow': 'hidden', 'width': '80px', 'height': '80' }}>
-        <img src="troll_face.png"
-          className={styles.horizon}
-          style={
-            {
-              '--roll': `${roll}deg`,
-              '--pitch': pitch
-            } as React.CSSProperties}
-            width='100px' />
+      <div className={styles.artificialHorizon}>
+        <ArtificialHorizon
+          pitch={pitch}
+          roll={roll}
+        />
       </div>
     </div>
   );
 }
 
-export default IMU
+export default IMU;
