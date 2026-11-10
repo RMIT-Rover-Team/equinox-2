@@ -65,6 +65,7 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Setup Node
+        if: steps.detect-package-manager.outputs.manager != 'bun'
         uses: actions/setup-node@v4
         with:
           node-version: "24"
