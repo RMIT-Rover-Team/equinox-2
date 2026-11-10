@@ -65,6 +65,7 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Setup Node
+        if: steps.detect-package-manager.outputs.manager != 'bun'
         uses: actions/setup-node@v4
         with:
           node-version: "24"
@@ -76,6 +77,8 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
         working-directory: ${{ env.BUILD_PATH }}
+      - name: Install D2
+        run: curl -fsSL https://d2lang.com/install.sh | sh -s -- --version v0.7.1
       - name: Build with Astro
         run: |
           ${{ steps.detect-package-manager.outputs.runner }} astro build \

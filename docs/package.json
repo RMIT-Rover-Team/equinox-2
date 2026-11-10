@@ -13,10 +13,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^8.1.1",
-    "@astrojs/starlight": "^0.42.7",
-    "astro": "^7.4.2",
-    "astro-d2": "^0.14.0",
+    "@astrojs/mdx": "^8.1.4",
+    "@astrojs/starlight": "^0.42.10",
+    "astro": "^7.4.10",
+    "astro-d2": "^0.14.1",
     "lenis": "^1.3.27",
     "react": "^19.3.1",
     "sharp": "^0.34.5"
