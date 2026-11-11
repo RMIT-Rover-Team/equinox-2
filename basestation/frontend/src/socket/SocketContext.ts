@@ -1,5 +1,4 @@
-function SocketContext() {
+import { createContext } from 'react';
+import type { SocketClient } from './client';
 
-}
-
-export default SocketContext
+export const SocketContext = createContext<SocketClient | null>(null);
