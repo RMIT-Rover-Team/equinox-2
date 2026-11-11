@@ -34,7 +34,7 @@ from ModularWebServer import ModularWebServer
 
 
 
-class mainApp:
+class main
     def __init__(self) -> None:
         self.globalProcessDict = {}
         self.globalThreads = {}
@@ -43,8 +43,11 @@ class mainApp:
         # First start the local webserver
         self.webserver = ModularWebServer.webServer('0.0.0.0',8080,CatchAll=WSPageStub.wsPageStub())
 
+        self.webserverThread = threading.Thread(target=self.webserver.run, name="FROGR WebSocket Server")
+        self.webserverThread.start()
 
         for procName in Processes:
+            print("Starting Thread ",procName)
             procObjUnInitialised = Processes[procName][0]
 
             # MonkeyPatch
