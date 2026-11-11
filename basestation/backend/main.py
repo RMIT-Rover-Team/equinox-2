@@ -1,8 +1,21 @@
 #!/usr/bin/env python3
 
 
-"""
-Equinox 2 Monothread application V1.0
+__title__ = """
+Equinox 2 Monothread Backend
+Federated Rover Operation Gateway Runtime (F.R.O.G.R) V1.0
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⢠⣄⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠄⠂⠉⢀⣀⠀⠀⠉⡀
+⠀⠀⠀⠀⠀⠀⢀⠀⠤⠀⠒⠀⠉⠀⠀⠀⠀⠀⡻⠋⢱⠀⠀⠇
+⠀⠀⡀⢀⠔⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠒⠁⢀⠞⠀
+⢸⠁⠀⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠄⠀⠀⢀⠴⠃⠀⠀
+⠈⠑⠦⠀⠀⠀⠀⠀⠤⢀⠀⠀⠀⠀⡠⠂⠀⢀⠖⠁⠀⠀⠀⠀
+⢀⠤⠒⠈⠉⠉⠀⠒⠂⠠⠌⠢⣀⣰⠀⠀⠀⡊⠀⢀⣀⡀⠀⠀
+⠣⡀⠀⢀⡀⠀⠀⠀⠀⠀⠀⢀⣸⠝⣤⡀⠀⠀⠉⠀⠈⣧⠒⣢
+⠀⠈⠒⠤⠬⣉⣀⠀⠀⠀⠉⢀⣙⠛⠾⡀⠉⠐⠒⠀⠐⠛⠂⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠉⠑⠢⢌⣀⠉⠐⠚⠀⠀⠀⠀⠀⠀⠀⠀
+
 
 Authors:
 - Kaelan Grainger (MegaKG)
@@ -16,6 +29,7 @@ import time
 # Local imports
 from AbstractProcess import AbstractProcess
 from Config import Processes
+
 
 
 
@@ -59,4 +73,5 @@ class mainApp:
 
 
 if __name__ == "__main__":
+    print(__title__)
     mainApp().run()
