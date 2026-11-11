@@ -1,7 +1,7 @@
 #GNU General Public License v3.0
 #Code by MegaKG
 
-import Pages
+from . import Pages
 
 class e404(Pages.webpage):
     def connect(self,Request: Pages.Connection):

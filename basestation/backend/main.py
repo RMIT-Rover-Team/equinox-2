@@ -29,7 +29,8 @@ import time
 # Local imports
 from AbstractProcess import AbstractProcess
 from Config import Processes
-
+import WSPageStub
+from ModularWebServer import ModularWebServer
 
 
 
@@ -38,6 +39,9 @@ class mainApp:
         self.globalProcessDict = {}
         self.globalThreads = {}
         self.printLock = threading.Lock()
+
+        # First start the local webserver
+        self.webserver = ModularWebServer.webServer('0.0.0.0',8080,CatchAll=WSPageStub.wsPageStub())
 
 
         for procName in Processes:
@@ -73,5 +77,5 @@ class mainApp:
 
 
 if __name__ == "__main__":
-    print(__title__)
+    print('\033[0;32m',__title__,'\033[0m')
     mainApp().run()

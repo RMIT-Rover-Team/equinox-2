@@ -23,14 +23,14 @@ class WSConnection:
 
 class wsPageStub(Pages.webpage):
     # Add additional variables to the init function
-    def __init__(self,Options):
+    def __init__(self,Options=None):
         super().__init__(Options)
 
         self.HandlerHooks = {}
 
     # Creates a handler mapping
     # Pass in topic as path, and function of form 
-    def newHandler(self, topic: str, handlerFunction: function):
+    def newHandler(self, topic: str, handlerFunction: callable):
         self.HandlerHooks[topic] = handlerFunction
 
 
