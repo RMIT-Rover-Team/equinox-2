@@ -34,7 +34,7 @@ from ModularWebServer import ModularWebServer
 
 
 
-class main
+class main:
     def __init__(self) -> None:
         self.globalProcessDict = {}
         self.globalThreads = {}
