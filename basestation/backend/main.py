@@ -81,4 +81,5 @@ class main:
 
 if __name__ == "__main__":
     print('\033[0;32m',__title__,'\033[0m')
-    mainApp().run()
+    app = main()
+    app.run()
