@@ -24,7 +24,7 @@ function IMU() {
   return (
     <div id="IMU">
       {/*placeholder IMU data*/}
-      <h1>{imu.pitch.toFixed(1)}°</h1>
+      <h1>{imu ? `${imu.pitch.toFixed(1)}°` : '--'}</h1>
       {/*move the shitty div styles later i just couldn't be bothered in the moment */}
       <img className={styles.compass} src="troll_face.png" width='100px' style={{'--yaw': `${yaw}deg`} as React.CSSProperties} />
       <div style={{ 'overflow': 'hidden', 'width': '80px', 'height': '80' }}>
