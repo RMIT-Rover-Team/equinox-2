@@ -2,9 +2,9 @@ import { useCallback, useContext, useSyncExternalStore } from 'react';
 import { SocketContext } from './SocketContext';
 
 /**
- *
- * @param topic
- * @returns
+ * Hook to get data from a topic. Wraps useSyncExternalStore with subscribe and snapshot functions.
+ * @param topic Name of topic to use.
+ * @returns Returns the JSON object if found, otherwise returns undefined.
  */
 export function useTopic<T>(topic: string): T | undefined {
 	const client = useContext(SocketContext);
