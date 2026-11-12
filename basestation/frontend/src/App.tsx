@@ -2,6 +2,7 @@ import './styles/global.scss';
 
 import { useState, createContext } from 'react';
 import type { ReactNode } from 'react';
+import CameraRoom from './components/cameras/CameraRoom';
 
 import type { InfoBox } from './components/banner/Banner';
 import Layout from './components/layout/Layout';
@@ -29,15 +30,17 @@ type Theme = 'Dark' | 'Light';
 
 function App() {
 	const [page, setPage] = useState<Page>('Drive');
-  const themeContext = createContext<Theme>('Dark');
+	const themeContext = createContext<Theme>('Dark');
 	return (
-		<Layout
-			page={page}
-			onPageChange={setPage}
-			infoBoxes={infoBoxes}
-		>
-			{views[page]}
-		</Layout>
+		<CameraRoom>
+			<Layout
+				page={page}
+				onPageChange={setPage}
+				infoBoxes={infoBoxes}
+			>
+				{views[page]}
+			</Layout>
+		</CameraRoom>
 	);
 }
 
