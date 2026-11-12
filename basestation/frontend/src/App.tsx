@@ -2,6 +2,7 @@ import './styles/global.scss';
 
 import { useState, createContext } from 'react';
 import type { ReactNode } from 'react';
+import { SocketProvider } from './socket/SocketProvider';
 
 import type { InfoBox } from './components/banner/Banner';
 import Layout from './components/layout/Layout';
@@ -28,16 +29,19 @@ const views: Record<Page, ReactNode> = {
 type Theme = 'Dark' | 'Light';
 
 function App() {
-	const [page, setPage] = useState<Page>('Drive');
+  const [baseUrl, setBaseUrl] = useState<string>('ws://127.0.0.1:8000')
+  const [page, setPage] = useState<Page>('Drive');
   const themeContext = createContext<Theme>('Dark');
-	return (
-		<Layout
-			page={page}
-			onPageChange={setPage}
-			infoBoxes={infoBoxes}
-		>
-			{views[page]}
-		</Layout>
+  return (
+    <SocketProvider baseUrl={baseUrl} >
+  		<Layout
+  			page={page}
+  			onPageChange={setPage}
+  			infoBoxes={infoBoxes}
+  		>
+  			{views[page]}
+      </Layout>
+    </SocketProvider>
 	);
 }
 

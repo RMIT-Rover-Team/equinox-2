@@ -1,6 +1,11 @@
 import { useCallback, useContext, useSyncExternalStore } from 'react';
 import { SocketContext } from './SocketContext';
 
+/**
+ *
+ * @param topic
+ * @returns
+ */
 export function useTopic<T>(topic: string): T | undefined {
 	const client = useContext(SocketContext);
 	if (!client) throw new Error('useTopic must be used inside <SocketProvider>');

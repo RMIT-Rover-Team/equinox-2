@@ -71,19 +71,14 @@ function createTopic(url: string) {
     ws.close();
   }
 
-  return {
-    listeners,
-    get,
-    send,
-    close,
-  };
+  return { listeners, get, send, close, };
 }
 
 type Topic = ReturnType<typeof createTopic>;
 
 /**
  * Initializes the websocket client and the associated websocket functions.
- * @param baseUrl Base IP address (for example ws://27.0.0.1)
+ * @param baseUrl Base websocket URL address (for example ws://127.0.0.1)
  * @return Client functions
  */
 export function createSocketClient(baseUrl: string) {
@@ -110,8 +105,7 @@ export function createSocketClient(baseUrl: string) {
    * Example of subscribing, manually assigning an unsubscribe function.
    * @example
    * ```ts
-   * const unsubscribe = () => { client.subscribe('fooTopic', console.log(client.get('fooTopic')); };
-   * })
+   * const unsubscribe = client.subscribe('fooTopic', () => console.log(client.get('fooTopic')));
    * // later
    * unsubscribe();
    * ```

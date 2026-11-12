@@ -4,12 +4,12 @@ import { createSocketClient } from './client';
 import { SocketContext } from './SocketContext';
 
 type SocketProviderProps = {
-	url: string;
+	baseUrl: string;
 	children: ReactNode;
 };
 
-export function SocketProvider({ url, children }: SocketProviderProps) {
-	const [client] = useState(() => createSocketClient(url));
+export function SocketProvider({ baseUrl, children }: SocketProviderProps) {
+	const [client] = useState(() => createSocketClient(baseUrl));
 
 	useEffect(() => {
 		return () => client.close();

@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react'
 import styles from './IMU.module.scss'
 
+import { useTopic } from '../../socket/useTopic';
+import { type ReceiveIMU } from '../../socket/data/imu';
+
 function IMU() {
   const [roll, setRoll] = useState<number>(0);
   const [pitch, setPitch] = useState<number>(0);
   const [yaw, setYaw] = useState<number>(0);
 
+  const imu = useTopic<ReceiveIMU>('IMU');
   useEffect(() => {
   	const start = performance.now();
   	const id = setInterval(() => {
@@ -19,6 +23,8 @@ function IMU() {
 
   return (
     <div id="IMU">
+      {/*placeholder IMU data*/}
+      <h1>{imu.pitch.toFixed(1)}°</h1>
       {/*move the shitty div styles later i just couldn't be bothered in the moment */}
       <img className={styles.compass} src="troll_face.png" width='100px' style={{'--yaw': `${yaw}deg`} as React.CSSProperties} />
       <div style={{ 'overflow': 'hidden', 'width': '80px', 'height': '80' }}>
