@@ -1,12 +1,16 @@
-import { useState, useEffect } from "react";
-import styles from "./IMU.module.scss";
-import { ArtificialHorizon } from "../../components/artificialHorizon/artificialHorizon";
+import { useState, useEffect } from 'react';
+import styles from './IMU.module.scss';
+import { ArtificialHorizon } from '../../components/artificialHorizon/artificialHorizon';
+
+import { useTopic } from '../../socket/useTopic';
+import { type ReceiveIMU } from '../../socket/data/imu';
 
 function IMU() {
   const [roll, setRoll] = useState<number>(0);
   const [pitch, setPitch] = useState<number>(0);
   const [yaw, setYaw] = useState<number>(0);
 
+  const imu = useTopic<ReceiveIMU>('IMU');
   useEffect(() => {
     const start = performance.now();
     const id = setInterval(() => {
@@ -29,17 +33,14 @@ type HorizonProps = {
 
 export function Horizon({ roll, pitch, yaw }: HorizonProps) {
   return (
-    <div id="IMU">
+    <div id='IMU'>
       <div className={styles.horizon}>
         <section className={styles.horizon__title}>
           <h2>Horizon</h2>
         </section>
 
         <section className={styles.horizon__container}>
-          <ArtificialHorizon
-            pitch={pitch}
-            roll={roll}
-          />
+          <ArtificialHorizon pitch={pitch} roll={roll} />
           <section className={styles.horizon__metrics}>
             <div className={styles.horizon__metric}>
               <h3>Roll</h3>
