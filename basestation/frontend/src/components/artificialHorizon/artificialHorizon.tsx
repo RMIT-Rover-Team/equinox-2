@@ -2,7 +2,7 @@ import { useId } from "react";
 
 type ArtificialHorizonProps = {
   pitch: number; // Degrees: positive = nose up
-  roll: number; // Degrees: positive = right side down
+  roll: number; // Degrees: negative = visual tilt left, positive = visual tilt right
   size?: number;
 };
 
@@ -42,8 +42,8 @@ export function ArtificialHorizon({
 
       {/* Circular window stays stationary */}
       <g clipPath={`url(#${clipId})`}>
-        {/* Roll rotates around the centre of the instrument */}
-        <g transform={`rotate(${-roll})`}>
+        {/* Negative SVG rotation tilts left (counterclockwise). */}
+        <g transform={`rotate(${roll})`}>
           {/* Pitch moves along the rotated vertical axis */}
           <g transform={`translate(0 ${pitchOffset})`}>
             {/* Oversized backgrounds prevent gaps during movement */}

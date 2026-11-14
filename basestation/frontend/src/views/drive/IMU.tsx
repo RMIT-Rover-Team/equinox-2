@@ -18,13 +18,43 @@ function IMU() {
     return () => clearInterval(id);
   }, []);
 
+  return <Horizon roll={roll} pitch={pitch} yaw={yaw} />;
+}
+
+type HorizonProps = {
+  roll: number;
+  pitch: number;
+  yaw: number;
+};
+
+export function Horizon({ roll, pitch, yaw }: HorizonProps) {
   return (
     <div id="IMU">
-      <div className={styles.artificialHorizon}>
-        <ArtificialHorizon
-          pitch={pitch}
-          roll={roll}
-        />
+      <div className={styles.horizon}>
+        <section className={styles.horizon__title}>
+          <h2>Horizon</h2>
+        </section>
+
+        <section className={styles.horizon__container}>
+          <ArtificialHorizon
+            pitch={pitch}
+            roll={roll}
+          />
+          <section className={styles.horizon__metrics}>
+            <div className={styles.horizon__metric}>
+              <h3>Roll</h3>
+              <p>{roll.toFixed(2)}°</p>
+            </div>
+            <div className={styles.horizon__metric}>
+              <h3>Pitch</h3>
+              <p>{pitch.toFixed(2)}°</p>
+            </div>
+            <div className={styles.horizon__metric}>
+              <h3>Yaw</h3>
+              <p>{yaw.toFixed(2)}°</p>
+            </div>
+          </section>
+        </section>
       </div>
     </div>
   );
