@@ -1,0 +1,18 @@
+
+Name: ArmControlStatus@localhost
+
+
+RequestFormat {
+    # The current Control State
+    # 0 = User Velocity
+    # 1 = IK Position
+    inputState: char
+    
+
+}
+
+
+# This is used for transactional communications in the same format as above
+ResponseFormat {
+
+}

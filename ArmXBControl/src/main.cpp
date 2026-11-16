@@ -10,8 +10,18 @@
 const int ArmXBChannelID = 2;
 
 
-//The Default Position
-const double jointDefaults[6] = {
+//The Raised Position
+const double jointRaised[6] = {
+    -38,
+    140,
+    130,
+    -14,
+    14,
+    1.5
+};
+
+// The Stowed Position
+const double jointStowed[6] = {
     -38,
     140,
     130,
@@ -123,19 +133,37 @@ void ikControl(LossyCastPublisher* myPub, MessageStructure* myControl){
 }
     */
 
+// Asynchronously tells the backend what the state of the arm control is
+void statusWorker(int* IKMode){
+    //Start the Status Publisher
+    LossyCastPublisher myStatusCast("COMFILES/ArmControlStatus.defcom");
 
+    while (true){
+        // Announce the current state of arm control
+        MessageStructure myStatusMessage = myStatusCast.getNewMessageObject();
+        myStatusMessage.setChar("inputState", *IKMode);
+        myStatusCast.publish(myStatusMessage);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
+}
 
 int main(int argc, char *argv[]) {
     // Set Up Controller Listener
     LossyCastSubscriber controllerSub("COMFILES/XBox.defcom");
     printf("Controller Subscriber Initialised\n");
     
-    //Start the Publisher
+    //Start the Arm Control Publishers
     LossyCastPublisher myCast("COMFILES/ArmControl.defcom");
     LossyCastPublisher myIKCast("COMFILES/ArmIKControl.defcom");
-    printf("Outbound Channels Up\n");
+    printf("Outbound Control Channels Up\n");
 
+    // Config Variables
     int IKMode = 0;
+
+    // Start the status worker
+    std::thread statusThread(statusWorker, &IKMode);
+
     while (true){
         // Get a controller message
         MessageStructure controlMessage = controllerSub.subscribe();
@@ -145,19 +173,30 @@ int main(int argc, char *argv[]) {
             continue; // Skip everything else
         }
 
-        //If Button 1, then switch to IK
+        //If X Button, then switch to IK
+        if (controlMessage.getChar("X_Button")){
+            printf("Enter IK Mode\n");
+            IKMode = 1;
+        }
+
+        // If Y Button is pressed, switch to user velocity
+        if (controlMessage.getChar("Y_Button")){
+            printf("Enter User Velocity Mode\n");
+            IKMode = 0;
+        }
         
-
-
-        //if (IKMode){
-        //    ikControl(&myIKCast, &controlMessage);
-        //}
-        //else {
+        
+        /*if (IKMode){
+            ikControl(&myIKCast, &controlMessage);
+        }
+        else {*/
             directControl(&myCast, &controlMessage);
         //}
 
         
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        
     }
     return 0;
 }
