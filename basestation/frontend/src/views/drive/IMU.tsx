@@ -33,26 +33,25 @@ type HorizonProps = {
 
 export function Horizon({ roll, pitch, yaw }: HorizonProps) {
   return (
-    <div id='IMU'>
+    <div id='IMU' className={styles.module}>
       <div className={styles.horizon}>
-        <section className={styles.horizon__title}>
-          <h2>Horizon</h2>
-        </section>
-
+        <h2 className={styles.horizon__title}>Horizon</h2>
         <section className={styles.horizon__container}>
-          <ArtificialHorizon pitch={pitch} roll={roll} />
+          <div className={styles.horizon__instrument}>
+            <ArtificialHorizon pitch={pitch} roll={roll} size={320} />
+          </div>
           <section className={styles.horizon__metrics}>
             <div className={styles.horizon__metric}>
-              <h3>Roll</h3>
-              <p>{roll.toFixed(2)}°</p>
-            </div>
-            <div className={styles.horizon__metric}>
               <h3>Pitch</h3>
-              <p>{pitch.toFixed(2)}°</p>
+              <p>{pitch > 0 ? '+' : ''}{pitch.toFixed(1)}°</p>
             </div>
             <div className={styles.horizon__metric}>
+              <h3>Roll</h3>
+              <p>{roll > 0 ? '+' : ''}{roll.toFixed(1)}°</p>
+            </div>
+            <div className={`${styles.horizon__metric} ${styles.horizon__yaw}`}>
               <h3>Yaw</h3>
-              <p>{yaw.toFixed(2)}°</p>
+              <p>{yaw.toFixed(1)}°</p>
             </div>
           </section>
         </section>
