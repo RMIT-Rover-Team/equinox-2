@@ -15,5 +15,5 @@ sudo bash install.sh
 cd ..
 git clone https://github.com/RMIT-Rover-Team/urc-arm-ik.git
 cd urc-arm-ik
-defcombuild cleanall # I know that sometimes I accidentally commit binaries!
-defcombuild all
+/usr/sbin/defcombuild cleanall # I know that sometimes I accidentally commit binaries!
+/usr/sbin/defcombuild all
