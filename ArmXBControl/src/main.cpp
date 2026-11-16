@@ -9,6 +9,10 @@
 
 const int ArmXBChannelID = 2;
 
+// IK Config
+const double posScale = 0.01;
+const double angScale = 5;
+
 
 //The Raised Position in degrees
 const double jointRaised[6] = {
@@ -99,32 +103,29 @@ void directControl(LossyCastPublisher* myPub, MessageStructure* myControl){
 
     myPub->publish(myMessage);
 }
-/*
-double ikpos[3] = {0};
-const double posScale = 0.01;
-double ikang[3] = {0};
-const double angScale = 5;
 
-const int readOrder[3] = {0, 1, 4};
+double ikpos[3] = {0};
+double ikang[3] = {0};
+
 void ikControl(LossyCastPublisher* myPub, MessageStructure* myControl){
     //New Message for outgoing
     MessageStructure myMessage = myPub->getNewMessageObject();
 
     // Check if we are in angle or position mode
-    if (myControl->getButton(2)){
-        printf("Angle Mode\n");
+    if (myControl->getChar("L_Stick_Button") || myControl->getChar("R_Stick_Button")){
+        printf("IK Angle Mode\n");
 
         // Axis are 0, 1, 3, 4
-        for (int i = 0; i < 3; i++){
-            ikang[i] += ((double)myControl->getAxis(readOrder[i]) / 32768.0) * angScale;
-        }
-        
-
+        ikang[2] += myControl->getFloat("L_Stick_Y") * angScale * -1;
+        ikang[0] += myControl->getFloat("R_Stick_X") * angScale * 1;
+        ikang[1] += myControl->getFloat("R_Stick_Y") * angScale * -1;
     }
     else {
-        printf("Position Mode\n");
+        printf("IK Position Mode\n");
         for (int i = 0; i < 3; i++){
-            ikpos[i] += ((double)myControl->getAxis(readOrder[i]) / 32768.0) * posScale;
+            ikpos[2] += myControl->getFloat("L_Stick_Y") * posScale * -1;
+            ikpos[0] += myControl->getFloat("R_Stick_X") * posScale * 1;
+            ikpos[1] += myControl->getFloat("R_Stick_Y") * posScale * -1;
         }
     }
 
@@ -138,7 +139,7 @@ void ikControl(LossyCastPublisher* myPub, MessageStructure* myControl){
 
     myPub->publish(myMessage);
 }
-    */
+    
 
 void presetControl(LossyCastPublisher* myPub, MessageStructure* myControl){
     //New Message for outgoing
@@ -235,7 +236,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (mode == ArmMode::IKControl){
-            //ikControl(&myIKCast, &controlMessage);
+            ikControl(&myIKCast, &controlMessage);
         }
         else if (mode == ArmMode::PresetControl) {
             presetControl(&myCast, &controlMessage);

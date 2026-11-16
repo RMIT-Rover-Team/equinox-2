@@ -27,7 +27,10 @@ Buttons = {
     (50,50):'L_Bumper',
     (430,45):'R_Bumper',
     (50,70):'L_Trigger',
-    (430,70):'R_Trigger'
+    (430,70):'R_Trigger',
+
+    (430,293):'R_Stick_Button',
+    (50,145):'L_Stick_Button'
 }
 
 Mappings = {
@@ -45,11 +48,13 @@ Mappings = {
         
     },
     1:{
-        'R_Stick_X':'X Position',
-        'R_Stick_Y':'Y Position',
-        'L_Stick_Y':'Z Position',
+        'R_Stick_X':'X Value',
+        'R_Stick_Y':'Y Value',
+        'L_Stick_Y':'Z Value',
         'Y_Button':'To Joint Mode',
-        'B_Button':'To Preset'
+        'B_Button':'To Preset',
+        'L_Stick_Button':'Hold (Angle)',
+        'R_Stick_Button':'Hold (Angle)'
     },
     2:{
         'X_Button':'To IK Mode',
@@ -104,7 +109,7 @@ class app:
             #print(self.labels)
 
             # For each of the buttons/axis, check if they have been pressed
-            for b in ['A_Button','B_Button','X_Button','Y_Button','L_Bumper','R_Bumper','D_Pad_Up','D_Pad_Down','D_Pad_Left','D_Pad_Right']:
+            for b in ['A_Button','B_Button','X_Button','Y_Button','L_Bumper','R_Bumper','D_Pad_Up','D_Pad_Down','D_Pad_Left','D_Pad_Right','L_Stick_Button','R_Stick_Button']:
                 if message.getChar(b)[0]:
                     self.canvas.itemconfig(self.labels[b], fill='red')
                 else:
