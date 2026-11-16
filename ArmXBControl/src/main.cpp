@@ -22,12 +22,12 @@ const double jointRaised[6] = {
 
 // The Stowed Position
 const double jointStowed[6] = {
-    -38,
-    140,
-    130,
-    -14,
-    14,
-    1.5
+    0,
+    -180,
+    170,
+    95,
+    0,
+    8
 };
 
 //Input Scales
@@ -38,6 +38,13 @@ const double jointScales[6] = {
     20,
     20,
     20
+};
+
+// The operation modes
+enum class ArmMode : int {
+    JointControl = 0,
+    IKControl = 1,
+    PresetControl = 2
 };
 
 
@@ -133,15 +140,51 @@ void ikControl(LossyCastPublisher* myPub, MessageStructure* myControl){
 }
     */
 
+void presetControl(LossyCastPublisher* myPub, MessageStructure* myControl){
+    //New Message for outgoing
+    MessageStructure myMessage = myPub->getNewMessageObject();
+    char messageMode = 0; // A flag so we can ignore the movement if not important
+
+    // If DPad Up is pressed, we go into raised mode
+    if (myControl->getChar("D_Pad_Up")){
+        // Copy the positions into the message
+        for (int i = 0; i < 6; i++){
+            myMessage.setFloat("jointSetValues",jointRaised[i],i);
+        }
+        messageMode = 'P';
+    }
+
+    // If DPad Down is pressed, we go into stowed mode
+    else if (myControl->getChar("D_Pad_Down")){
+        // Copy the positions into the message
+        for (int i = 0; i < 6; i++){
+            myMessage.setFloat("jointSetValues",jointStowed[i],i);
+        }
+        messageMode = 'P';
+    }
+
+    // Zero all values
+    else {
+        messageMode = 'V';
+        for (int i = 0; i < 6; i++){
+            myMessage.setFloat("jointSetValues",0,i);
+        }
+    }
+
+    // Send the message
+    myMessage.setBytes("movementType", (uint8_t*)&messageMode);
+    myPub->publish(myMessage);
+}
+
 // Asynchronously tells the backend what the state of the arm control is
-void statusWorker(int* IKMode){
+void statusWorker(ArmMode* IKMode){
     //Start the Status Publisher
     LossyCastPublisher myStatusCast("COMFILES/ArmControlStatus.defcom");
 
     while (true){
         // Announce the current state of arm control
         MessageStructure myStatusMessage = myStatusCast.getNewMessageObject();
-        myStatusMessage.setChar("inputState", *IKMode);
+        myStatusMessage.setChar("inputState", (int)(*IKMode));
         myStatusCast.publish(myStatusMessage);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -159,10 +202,10 @@ int main(int argc, char *argv[]) {
     printf("Outbound Control Channels Up\n");
 
     // Config Variables
-    int IKMode = 0;
+    ArmMode mode = ArmMode::JointControl;
 
     // Start the status worker
-    std::thread statusThread(statusWorker, &IKMode);
+    std::thread statusThread(statusWorker, &mode);
 
     while (true){
         // Get a controller message
@@ -176,22 +219,30 @@ int main(int argc, char *argv[]) {
         //If X Button, then switch to IK
         if (controlMessage.getChar("X_Button")){
             printf("Enter IK Mode\n");
-            IKMode = 1;
+            mode = ArmMode::IKControl;
         }
 
         // If Y Button is pressed, switch to user velocity
         if (controlMessage.getChar("Y_Button")){
             printf("Enter User Velocity Mode\n");
-            IKMode = 0;
+            mode = ArmMode::JointControl;
         }
-        
-        
-        /*if (IKMode){
-            ikControl(&myIKCast, &controlMessage);
+
+        // If B button is pressed, we go to preset mode
+        if (controlMessage.getChar("B_Button")){
+            printf("Enter Preset Mode\n");
+            mode = ArmMode::PresetControl;
         }
-        else {*/
+
+        if (mode == ArmMode::IKControl){
+            //ikControl(&myIKCast, &controlMessage);
+        }
+        else if (mode == ArmMode::PresetControl) {
+            presetControl(&myCast, &controlMessage);
+        }
+        else {
             directControl(&myCast, &controlMessage);
-        //}
+        }
 
         
         std::this_thread::sleep_for(std::chrono::milliseconds(100));

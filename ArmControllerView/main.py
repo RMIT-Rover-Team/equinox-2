@@ -41,13 +41,21 @@ Mappings = {
         'D_Pad_Left':'Wrist Left',
         'D_Pad_Right':'Wrist Right',
         'X_Button':'To IK Mode',
+        'B_Button':'To Preset'
         
     },
     1:{
         'R_Stick_X':'X Position',
         'R_Stick_Y':'Y Position',
         'L_Stick_Y':'Z Position',
-        'Y_Button':'To Joint Mode'
+        'Y_Button':'To Joint Mode',
+        'B_Button':'To Preset'
+    },
+    2:{
+        'X_Button':'To IK Mode',
+        'Y_Button':'To Joint Mode',
+        'D_Pad_Up':'Raised',
+        'D_Pad_Down':'Stowed'
     }
 }
 
@@ -110,6 +118,8 @@ class app:
 
             if self.mode == 1:
                 self.canvas.itemconfig(self.modeLabel, text='Mode: IK Control')
+            elif self.mode == 2:
+                self.canvas.itemconfig(self.modeLabel, text='Mode: Preset Control')
             else:
                 self.canvas.itemconfig(self.modeLabel, text='Mode: Joint Control')
 

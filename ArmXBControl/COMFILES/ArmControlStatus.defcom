@@ -6,8 +6,9 @@ RequestFormat {
     # The current Control State
     # 0 = User Velocity
     # 1 = IK Position
+    # 2 = Preset Position
     inputState: char
-    
+
 
 }
 
