@@ -30,7 +30,8 @@ Buttons = {
     (430,70):'R_Trigger',
 
     (430,293):'R_Stick_Button',
-    (50,145):'L_Stick_Button'
+    (50,145):'L_Stick_Button',
+    (50,75):'L_Trigger'
 }
 
 Mappings = {
@@ -53,8 +54,7 @@ Mappings = {
         'L_Stick_Y':'Z Value',
         'Y_Button':'To Joint Mode',
         'B_Button':'To Preset',
-        'L_Stick_Button':'Hold (Angle)',
-        'R_Stick_Button':'Hold (Angle)'
+        'L_Trigger':'Hold (Angle)'
     },
     2:{
         'X_Button':'To IK Mode',

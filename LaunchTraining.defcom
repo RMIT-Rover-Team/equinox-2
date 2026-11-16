@@ -20,4 +20,14 @@ Nodes {
         PostDelay: 0.1
         Args: [2]
     }
+    ArmControllerView {
+        Order: 5
+        PostDelay: 0.1
+        Args: []
+    }
+    IKModel {
+        Order: 6
+        PostDelay: 0.1
+        Args: []
+    }
 }

@@ -112,7 +112,8 @@ void ikControl(LossyCastPublisher* myPub, MessageStructure* myControl){
     MessageStructure myMessage = myPub->getNewMessageObject();
 
     // Check if we are in angle or position mode
-    if (myControl->getChar("L_Stick_Button") || myControl->getChar("R_Stick_Button")){
+    //if (myControl->getChar("L_Stick_Button") || myControl->getChar("R_Stick_Button")){
+    if (myControl->getFloat("L_Trigger") > -0.9){
         printf("IK Angle Mode\n");
 
         // Axis are 0, 1, 3, 4

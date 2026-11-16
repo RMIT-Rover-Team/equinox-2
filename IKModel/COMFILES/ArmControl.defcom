@@ -3,8 +3,11 @@ Name: ArmControl@localhost
 
 
 RequestFormat {
-    #Arm Joint positions in radians
-    jointPositions: float[6]
+    #Arm Joint positions/velocities in radians / rad/sec
+    jointSetValues: float[6]
+
+    # The message type, V is velocity and P is position
+    movementType: bytes[1]
 
 }
 

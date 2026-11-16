@@ -6,7 +6,7 @@ rm -rvf ARM
 mkdir ARM
 cd ARM
 
-sudo apt install git gcc g++ python3 python3-pip python3-venv cmake make
+sudo apt install git gcc g++ python3 python3-pip python3-venv cmake make git -y
 git clone https://github.com/RMIT-Rover-Team/DEFCOM.git
 
 cd DEFCOM

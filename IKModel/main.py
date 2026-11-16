@@ -126,8 +126,9 @@ class IKServer:
                 outgoing = self.outChannel.getNewMessageObject()
 
                 for i, a in enumerate(angles):
-                    outgoing.setFloat("jointPositions",a,i)
+                    outgoing.setFloat("jointSetValues",a,i)
                 print(angles)
+                outgoing.setBytes("movementType",b'P')
 
                 #Send the message
                 self.outChannel.publish(outgoing)
