@@ -11,23 +11,23 @@ import threading
 Buttons = {
     (50,120):'L_Stick_X',
     (50,100):'L_Stick_Y',
-    (420,270):'R_Stick_X',
-    (420,250):'R_Stick_Y',
+    (430,270):'R_Stick_X',
+    (430,250):'R_Stick_Y',
 
     (50,230):'D_Pad_Up',
     (50,270):'D_Pad_Down',
     (50,250):'D_Pad_Left',
     (50,290):'D_Pad_Right',
     
-    (420,145):'X_Button',
-    (420,95):'Y_Button',
-    (420,220):'A_Button',
-    (420,125):'B_Button',
+    (430,145):'X_Button',
+    (430,95):'Y_Button',
+    (430,215):'A_Button',
+    (430,125):'B_Button',
 
     (50,50):'L_Bumper',
-    (420,45):'R_Bumper',
+    (430,45):'R_Bumper',
     (50,70):'L_Trigger',
-    (420,70):'R_Trigger'
+    (430,70):'R_Trigger'
 }
 
 Mappings = {
@@ -44,10 +44,10 @@ Mappings = {
         
     },
     1:{
-        'R_Stick_X':'X Pos',
-        'R_Stick_Y':'Y Pos',
-        'L_Stick_Y':'Z Pos',
-        'A_Button':'To Joint Mode'
+        'R_Stick_X':'X Position',
+        'R_Stick_Y':'Y Position',
+        'L_Stick_Y':'Z Position',
+        'Y_Button':'To Joint Mode'
     }
 }
 
@@ -112,6 +112,14 @@ class app:
                 self.canvas.itemconfig(self.modeLabel, text='Mode: IK Control')
             else:
                 self.canvas.itemconfig(self.modeLabel, text='Mode: Joint Control')
+
+            # Update labels for given mode
+            for i in self.labels:
+                modemap = Mappings[self.mode]
+                if i in modemap:
+                    self.canvas.itemconfig(self.labels[i], text=modemap[i])
+                else:
+                    self.canvas.itemconfig(self.labels[i], text='')
 
             self.root.update()
 
