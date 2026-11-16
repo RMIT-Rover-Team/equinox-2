@@ -10,17 +10,17 @@
 const int ArmXBChannelID = 2;
 
 
-//The Raised Position
+//The Raised Position in degrees
 const double jointRaised[6] = {
-    -38,
-    140,
+    0,
+    140+90,
     130,
     -14,
     14,
     1.5
 };
 
-// The Stowed Position
+// The Stowed Position in degrees
 const double jointStowed[6] = {
     0,
     -180,
@@ -149,7 +149,7 @@ void presetControl(LossyCastPublisher* myPub, MessageStructure* myControl){
     if (myControl->getChar("D_Pad_Up")){
         // Copy the positions into the message
         for (int i = 0; i < 6; i++){
-            myMessage.setFloat("jointSetValues",jointRaised[i],i);
+            myMessage.setFloat("jointSetValues",toRadians(jointRaised[i]),i);
         }
         messageMode = 'P';
     }
@@ -158,7 +158,7 @@ void presetControl(LossyCastPublisher* myPub, MessageStructure* myControl){
     else if (myControl->getChar("D_Pad_Down")){
         // Copy the positions into the message
         for (int i = 0; i < 6; i++){
-            myMessage.setFloat("jointSetValues",jointStowed[i],i);
+            myMessage.setFloat("jointSetValues",toRadians(jointStowed[i]),i);
         }
         messageMode = 'P';
     }
