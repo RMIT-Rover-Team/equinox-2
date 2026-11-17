@@ -1,5 +1,5 @@
 
-Name: ArmControl@localhost
+Name: ArmPosState@localhost
 
 
 RequestFormat {

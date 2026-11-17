@@ -22,6 +22,7 @@ ArmJoints = {
 def main():
     p.connect(p.GUI)
     p.setAdditionalSearchPath(pybullet_data.getDataPath())
+    p.setTimeStep(1/30)
 
     # Load the URDF
     robot = p.loadURDF("myactuator_arm_assembly/urdf/myactuator_arm_assembly.urdf", useFixedBase=True)
@@ -89,6 +90,6 @@ def main():
             p.resetJointState(robot, JointLookup[ArmJoints[i]], newPos.getFloat("jointPositions",i))
 
         #Update the simulation
-        p.stepSimulation()
+        #p.stepSimulation()
 if __name__ == "__main__":
     main()
