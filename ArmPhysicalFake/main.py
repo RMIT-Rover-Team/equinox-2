@@ -13,7 +13,7 @@ class FakeArm:
         self.targetJointPositions = [0, 0, 0, 0, 0, 0]
         self.jointSpeeds = [0, 0, 0, 0, 0, 0]
         self.idleMoveSpeedDiv = 0.5
-        self.td = 1/60
+        self.td = 1/6
 
         # Set up the defcom channels for input and output
         self.outputChannel = ChannelLossyCast.LossyCastPublisher("COMFILES/ArmState.defcom")

@@ -26,8 +26,8 @@ Nodes {
         Args: []
     }
     IKModel {
-        Order: 6
-        PostDelay: 0.1
+        Order: 0
+        PostDelay: 5
         Args: []
     }
 }
