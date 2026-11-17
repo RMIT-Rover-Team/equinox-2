@@ -9,6 +9,7 @@ from ikpy.utils import geometry
 import time
 import pybullet as p
 import pybullet_data
+import threading
 
 ArmJoints = [
     'rev_j0',
@@ -26,10 +27,16 @@ class motionplanner:
         self.joint_index = {link.name: i for i, link in enumerate(self.chain.links)}
         print("URDF Loaded and converted to chain")
 
+        self.armJointPos = [0]*len(ArmJoints)
+
+
+    def setJointOrigins(self, joints):
+        self.armJointPos = joints
+
 
     # Cartesian X, Y, Z for the arm to home to
     def translatePosToAngles(self,x,y,z) -> list[float]:
-        angles = self.chain.inverse_kinematics([x,y,z])
+        angles = self.chain.inverse_kinematics([x,y,z],initial_position=self.armJointPos)
         oangles = []
         for name in ArmJoints:
             oangles.append(
@@ -50,7 +57,8 @@ class motionplanner:
 
         angles = self.chain.inverse_kinematics_frame(
             target=target_frame,
-            orientation_mode="all"
+            orientation_mode="all",
+            initial_position=self.armJointPos
         )
 
         oangles = []
@@ -104,7 +112,18 @@ class IKServer:
     def __init__(self, planner: motionplanner):
         self.inChannel = ChannelLossyCast.LossyCastSubscriber("COMFILES/ArmIKControl.defcom")
         self.outChannel = ChannelLossyCast.LossyCastPublisher("COMFILES/ArmControl.defcom")
+        self.feedbackChannel = ChannelLossyCast.LossyCastSubscriber("COMFILES/ArmState.defcom")
         self.planner = planner
+
+        self.fThread = threading.Thread(target=self._armStateListener, args=())
+        self.fThread.start()
+
+
+    def _armStateListener(self):
+        while True:
+            msg = self.feedbackChannel.subscribe()
+            pos = [msg.getFloat("jointPositions",i) for i in range(len(ArmJoints))]
+            self.planner.setJointOrigins(pos)
 
     def run(self):
         last = time.time()

@@ -1,6 +1,6 @@
 # Launch File - Specifies the order and delay after each node launch
 Nodes {
-    ArmDisplay {
+    ArmDisplayWeb {
         Order: 1
         PostDelay: 0.1
         Args: []
