@@ -1,0 +1,75 @@
+/* For more info regarding CSS styling, refer to:
+Starlight CSS docs: https://starlight.astro.build/guides/css-and-tailwind/
+Editable props: https://github.com/withastro/starlight/blob/main/packages/starlight/src/style/props.css
+*/
+:root {
+	--ui-white: #edeced;
+	--ui-black: #1d1c1d;
+
+	--ui-gray-1: color-mix(in oklab, var(--ui-black) 93.3%, var(--ui-white));
+	--ui-gray-2: color-mix(in oklab, var(--ui-black) 85.6%, var(--ui-white));
+	--ui-gray-3: color-mix(in oklab, var(--ui-black) 71.1%, var(--ui-white));
+	--ui-gray-4: color-mix(in oklab, var(--ui-black) 48.9%, var(--ui-white));
+	--ui-gray-5: color-mix(in oklab, var(--ui-black) 25.6%, var(--ui-white));
+	--ui-gray-6: color-mix(in oklab, var(--ui-black) 6.7%, var(--ui-white));
+	--ui-gray-7: color-mix(in oklab, var(--ui-black) 3.3%, var(--ui-white));
+
+	--ui-red: #f11b1c;
+	--ui-red-low: color-mix(in oklab, var(--ui-red) 75%, var(--ui-black));
+	--ui-red-on-light: color-mix(in oklab, var(--ui-red) 80%, var(--ui-black));
+	--ui-red-high: color-mix(in oklab, var(--ui-red) 25%, var(--ui-white));
+
+	--sl-content-width: 75rem;
+	--sl-nav-height: 0rem
+}
+
+header.header {
+  display: none;
+}
+
+.site-title {
+  --sl-nav-height: 5.5rem;
+}
+
+.sl-menu-button {
+  top: 1rem;
+}
+
+:root[data-theme='dark'] {
+	--sl-color-white: var(--ui-white);
+	--sl-color-gray-1: var(--ui-gray-6);
+	--sl-color-gray-2: var(--ui-gray-5);
+	--sl-color-gray-3: var(--ui-gray-4);
+	--sl-color-gray-4: var(--ui-gray-3);
+	--sl-color-gray-5: var(--ui-gray-2);
+	--sl-color-gray-6: var(--ui-gray-1);
+	--sl-color-black: var(--ui-black);
+	--sl-color-bg: var(--sl-color-black);
+
+	--sl-color-accent-low: var(--ui-red-low);
+	--sl-color-accent: var(--ui-red);
+	--sl-color-accent-high: var(--ui-red-high);
+	--sl-color-text-accent: var(--sl-color-accent-high);
+
+	--sl-color-accent-opaque: color-mix(in srgb, var(--sl-color-accent) 50%, transparent);
+}
+
+:root[data-theme='light'] {
+	--sl-color-white: var(--ui-black);
+	--sl-color-black: var(--ui-white);
+	--sl-color-bg: var(--sl-color-black);
+	--sl-color-gray-1: var(--ui-gray-1);
+	--sl-color-gray-2: var(--ui-gray-2);
+	--sl-color-gray-3: var(--ui-gray-3);
+	--sl-color-gray-4: var(--ui-gray-4);
+	--sl-color-gray-5: var(--ui-gray-5);
+	--sl-color-gray-6: var(--ui-gray-6);
+	--sl-color-gray-7: var(--ui-gray-7);
+
+	--sl-color-accent-low: var(--ui-red-high);
+	--sl-color-accent: var(--ui-red-on-light);
+	--sl-color-accent-high: var(--ui-red-low);
+	--sl-color-text-accent: var(--sl-color-accent);
+
+	--sl-color-accent-opaque: color-mix(in srgb, var(--sl-color-accent) 20%, transparent);
+}

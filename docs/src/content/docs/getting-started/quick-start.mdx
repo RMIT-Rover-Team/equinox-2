@@ -1,0 +1,59 @@
+---
+title: Quick Start
+description: Setup your environment
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Steps } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
+
+This article will guide you through setting up your computer. This includes installing Ubuntu 24.04 and ROS Jazzy.
+## Installing Ubuntu 24.04 (Jazzy)
+There are multiple ways to install Ubuntu 24.04. The recommended approach would be to dual-boot, allowing yourself to run your current system and another OS, but understandably not everyone can do that, so there are alternative ways to setup Ubuntu 24.04
+<Tabs>
+    <TabItem label="Dual-booting Ubuntu 24.04">
+        Requirements:
+        - USB Stick
+        - Space on your SSD(s) for Ubuntu 24.04
+        <Aside>
+            These multiple partitions include
+            - efi partitions
+            - two windows partitions, one for c and one for recovery
+            - one partition for Linux for /.
+            - one NTFS partition accessible to all.
+
+            You don't need to worry too hard about partitioning, just know that by dualbooting it creates "partitions" to separate your different Operating Systems and the logic used to boot them up.
+        </Aside>
+
+        ### Partioning your drive
+        <Steps>
+            1. WORK ON LATER
+            2. WORK ON LATER
+
+        </Steps>
+
+        <Steps>
+            1. [Download Ubuntu 24.04](https://releases.ubuntu.com/jammy/ubuntu-24.04.5-desktop-amd64.iso)
+            2. [Download Rufus](https://rufus.ie/en/#download)
+            3. Open Rufus, choose your USB device and add the Ubuntu 24.04 flash to Rufus by clicking `SELECT` next to Boot selection and selecting Ubuntu 24.04.
+            4. Click `Start` to flash to your USB device.
+            5. Rufus will prompt that your Ubuntu image is an ISOHybrid image. Confirm `Write in ISO Image mode` option.
+            6. If Rufus prompts to download additional files select `Yes`.
+            7. Rufus will destroy all your files on your USB device, so double check the contents are backed up before confirming `Ok`.
+            8. Once done, insert the USB stick into the device to flash, then restart the computer. Bring up the system boot menu for the computer (this depends, but it's typically done by holding F12 on system startup).
+            9. Follow the installer and Ubuntu will do the rest.
+        </Steps>
+
+        If any of the following instructions do not work, please refer to the [official Ubuntu install tutorial](https://ubuntu.com/desktop/docs/en/24.04/tutorial/install-ubuntu-desktop/)
+    </TabItem>
+    <TabItem label="WSL">
+        <Steps>
+        1. Download the [Git installer](https://git-scm.com/install/windows)
+        2. Run the installer.
+        </Steps>
+    </TabItem>
+    <TabItem label="VIKA FILL THIS OUT">
+        <Steps>
+        1. Vika you might want to do this one...
+        </Steps>
+    </TabItem>
+</Tabs>

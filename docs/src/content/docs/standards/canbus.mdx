@@ -4,8 +4,6 @@ description: CANBus Standards for Equinox 2
 ---
 import { Aside } from '@astrojs/starlight/components';
 
-**<u>CAN Standards v3.0.2</u>**
-
 CANBus messages will not have responses, only requests.
 ## CAN Bus Standards
 ### Header
@@ -52,14 +50,14 @@ These are:
 | 0x0C | BrFloat   | Slave     | 32 | Receives a floating point value |
 | 0x0D | BrData    | Slave     | 64 | Broadcasts an arbitrary byte buffer |
 | 0x0E | BrData2   | Slave     | 64 | Broadcasts an arbitrary byte buffer |
- 
+
 Each packet will include between 1 and 'n' inclusions of the datatype in little endian order.
 
 For example, a TxInt16 has a size of 16 bits. This means that up to 4 signed integers can be packed in the packet as follows:
 
 | Offset |     Byte 1      |      Byte 2     |
 | ------ | --------------- | --------------- |
-| 0x00   | A (Int16)[0]    | A (Int16)[1]    | 
+| 0x00   | A (Int16)[0]    | A (Int16)[1]    |
 | 0x02   | B (Int16)[0]    | B (Int16)[1]    |
 | 0x04   | C (Int16)[0]    | C (Int16)[1]    |
 | 0x06   | D (Int16)[0]    | D (Int16)[1]    |
@@ -84,7 +82,7 @@ Set Motor Speed, TxInt16
 ##### Message Payload
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
-| 0x00   | Motor Speed (Int16)[0] | Motor Speed (Int16)[1] | 
+| 0x00   | Motor Speed (Int16)[0] | Motor Speed (Int16)[1] |
 | 0x02   | - | - |
 | 0x04   | - | - |
 | 0x06   | - | - |
@@ -94,7 +92,7 @@ Set Motor Speed, TxInt16
 Toggle Electromagnet State, TxInt8
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
-| 0x00   | Toggle Electromagnet State (0 or 1) (Int8)[0] | - | 
+| 0x00   | Toggle Electromagnet State (0 or 1) (Int8)[0] | - |
 | 0x02   | - | - |
 | 0x04   | - | - |
 | 0x06   | - | - |
@@ -123,7 +121,7 @@ The payload has both pan speed and tilt position at the same time as it maps to 
 ### PDB
 
 - Firmware will broadcast status messages every 1 second by default.
-- Each channel will present with a seperate device id. For example, a switchboard with 8 channels may occupy the device ids of 0 to 7. 
+- Each channel will present with a seperate device id. For example, a switchboard with 8 channels may occupy the device ids of 0 to 7.
 - It is recommended to use the upper bits of the device id to specify which switchboard is selected. In this scenario, the device id netmask would be 0x1c.
 
 Device ID Sub-Structure:
@@ -182,7 +180,7 @@ Send Telemetry of BMS Cells, Message Type: BdInt8
 | 0x00 | Cell 0/6 Voltage (Int8)[0]  | Cell 1/7 Voltage (Int8)[0]  |
 | 0x02 | Cell 2/8 Voltage (Int8)[0]  | Cell 3/9 Voltage (Int8)[0]  |
 | 0x04 | Cell 4/10 Voltage (Int8)[0] | Cell 5/11 Voltage (Int8)[0] |
-| 0x06 | - | - | 
+| 0x06 | - | - |
 
 #### Switchboard
 ##### Message Header
@@ -300,7 +298,7 @@ Set Gripper Speed, MessageType: Int16
 
 | Offset | Byte 1 | Byte 2 |
 | ------ | ------ | ------ |
-| 0x00   | Motor Speed (Int16)[0] | Motor Speed (Int16)[1] | 
+| 0x00   | Motor Speed (Int16)[0] | Motor Speed (Int16)[1] |
 | 0x02   | - | - |
 | 0x04   | - | - |
 | 0x06   | - | - |
