@@ -6,8 +6,8 @@
 #include <queue>
 #include <condition_variable>
 #include "ExcavatorPayload.h"
-#include "RoverCanMaster.h"
-#include "SocketCanWrapper.h"
+#include <universalcan/RoverCanMaster.h>
+#include <universalcan/SocketCAN.h>
 
 
 enum ThreadCommand {
@@ -38,7 +38,7 @@ private:
 
     std::mutex m_excavator;
 
-    WrappedCANBus can_bus;
+    SocketCAN can_bus;
     RoverCanMaster can_master;
     ExcavatorPayload excavator;
 

@@ -79,11 +79,8 @@ vcpkg_installed/
 Testing/
 .cache/
 
-<<<<<<< HEAD
-=======
 
 ## Bun Ignores for frontend
->>>>>>> main
 # Logs
 logs
 *.log
@@ -202,3 +199,6 @@ dist
 ## DEFCOM
 **pyenv
 **external/DEFCOM
+
+# PlatformIO build
+.pio/

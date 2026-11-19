@@ -8,7 +8,7 @@
 #ifndef EQUINOX_2_DRILL_H
 #define EQUINOX_2_DRILL_H
 
-#include "../../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
+#include <universalcan/RoverCanMaster.h>
 #include "StepperMotor.h"
 #include "GenericMotor.h"
 
@@ -26,14 +26,14 @@ private:
 public:
     Drill(uint8_t device_id, RoverCanMaster &can_master);
     ~Drill();
-    void setHeight(double height);
+    void set_height(double height);
     void start(int16_t rpm);
     void start();
     void stop();
-    double getCurrentHeight() const;
-    double getTargetHeight() const;
-    int16_t getCurrentRpm() const;
-    int16_t getTargetRpm() const;
+    double get_current_height() const;
+    double get_target_height() const;
+    int16_t get_current_rpm() const;
+    int16_t get_target_rpm() const;
 };
 
 

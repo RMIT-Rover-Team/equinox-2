@@ -1,11 +1,13 @@
-#include "ExcavatorPayload.h"
+#include <ExcavatorPayload.h>
 
+#include <ExcavatorTypes.h>
+#include <universalcan/CanTypes.h>
 ExcavatorPayload::ExcavatorPayload(RoverCanMaster &can_master)
     : can_master(can_master)
-    , excavator_tilt(DeviceId::EXCAVATOR_TILT, can_master)
-    , bucket_tilt(DeviceId::BUCKET_TILT, can_master)
-    , teeth(DeviceId::TEETH, can_master)
-    , paver_magnet(DeviceId::PAVER_MAGNET, can_master) {}
+    , excavator_tilt(DeviceID::ExcavatorTilt, can_master)
+    , bucket_tilt(DeviceID::BucketTilt, can_master)
+    , teeth(DeviceID::Teeth, can_master)
+    , paver_magnet(DeviceID::PaverMagnet, can_master) {}
 
 void ExcavatorPayload::estop() {
     excavator_tilt.estop();

@@ -1,7 +1,7 @@
 #ifndef EQUINOX_2_CANSENDER_H
 #define EQUINOX_2_CANSENDER_H
 
-#include "../../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
+#include <universalcan/RoverCanMaster.h>
 #include <thread>
 #include <mutex>
 #include <atomic>
@@ -21,21 +21,21 @@ private:
     std::thread can_worker_thread;
     std::atomic<bool> stop_heartbeat_thread;
     std::thread can_heartbeat_thread;
-    bool is_alive;
+    bool alive;
 
-    void canMonitorLoop();
-    void canHeartbeatLoop();
-    void logFailedHeartbeat() const;
+    void can_monitor_loop();
+    void can_heartbeat_loop();
+    void log_failed_heartbeat() const;
 protected:
-    virtual void updateCurrent(int16_t current) = 0;
+    virtual void update_current(int16_t current) = 0;
     virtual ~CanDevice();
 public:
     CanDevice(uint8_t device_id, RoverCanMaster & can_master);
-    bool isAlive() const;
-    void setTarget(int16_t target);
-    int16_t getCanTarget() const { return target_value; }
-    int16_t getCanCurrent() const { return current_value; }
-    int16_t getCanTargetChanged() const { return target_changed; }
+    bool is_alive() const;
+    void set_target(int16_t target);
+    int16_t get_can_target() const { return target_value; }
+    int16_t get_can_current() const { return current_value; }
+    int16_t get_can_target_changed() const { return target_changed; }
 };
 
 

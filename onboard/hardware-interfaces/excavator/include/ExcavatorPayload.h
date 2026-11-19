@@ -2,21 +2,11 @@
 #include "ExcavatorActuator.h"
 #include "TeethActuator.h"
 #include "PaverMagnet.h"
-#include "GenericCan.h"
-#include "SocketCanWrapper.h"
-#include "RoverCanMaster.h"
-
-
-enum DeviceId {
-    EXCAVATOR_TILT = 0x0,
-    BUCKET_TILT = 0x1,
-    TEETH = 0x2,
-    PAVER_MAGNET = 0x3
-};
+#include "universalcan/RoverCanMaster.h"
 
 class ExcavatorPayload {
 private:
-    RoverCanMaster can_master;
+    RoverCanMaster &can_master;
 public:
     ExcavatorActuator excavator_tilt;
     ExcavatorActuator bucket_tilt;

@@ -1,4 +1,5 @@
 #include "PaverMagnet.h"
+#include <universalcan/CanTypes.h>
 
 PaverMagnet::PaverMagnet(uint8_t device_id, RoverCanMaster &can_master) : device_id(device_id), can_master(can_master), status(false) {}
 
@@ -15,14 +16,14 @@ void PaverMagnet::set_status(bool status) {
     this->status = status;
 
     int8_t msg[8] = { (int8_t)status, 0, 0, 0, 0, 0, 0, 0 };
-    can_master.tx_int8(GroupId::PAYLOAD, device_id, msg);
+    can_master.tx_int8(GroupID::Payload, device_id, msg);
 }
 
 void PaverMagnet::estop() {
     spdlog::critical("ESTOP PAVER MAGNET {0:x}", device_id);
-    can_master.estop(GroupId::PAYLOAD, device_id);
+    can_master.estop(GroupID::Payload, device_id);
 }
 
 void PaverMagnet::ping() {
-    can_master.ping(GroupId::PAYLOAD, device_id);
+    can_master.ping(GroupID::Payload, device_id);
 }
