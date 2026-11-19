@@ -79,7 +79,7 @@ class MessageStructure:
         bufferIndex, endIndex = self._getIndexOfDatablock(key)
         bufferIndex += (1 * index)
         endIndex = bufferIndex+1
-        self._myArray[bufferIndex:endIndex] = value[0]
+        self._myArray[bufferIndex:endIndex] = value
 
     def setBytes(self, key: str, value: bytes) -> None:
         bufferIndex, endIndex = self._getIndexOfDatablock(key)
@@ -123,11 +123,11 @@ class MessageStructure:
         bufferIndex, endIndex = self._getIndexOfDatablock(key)
         bufferIndex += (1 * index)
         endIndex = bufferIndex+1
-        return self._myArray[bufferIndex:endIndex]
+        return bytes(self._myArray[bufferIndex:endIndex])
     
     def getBytes(self, key: str) -> bytes:
         bufferIndex, endIndex = self._getIndexOfDatablock(key)
-        return self._myArray[bufferIndex:endIndex]
+        return bytes(self._myArray[bufferIndex:endIndex])
 
     def getString(self, key: str) -> str:
         bufferIndex, endIndex = self._getIndexOfDatablock(key)

@@ -108,7 +108,7 @@ class MulticastPublisher:
                     time.sleep(0.1)
 
         con.close()
-        print("Client Disconnected {} {}".format(con.info["Address"]))
+        print("Client Disconnected {}".format(con.info["Address"]))
 
         #Delete the queue
         with self._sendMutex:

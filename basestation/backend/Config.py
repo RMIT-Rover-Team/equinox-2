@@ -10,5 +10,5 @@ from Processes import DriveProcess
 # ArgsDict is a dictionary of arguments to be passed to the process 
 Processes = {
     "Dummy": (DummyProcess.DummyProcess, {"a": 10}),
-    "Drive": (DriveProcess.DriveProcess, {})
+    "Drive": (DriveProcess.DriveProcess, {"maxDriveSpeed": 100})
 }

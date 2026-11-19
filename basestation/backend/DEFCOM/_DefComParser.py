@@ -14,6 +14,7 @@ class ConnectionSpecification:
     ResolvedIP: str
     NumericPort: int
     Name: str
+    Priority: int
 
     #The Request / Multicast message (main payload for Multicast)
     #Format - dictionary of [key: value] like ["VariableName":"VariableType"]
@@ -93,7 +94,13 @@ def loadConfFile(filename: str) -> ConnectionSpecification:
     #Do the same for the Response
     ResponseMessageFormat = MessageStructure(LoadedData["ResponseFormat"])
 
+    # Add the priority
+    if "Priority" in LoadedData:
+        Priority = int(LoadedData["Priority"])
+    else:
+        Priority = 0
+
     print("Connection {} Specified on {} port {} Req Size {} Resp Size {}".format(LoadedData["Name"],IP, PORT, RequestMessageFormat.totalSize, ResponseMessageFormat.totalSize))
-    return ConnectionSpecification(IP, PORT, RawPort, RequestMessageFormat, ResponseMessageFormat)
+    return ConnectionSpecification(IP, PORT, RawPort, Priority, RequestMessageFormat, ResponseMessageFormat)
 
     
