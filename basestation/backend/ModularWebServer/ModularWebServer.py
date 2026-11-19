@@ -133,7 +133,30 @@ class webServer:
                         if self.CatchallPage is not None:
                             #Server Catchall page
                             print(IDENTIFIER,"Redirect to Catchall")
-                            self.CatchallPage.connect(Connection)
+
+                            #Handle Websocket if needed
+                            if 'Upgrade' in ParsedOptions.getHeaderNames():
+                                #If a websocket is wanted
+                                if ParsedOptions.getHeader('Upgrade') == 'websocket':
+                                    if self.AllowWebsocket:
+                                        print(IDENTIFIER,"Upgrading to Websocket")
+                                        #Do the special magic that prevents Caching
+                                        HEADER = WebsocketUtils.responseHeader(ParsedOptions)
+                                        CON.sendstdat(HEADER)
+    
+                                        #Convert CON to something usable
+                                        CON = WebsocketUtils.wrappedConnection(CON)
+                                        Connection = Pages.Connection(CON,ParsedOptions)
+    
+                                        #Now we begin websocket
+                                        try:
+                                            self.CatchallPage.websocket(Connection)
+                                        except OSError:
+                                            print(IDENTIFIER,"Websocket Died")
+                                    else:
+                                        print(IDENTIFIER,"Deny Websocket")
+                            else:
+                                self.CatchallPage.connect(Connection)
 
                         else:
                             #The Default 404 Handler

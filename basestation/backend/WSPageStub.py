@@ -31,6 +31,7 @@ class wsPageStub(Pages.webpage):
     # Creates a handler mapping
     # Pass in topic as path, and function of form 
     def newHandler(self, topic: str, handlerFunction: callable):
+        print("Registering Websocket Listener for " + topic)
         self.HandlerHooks[topic] = handlerFunction
 
 
@@ -54,6 +55,7 @@ class wsPageStub(Pages.webpage):
         path = Request.getRequestHeader().getResource()
 
         # Find the handler for the path
+        print(path)
         if path in self.HandlerHooks:
             self.HandlerHooks[path](WSConnection(CON))
 

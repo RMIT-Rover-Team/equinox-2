@@ -220,6 +220,9 @@ dist
 dist-ssr
 *.local
 
+# Python Stuff
+**.pyc
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -10,7 +10,7 @@
 # Or if I wanted to use a port number
 #   Name: 1234@localhost
 
-Name: Drive@localhost
+Name: DriveStatus@localhost
 
 # This is the message format for requests in transactional communications or the boardcast message in multicast
 # Format is a collection of key value pairs in the form of VarName: Type
@@ -27,14 +27,15 @@ Name: Drive@localhost
 RequestFormat {
     LeftSpeed: float
     RightSpeed: float
+    LeftPosition: float
+    RightPosition: float
 
     # The mode of the drive - 0 = Unlocked, 2 = Locked
     DriveMode: char
 
     # Flags for each 0/1
-    EStop: char
-    Enable: char
-    Calibrate: char
+    Enabled: char
+    SlipAlarm: char
 }
 
 

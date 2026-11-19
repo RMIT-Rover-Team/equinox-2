@@ -41,7 +41,8 @@ class main:
         self.printLock = threading.Lock()
 
         # First start the local webserver
-        self.webserver = ModularWebServer.webServer('0.0.0.0',8080,CatchAll=WSPageStub.wsPageStub())
+        self.globalProcessDict['webserver'] = WSPageStub.wsPageStub()
+        self.webserver = ModularWebServer.webServer('0.0.0.0',8080,CatchAll=self.globalProcessDict['webserver'])
 
         self.webserverThread = threading.Thread(target=self.webserver.run, name="FROGR WebSocket Server")
         self.webserverThread.start()
