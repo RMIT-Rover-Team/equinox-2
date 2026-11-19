@@ -1,0 +1,19 @@
+
+Name: Excavator@localhost
+
+RequestFormat {
+    FrameSpeed: float
+    BucketSpeed: float
+    TeethSpeed: float
+
+    # 1 or 0
+    Magnet: char
+    EStop: char
+
+}
+
+
+# This is used for transactional communications in the same format as above
+ResponseFormat {
+
+}
