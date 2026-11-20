@@ -2,6 +2,7 @@
 Name: Excavator@localhost
 
 RequestFormat {
+    # Speeds between -1 and 1
     FrameSpeed: float
     BucketSpeed: float
     TeethSpeed: float

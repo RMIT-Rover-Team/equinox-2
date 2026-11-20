@@ -1,5 +1,5 @@
 
-Name: Excavator@localhost
+Name: ExcavatorStatus@localhost
 
 RequestFormat {
     FramePosition: float
@@ -9,8 +9,8 @@ RequestFormat {
     # Magnet State [0 or 1]
     Magnet: char
 
-    # Payload Last Seen
-    PayloadLastSeen: float
+    # Payload Last Seen (System Timestamp)
+    PayloadLastSeen: long
 }
 
 

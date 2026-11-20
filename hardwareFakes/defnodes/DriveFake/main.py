@@ -47,6 +47,8 @@ class DriveFake():
             self.LeftPosition += self.LeftSpeed * 0.5
             self.RightPosition += self.RightSpeed * 0.5
 
+            print("Current Drive Pos: ", self.LeftPosition, self.RightPosition, "Speed: ", self.LeftSpeed, self.RightSpeed)
+
     def run(self):
         while True:
             msg = self.inputChannel.subscribe()
