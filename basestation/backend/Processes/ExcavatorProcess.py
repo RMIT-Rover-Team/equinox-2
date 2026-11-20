@@ -20,9 +20,9 @@ Authors:
 
 class ExcavatorProcess(AbstractProcess):
     def __init__(self,lostPayloadTime=20) -> None:
-        print("Starting Drive")
+        print("Starting Excavator")
 
-        # Start the listener for drive
+        # Start the listener for Excavator
         self.telemChannel = ChannelLossyCast.LossyCastSubscriber("COMFILES/ExcavatorStatus.defcom")
         self.controllerChannel = ChannelLossyCast.LossyCastSubscriber("COMFILES/XBox.defcom")
         self.excavatorChannel = ChannelLossyCast.LossyCastPublisher("COMFILES/Excavator.defcom")
