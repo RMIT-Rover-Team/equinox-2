@@ -10,4 +10,5 @@ void DualModeActuator::set_velocity(int16_t value) { velocity.set_velocity(value
 int16_t DualModeActuator::get_velocity() const { return velocity.get_velocity(); }
 
 void DualModeActuator::set_position(int16_t value) { position.set_position(value); }
-int16_t DualModeActuator::get_position() const { return position.get_position(); }
+int16_t DualModeActuator::get_position() const { return position.get_position();
+}

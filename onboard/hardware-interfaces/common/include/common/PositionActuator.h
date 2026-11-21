@@ -11,7 +11,6 @@ public:
 
     void set_position(int16_t position);
     int16_t get_position() const;
-
 private:
     CanAddress addr;
     RoverCanMaster &m;

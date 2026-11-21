@@ -18,7 +18,6 @@ public:
 
     void set_position(int16_t value);
     int16_t get_position() const;
-
 private:
     VelocityActuator velocity;
     PositionActuator position;

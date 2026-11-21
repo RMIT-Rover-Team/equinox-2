@@ -20,9 +20,9 @@ if(NOT TARGET UniversalCAN::linux)
 endif()
 
 add_library(HardwareCommon STATIC
-    src/VelocityActuator.cpp
-    src/PositionActuator.cpp
-    src/DualModeActuator.cpp
+    src/common/VelocityActuator.cpp
+    src/common/PositionActuator.cpp
+    src/common/DualModeActuator.cpp
 )
 add_library(Hardware::common ALIAS HardwareCommon)
 

@@ -11,7 +11,6 @@ public:
 
     void set_velocity(int16_t velocity);
     int16_t get_velocity() const;
-
 private:
     CanAddress addr;
     RoverCanMaster &m;

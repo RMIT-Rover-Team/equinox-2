@@ -2,18 +2,25 @@
 
 #include <ExcavatorTypes.h>
 #include <universalcan/CanTypes.h>
-Excavator::Excavator(RoverCanMaster &can_master)
-    : can_master(can_master)
-    , boom_tilt(DeviceID::BoomTilt, can_master)
-    , rock_bucket_tilt(DeviceID::RockBucketTilt, can_master)
-    , sand_bucket_tilt(DeviceID::SandBucketTilt, can_master)
-    , paver_magnet(DeviceID::PaverMagnet, can_master) {}
 
-void Excavator::estop() {
-  boom_tilt.estop();
-  rock_bucket_tilt.estop();
-  sand_bucket_tilt.estop();
-  paver_magnet.estop();
+namespace {
+constexpr CanAddress payload(DeviceID device) {
+    return {GroupID::Payload, static_cast<uint8_t>(device)};
+}
+}  // namespace
+
+Excavator::Excavator(RoverCanMaster &m)
+    : m(m)
+    , boom_tilt(payload(DeviceID::BoomTilt), m)
+    , rock_bucket_tilt(payload(DeviceID::RockBucketTilt), m)
+    , sand_bucket_tilt(payload(DeviceID::SandBucketTilt), m)
+    , paver_magnet(DeviceID::PaverMagnet, m) {
+      m.start_heartbeat(GroupID::Payload, DeviceID::BoomTilt);
+    }
+
+
+Excavator::~Excavator() {
+  m.stop_heartbeat(GroupID::Payload, DeviceID::BoomTilt);
 }
 
-Excavator::~Excavator() {}
+void Excavator::estop() { m.estop(GroupID::Payload, DeviceID::RockBucketTilt); }

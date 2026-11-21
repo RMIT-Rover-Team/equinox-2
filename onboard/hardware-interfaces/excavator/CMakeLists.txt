@@ -22,8 +22,6 @@ endif()
 
 add_library(ExcavatorHardwareInterface STATIC
     src/Excavator.cpp
-    src/ExcavatorActuator.cpp
-    src/TeethActuator.cpp
     src/PaverMagnet.cpp
 )
 

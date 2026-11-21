@@ -1,11 +1,9 @@
 #pragma once
 #include <thread>
-#include <chrono>
 #include <mutex>
 #include <atomic>
-#include <queue>
 #include <condition_variable>
-#include "ExcavatorPayload.h"
+#include <Excavator.h>
 #include <universalcan/RoverCanMaster.h>
 #include <universalcan/SocketCAN.h>
 
@@ -40,7 +38,7 @@ private:
 
     SocketCAN can_bus;
     RoverCanMaster can_master;
-    ExcavatorPayload excavator;
+    Excavator excavator;
 
     void run();
 public:

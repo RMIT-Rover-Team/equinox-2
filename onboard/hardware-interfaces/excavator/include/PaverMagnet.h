@@ -13,7 +13,4 @@ public:
     ~PaverMagnet();
     bool get_status();
     void set_status(bool status);
-
-    void estop();
-    void ping();
 };

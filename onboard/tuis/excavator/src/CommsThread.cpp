@@ -72,12 +72,12 @@ void CommsThread::run() {
             std::lock_guard<std::mutex> lock2(m_excavator);
 
             if (excavator_target_velocity != last_sent_excavator_velocity) {
-                excavator.excavator_tilt.set_velocity(excavator_target_velocity);
+                excavator.boom_tilt.set_velocity(excavator_target_velocity);
                 last_sent_excavator_velocity = excavator_target_velocity;
             }
 
             if (bucket_target_velocity != last_sent_bucket_velocity) {
-                excavator.bucket_tilt.set_velocity(bucket_target_velocity);
+                excavator.rock_bucket_tilt.set_velocity(bucket_target_velocity);
                 last_sent_bucket_velocity = bucket_target_velocity;
             }
         }

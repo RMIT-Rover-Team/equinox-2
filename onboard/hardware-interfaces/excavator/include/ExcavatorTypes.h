@@ -1,3 +1,5 @@
+#pragma once
+#include <cstdint>
 
 enum DeviceID {
     BoomTilt = 0x0,
