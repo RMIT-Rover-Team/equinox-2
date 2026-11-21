@@ -2,54 +2,52 @@
 #include <gtest/gtest.h>
 
 #include "SciencePayload.h"
-#include "SocketCanWrapper.h"
+#include "VcanTest.h"
 
-auto* stepper_motor_test_can_bus = new WrappedCANBus(CAN_BUS_NAME);
-auto* stepper_motor_test_can_master = new RoverCanMaster(*stepper_motor_test_can_bus, 1);
 
-struct StepperMotorTest : public ::testing::Test, public StepperMotor {
-    StepperMotorTest() : StepperMotor(1, *stepper_motor_test_can_master) {}
-    void testUpdateCurrent(const int16_t new_value) {
-        updateCurrent(new_value);
+struct StepperMotorTest : public VcanTest, public StepperMotor {
+    StepperMotorTest() : StepperMotor(1, test_can_master()) {}
+    void test_update_current(const int16_t new_value) {
+        update_current(new_value);
     }
 };
 
 TEST_F(StepperMotorTest, CurrentStepsInitialisesZero) {
-    EXPECT_EQ(0, getCurrentSteps());
+    EXPECT_EQ(0, get_current_steps());
 }
 
 TEST_F(StepperMotorTest, TargetStepsInitialisesZero) {
-    EXPECT_EQ(0, getTargetSteps());
+    EXPECT_EQ(0, get_target_steps());
 }
 
 TEST_F(StepperMotorTest, SetTargetStepsAcceptsPositive) {
-    setTargetSteps(100);
-    EXPECT_EQ(100, getTargetSteps());
+    set_target_steps(100);
+    EXPECT_EQ(100, get_target_steps());
 }
 
 TEST_F(StepperMotorTest, SetTargetStepsAcceptsNegative) {
-    setTargetSteps(-100);
-    EXPECT_EQ(-100, getTargetSteps());
+    set_target_steps(-100);
+    EXPECT_EQ(-100, get_target_steps());
 }
 
 TEST_F(StepperMotorTest, updateCurrentAcceptsPositive) {
-    testUpdateCurrent(100);
-    EXPECT_EQ(100, getCurrentSteps());
+    test_update_current(100);
+    EXPECT_EQ(100, get_current_steps());
 }
 
 TEST_F(StepperMotorTest, updateCurrentAcceptsNegative) {
-    testUpdateCurrent(-100);
-    EXPECT_EQ(-100, getCurrentSteps());
+    test_update_current(-100);
+    EXPECT_EQ(-100, get_current_steps());
 }
 
 TEST_F(StepperMotorTest, StopSetsTargetEqualToCurrent) {
-    testUpdateCurrent(100);
-    EXPECT_EQ(0, getTargetSteps());
+    test_update_current(100);
+    EXPECT_EQ(0, get_target_steps());
     stop();
-    EXPECT_EQ(100, getTargetSteps());
+    EXPECT_EQ(100, get_target_steps());
 
-    testUpdateCurrent(-100);
-    EXPECT_EQ(100, getTargetSteps());
+    test_update_current(-100);
+    EXPECT_EQ(100, get_target_steps());
     stop();
-    EXPECT_EQ(-100, getTargetSteps());
+    EXPECT_EQ(-100, get_target_steps());
 }

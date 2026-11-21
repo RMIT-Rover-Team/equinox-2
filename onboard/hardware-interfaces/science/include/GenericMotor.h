@@ -7,10 +7,7 @@
 #ifndef EQUINOX_2_GENERICMOTOR_H
 #define EQUINOX_2_GENERICMOTOR_H
 
-#include "../../lib-universal-canbus/libuniversalcan/RoverCanMaster.h"
-#include <thread>
-#include <mutex>
-#include <atomic>
+#include <universalcan/RoverCanMaster.h>
 #include "CanDevice.h"
 
 class GenericMotor : public CanDevice{
@@ -18,13 +15,13 @@ private:
     int16_t current_rpm;
     int16_t target_rpm;
 protected:
-    void updateCurrent(int16_t current) override;
+    void update_current(int16_t current) override;
 public:
     GenericMotor(uint8_t device_id, RoverCanMaster& can_master);
     ~GenericMotor() override = default;
-    int16_t getCurrentRpm() const;
-    int16_t getTargetRpm() const;
-    void setRpm(int16_t target);
+    int16_t get_current_rpm() const;
+    int16_t get_target_rpm() const;
+    void set_rpm(int16_t target);
     void stop();
 };
 

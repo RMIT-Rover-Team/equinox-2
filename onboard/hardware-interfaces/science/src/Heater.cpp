@@ -11,19 +11,19 @@ Heater::Heater(const uint8_t device_id, RoverCanMaster& can_master)
     , target_temperature(0)
     , current_temperature(0) {}
 
-void Heater::setTargetTemperature(const int16_t target) {
+void Heater::set_target_temperature(const int16_t target) {
     this->target_temperature = target;
-    CanDevice::setTarget(target);
+    CanDevice::set_target(target);
 }
 
-int16_t Heater::getCurrentTemperature() const {
+int16_t Heater::get_current_temperature() const {
     return current_temperature;
 }
 
-void Heater::updateCurrent(const int16_t current) {
+void Heater::update_current(const int16_t current) {
     current_temperature = current;
 }
 
-int16_t Heater::getTargetTemperature() const {
+int16_t Heater::get_target_temperature() const {
     return target_temperature;
 }

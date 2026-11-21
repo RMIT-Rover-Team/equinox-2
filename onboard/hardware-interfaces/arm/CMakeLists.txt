@@ -3,9 +3,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(Arm VERSION 1.0
-                  DESCRIPTION "Arm hardware interface"
-                  LANGUAGES CXX)
+project(ArmHardwareInterface VERSION 1.0
+            DESCRIPTION "Arm hardware interface"
+            LANGUAGES CXX)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -17,9 +17,9 @@ set(SOURCES
     src/EndEffector.cpp
     src/MyActuatorMotor.cpp
     # TODO: Change libuniversalcan subtree to a submodule or a subrepo. Newer commits in that repo have a CMakeLists so we can import that library like any other
-    ../lib-universal-canbus/libuniversalcan/RoverCanMaster.cpp
-    ../lib-universal-canbus/libuniversalcan/SocketCanWrapper.cpp
-    ../lib-universal-canbus/libuniversalcan/CommandUtils.cpp
+    ../lib-universal-canbus/linux/src/RoverCanMaster.cpp
+    ../lib-universal-canbus/linux/src/SocketCAN.cpp
+    ../lib-universal-canbus/embedded/src/universalcanCommandUtils.cpp
 )
 
 include(FetchContent)
@@ -82,7 +82,7 @@ add_executable(ArmTests
 
 target_include_directories(ArmTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(ArmTests PRIVATE 
+target_link_libraries(ArmTests PRIVATE
     GTest::gtest_main
     GTest::gmock_main
 )

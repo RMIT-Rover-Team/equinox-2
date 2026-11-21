@@ -1,7 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include "GenericCan.h"
-#include "RoverCanMaster.h"
+#include "universalcan/RoverCanMaster.h"
 #include "spdlog/spdlog.h"
 
 class PaverMagnet {
@@ -14,7 +13,4 @@ public:
     ~PaverMagnet();
     bool get_status();
     void set_status(bool status);
-
-    void estop();
-    void ping();
 };

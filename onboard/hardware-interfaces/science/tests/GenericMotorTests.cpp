@@ -2,44 +2,42 @@
 #include <gtest/gtest.h>
 
 #include "SciencePayload.h"
-#include "SocketCanWrapper.h"
+#include "VcanTest.h"
 
-auto* generic_motor_test_can_bus = new WrappedCANBus(CAN_BUS_NAME);
-auto* generic_motor_test_can_master = new RoverCanMaster(*generic_motor_test_can_bus, 1);
 
-struct GenericMotorTest : public ::testing::Test, public GenericMotor {
-    GenericMotorTest() : GenericMotor(1, *generic_motor_test_can_master) {}
+struct GenericMotorTest : public VcanTest, public GenericMotor {
+    GenericMotorTest() : GenericMotor(1, test_can_master()) {}
 };
 
 TEST_F(GenericMotorTest, TargetRpmInitialisesZero) {
-    EXPECT_EQ(0, getTargetRpm());
+    EXPECT_EQ(0, get_target_rpm());
 }
 
 TEST_F(GenericMotorTest, CurrentRpmInitialisesZero) {
-    EXPECT_EQ(0, getCurrentRpm());
+    EXPECT_EQ(0, get_current_rpm());
 }
 
 TEST_F(GenericMotorTest, SetRpmWorks) {
-    setRpm(100);
-    EXPECT_EQ(100, getTargetRpm());
-    setRpm(50);
-    EXPECT_EQ(50, getTargetRpm());
+    set_rpm(100);
+    EXPECT_EQ(100, get_target_rpm());
+    set_rpm(50);
+    EXPECT_EQ(50, get_target_rpm());
 }
 
 TEST_F(GenericMotorTest, SetRpmAcceptsNegative) {
-    setRpm(-100);
-    EXPECT_EQ(-100, getTargetRpm());
+    set_rpm(-100);
+    EXPECT_EQ(-100, get_target_rpm());
 }
 
 TEST_F(GenericMotorTest, StopWorks) {
-    setRpm(100);
-    EXPECT_NE(0, getTargetRpm());
+    set_rpm(100);
+    EXPECT_NE(0, get_target_rpm());
     stop();
-    EXPECT_EQ(0, getTargetRpm());
+    EXPECT_EQ(0, get_target_rpm());
 }
 
 TEST_F(GenericMotorTest, UpdateCurrentWorks) {
-    EXPECT_EQ(0, getCurrentRpm());
-    updateCurrent(100);
-    EXPECT_EQ(100, getCurrentRpm());
+    EXPECT_EQ(0, get_current_rpm());
+    update_current(100);
+    EXPECT_EQ(100, get_current_rpm());
 }

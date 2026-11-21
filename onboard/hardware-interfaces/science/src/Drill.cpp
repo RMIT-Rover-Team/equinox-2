@@ -1,4 +1,4 @@
-/** 
+/**
  * Drill.cpp
  * Implements the Drill hardware interface.
  * The Drill class controls two actuators:
@@ -20,14 +20,14 @@ Drill::Drill(uint8_t device_id, RoverCanMaster& can_master)
 Drill::~Drill() {
 }
 
-void Drill::setHeight(double height) {
+void Drill::set_height(double height) {
     this->target_height = height;
-    height_motor.setTargetSteps(height * DRILL_HEIGHT_MOTOR_RATIO);
+    height_motor.set_target_steps(height * DRILL_HEIGHT_MOTOR_RATIO);
 }
 
 void Drill::start(int16_t rpm) {
     this->target_rpm = rpm;
-    drill_motor.setRpm(rpm);
+    drill_motor.set_rpm(rpm);
 }
 
 void Drill::start() {
@@ -39,18 +39,18 @@ void Drill::stop() {
     this->start(0);
 }
 
-double Drill::getCurrentHeight() const {
-    return height_motor.getCurrentSteps() / DRILL_HEIGHT_MOTOR_RATIO;
+double Drill::get_current_height() const {
+    return height_motor.get_current_steps() / DRILL_HEIGHT_MOTOR_RATIO;
 }
 
-int16_t Drill::getCurrentRpm() const {
-    return drill_motor.getCurrentRpm();
+int16_t Drill::get_current_rpm() const {
+    return drill_motor.get_current_rpm();
 }
 
-double Drill::getTargetHeight() const {
+double Drill::get_target_height() const {
     return this->target_height;
 }
 
-int16_t Drill::getTargetRpm() const {
+int16_t Drill::get_target_rpm() const {
     return this->target_rpm;
 }
