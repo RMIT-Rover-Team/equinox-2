@@ -1,4 +1,4 @@
-#include "PositionActuator.h"
+#include <common/PositionActuator.h>
 
 PositionActuator::PositionActuator(CanAddress addr, RoverCanMaster &m)
     : addr(addr)

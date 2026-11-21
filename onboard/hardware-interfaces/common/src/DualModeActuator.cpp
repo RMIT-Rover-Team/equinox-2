@@ -1,4 +1,4 @@
-#include "DualModeActuator.h"
+#include <common/DualModeActuator.h>
 
 DualModeActuator::DualModeActuator(CanAddress velocity_addr,
                                    CanAddress position_addr,

@@ -1,4 +1,4 @@
-#include "VelocityActuator.h"
+#include <common/VelocityActuator.h>
 
 VelocityActuator::VelocityActuator(CanAddress addr, RoverCanMaster &m)
     : addr(addr)

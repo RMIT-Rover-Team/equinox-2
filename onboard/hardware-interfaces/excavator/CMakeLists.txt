@@ -11,14 +11,14 @@ project(ExcavatorHardwareInterface
     LANGUAGES CXX
 )
 
-set(UNIVERSALCAN_BUILD_UNICANMON OFF CACHE BOOL "" FORCE)
-if(NOT TARGET UniversalCAN::linux)  # build universal can
+# Shared actuator building blocks; brings in UniversalCAN::linux.
+# Outside this source tree, so the binary dir is required.
+if(NOT TARGET Hardware::common)
     add_subdirectory(
-        ../lib-universal-canbus
-        ${CMAKE_CURRENT_BINARY_DIR}/universalcan
+        ../common
+        ${CMAKE_CURRENT_BINARY_DIR}/common
     )
 endif()
-
 
 add_library(ExcavatorHardwareInterface STATIC
     src/Excavator.cpp
@@ -35,7 +35,7 @@ target_compile_options(ExcavatorHardwareInterface PRIVATE
 )
 target_include_directories(ExcavatorHardwareInterface
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(ExcavatorHardwareInterface PUBLIC UniversalCAN::linux)
+target_link_libraries(ExcavatorHardwareInterface PUBLIC Hardware::common)
 
 
 #
