@@ -4,6 +4,14 @@ project(MyNode LANGUAGES CXX)
 # Add DEFCOM library from local folder
 add_subdirectory(external/DEFCOM)
 
+# Add HW Interface
+if(NOT TARGET ExcavatorHardwareInterface)
+    add_subdirectory(
+        ../../hardware-interfaces/excavator
+        ${CMAKE_CURRENT_BINARY_DIR}/excavator-hi
+    )
+endif()
+
 # Your executable
 add_executable(ExcavatorInterface
     src/main.cpp
@@ -12,6 +20,7 @@ add_executable(ExcavatorInterface
 # Link against DEFCOM
 target_link_libraries(ExcavatorInterface
     PRIVATE
+        ExcavatorHardwareInterface
         DEFCOM
 )
 
