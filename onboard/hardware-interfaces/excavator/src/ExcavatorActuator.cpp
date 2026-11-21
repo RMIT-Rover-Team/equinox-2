@@ -3,7 +3,6 @@
 #include <universalcan/CanTypes.h>
 #include "spdlog/spdlog.h"
 
-
 ExcavatorActuator::ExcavatorActuator(uint8_t device_id, RoverCanMaster &can_master)
 : device_id(device_id),
   velocity(0.0),

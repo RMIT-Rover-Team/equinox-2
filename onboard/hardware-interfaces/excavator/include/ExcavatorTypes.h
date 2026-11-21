@@ -1,7 +1,7 @@
 
 enum DeviceID {
-    ExcavatorTilt = 0x0,
-    BucketTilt = 0x1,
-    Teeth = 0x2,
+    BoomTilt = 0x0,
+    RockBucketTilt = 0x1,
+    SandBucketTilt = 0x2,
     PaverMagnet = 0x3
 };

@@ -21,7 +21,7 @@ endif()
 
 
 add_library(ExcavatorHardwareInterface STATIC
-    src/ExcavatorPayload.cpp
+    src/Excavator.cpp
     src/ExcavatorActuator.cpp
     src/TeethActuator.cpp
     src/PaverMagnet.cpp
@@ -63,9 +63,9 @@ if(PROJECT_IS_TOP_LEVEL)
     if(BUILD_TESTING)
         FetchContent_Declare(
             googletest
-            GIT_TAG v1.17.0
+            GIT_TAG v1.18.0
             GIT_REPOSITORY https://github.com/google/googletest.git
-            FIND_PACKAGE_ARGS 1.17.0 NAMES GTest
+            FIND_PACKAGE_ARGS 1.18.0 NAMES GTest
             EXCLUDE_FROM_ALL
             SYSTEM
         )
