@@ -9,7 +9,7 @@ CommsThread::~CommsThread() {
 void CommsThread::estop() {
     {
         std::lock_guard<std::mutex> lock(m_payload);
-        payload.heater.setTargetTemperature(0);
+        payload.heater.set_target_temperature(0);
         payload.drill.stop();
     }
 
@@ -42,12 +42,12 @@ void CommsThread::run() {
             std::lock_guard<std::mutex> lock2(m_payload);
 
             if (target_state.heater_temperature != last_sent_state.heater_temperature) {
-                payload.heater.setTargetTemperature(target_state.heater_temperature);
+                payload.heater.set_target_temperature(target_state.heater_temperature);
                 last_sent_state.heater_temperature = target_state.heater_temperature;
             }
 
             if (target_state.drill_height != last_sent_state.drill_height) {
-                payload.drill.setHeight(target_state.drill_height);
+                payload.drill.set_height(target_state.drill_height);
                 last_sent_state.drill_height = target_state.drill_height;
             }
 
@@ -58,12 +58,12 @@ void CommsThread::run() {
             }
 
             if (target_state.microscope_height != last_sent_state.microscope_height) {
-                payload.microscope.setHeight(target_state.microscope_height);
+                payload.microscope.set_height(target_state.microscope_height);
                 last_sent_state.microscope_height = target_state.microscope_height;
             }
 
             if (target_state.microscope_swivel != last_sent_state.microscope_swivel) {
-                payload.microscope.setSwivel(target_state.microscope_swivel);
+                payload.microscope.set_lateral(target_state.microscope_swivel);
                 last_sent_state.microscope_swivel = target_state.microscope_swivel;
             }
         }

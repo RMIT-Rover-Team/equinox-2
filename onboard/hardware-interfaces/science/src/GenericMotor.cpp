@@ -13,25 +13,25 @@ GenericMotor::GenericMotor(const uint8_t device_id, RoverCanMaster &can_master)
     , current_rpm(0)
     , target_rpm(0) {}
 
-void GenericMotor::updateCurrent(const int16_t current) {
+void GenericMotor::update_current(const int16_t current) {
     current_rpm = current;
 }
 
-int16_t GenericMotor::getCurrentRpm() const {
+int16_t GenericMotor::get_current_rpm() const {
     return current_rpm;
 }
 
-int16_t GenericMotor::getTargetRpm() const {
+int16_t GenericMotor::get_target_rpm() const {
     return target_rpm;
 }
 
-void GenericMotor::setRpm(const int16_t target) {
+void GenericMotor::set_rpm(const int16_t target) {
     target_rpm = target;
-    CanDevice::setTarget(target);
+    CanDevice::set_target(target);
 }
 
 void GenericMotor::stop() {
     target_rpm = 0;
-    CanDevice::setTarget(0);
+    CanDevice::set_target(0);
 }
 

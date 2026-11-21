@@ -1,0 +1,20 @@
+
+Name: ExcavatorStatus@localhost
+
+RequestFormat {
+    FramePosition: float
+    BucketPosition: float
+    TeethPosition: float
+
+    # Magnet State [0 or 1]
+    Magnet: char
+
+    # Payload Last Seen (System Timestamp)
+    PayloadLastSeen: long
+}
+
+
+# This is used for transactional communications in the same format as above
+ResponseFormat {
+
+}

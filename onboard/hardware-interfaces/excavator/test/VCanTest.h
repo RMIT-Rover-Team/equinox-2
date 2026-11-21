@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "SocketCanWrapper.h"
+#include <universalcan/UniversalCAN.h>
 #include "RoverCanMaster.h"
 #include "../src/ExcavatorPayload.h"
 
