@@ -9,11 +9,8 @@
 #define PIN_SELECT0 PD7
 #define PIN_SELECT1 PB0
 #define PIN_SELECT2 PB1
-<<<<<<< HEAD
 
 #define TIMEOUT_MS 2000
-=======
->>>>>>> 0f9dc1b (copy over old buckboard)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Global objects to be initialised
