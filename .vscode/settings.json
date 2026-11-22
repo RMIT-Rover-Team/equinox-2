@@ -8,5 +8,8 @@
         "/opt/ros/humble/lib/python3.10/site-packages",
         "/opt/ros/humble/local/lib/python3.10/dist-packages"
     ],
-    "C_Cpp.default.compilerPath": "/usr/bin/g++"
+    "C_Cpp.default.compilerPath": "/usr/bin/g++",
+    "rust-analyzer.linkedProjects": [
+        "onboard/backup-controls/Cargo.toml"
+    ]
 }
