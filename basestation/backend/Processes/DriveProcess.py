@@ -117,8 +117,8 @@ class DriveProcess(AbstractProcess):
             # Get the Stick Values
             leftSpeed = msg.getFloat("L_Stick_Y") * self.maxDriveSpeed
             rightSpeed = msg.getFloat("R_Stick_Y") * self.maxDriveSpeed
-            outgoing.setFloat("LeftSpeed", leftSpeed)
-            outgoing.setFloat("RightSpeed", rightSpeed)
+            outgoing.setFloat("LeftSpeed", leftSpeed*-1)
+            outgoing.setFloat("RightSpeed", rightSpeed*-1)
 
             # If Y is pressed, we switch drive Mode
             self.SelectedDriveMode.update(msg.getChar("Y_Button")[0])

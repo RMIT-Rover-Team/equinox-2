@@ -5,6 +5,7 @@
 #include <Excavator.h>
 #include <universalcan/RoverCanMaster.h>
 #include <universalcan/SocketCAN.h>
+#include <thread>
 
 //#include <ChannelMulticast.hpp>
 //#include <ChannelTransactional.hpp>

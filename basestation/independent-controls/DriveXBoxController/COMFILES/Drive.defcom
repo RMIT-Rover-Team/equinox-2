@@ -10,7 +10,7 @@
 # Or if I wanted to use a port number
 #   Name: 1234@localhost
 
-Name: Drive@localhost
+Name: Drive@192.168.40.193
 
 # This is the message format for requests in transactional communications or the boardcast message in multicast
 # Format is a collection of key value pairs in the form of VarName: Type
