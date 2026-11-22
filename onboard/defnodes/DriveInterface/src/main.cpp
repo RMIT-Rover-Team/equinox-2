@@ -52,6 +52,8 @@ class DriveNode {
                 // Calculate the slip alarm
                 // [TODO]
 
+                telem.publish(msg);
+
                 std::this_thread::sleep_for(std::chrono::milliseconds(500));
             }
             
@@ -64,7 +66,7 @@ class DriveNode {
 
             // Start Telem
             std::thread telemThread = std::thread(&DriveNode::telemThread, this);
-            
+
             while (true){
                 MessageStructure msg = control.subscribe();
 
