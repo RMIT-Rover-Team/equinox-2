@@ -29,6 +29,29 @@ make -j4
 ./TestDrive can0
 ```
 
+# Mini Rover GPIO drive
+
+The DriveInterface node can drive the mini rover's four H-bridge channels with
+`libgpiod` v2 instead of WiringPi. Its existing DEFCOM controller input remains
+unchanged; only the motor-output backend changes.
+
+Build this backend on the Raspberry Pi with:
+
+```
+cmake -S onboard/defnodes/DriveInterface -B build/minirover -DDRIVE_USE_MINIROVER_GPIO=ON
+cmake --build build/minirover
+```
+
+Install the `libgpiod` v2 development package first (for example,
+`libgpiod-dev` on Debian-based Raspberry Pi images). The process needs access
+to `/dev/gpiochip0`, normally through an appropriate GPIO group or a udev rule.
+
+The adapter preserves the old `wiringPiSetup()` numbering by using these BCM
+GPIO line offsets: LF `13/12`, LR `19/16`, RF `18/17`, RR `15/14`; enable
+lines `27, 21, 20, 4, 2`. The backend uses a 100 Hz software-PWM loop for
+the direction pairs and sets all enable lines high only while the drive is
+enabled. It does not supply encoder feedback, so avoid locked-velocity mode.
+
 
 # (ROS) RAT3 Diff Drive
 RAT3 ROS2 Control Integration and Canbus Hardware Interface for Differential Drive Robot with 6 wheels.
@@ -53,7 +76,5 @@ After launch, use the following command for teleop control:
 ```
 ros2 run teleop_twist_keyboard teleop_twist_keyboard -r cmd_vel:=/diff_cont/cmd_vel_unstamped
 ```
-
-
 
 

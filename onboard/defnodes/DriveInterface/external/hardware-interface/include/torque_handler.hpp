@@ -18,8 +18,13 @@ Authors:
 
 //Define the type of motor
 #ifndef TorqueHandler_TestMode
-//#define USE_ODrive
-#define USE_MyActuator
+    #if defined(TORQUE_HANDLER_USE_MINIROVER_GPIO)
+        // CMake selects the GPIO H-bridge backend for the mini rover build.
+        #define USE_MINIROVER_GPIO
+    #else
+        //#define USE_ODrive
+        #define USE_MyActuator
+    #endif
 #endif
 
 
@@ -74,6 +79,10 @@ typedef struct
         #include "CanComms/GenericCan.h"
         #include "CanComms/SocketCanWrapper.h"
     #endif
+    #ifdef USE_MINIROVER_GPIO
+        // The mini rover implements the same wheel-level interface as CAN motors.
+        #include "Motors/minirover_gpio.hpp"
+    #endif
     
 #endif
 
@@ -103,6 +112,10 @@ class TorqueHandler{
             //The unified controller for the MyActuator motors
             #ifdef USE_MyActuator
                 GenericCan* myCan;
+            #endif
+            #ifdef USE_MINIROVER_GPIO
+                // Shared GPIO owner used by all four mini-rover wheel adapters.
+                MiniRoverGpio* miniRoverGpio;
             #endif
         #endif
 

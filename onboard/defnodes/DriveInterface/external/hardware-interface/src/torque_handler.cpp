@@ -21,6 +21,10 @@ TorqueHandler::TorqueHandler(const char* canInterface){
         #ifdef USE_MyActuator
             this->myCan = new WrappedCANBus(canInterface);
         #endif
+        #ifdef USE_MINIROVER_GPIO
+            // For this backend, the historical CAN interface argument is the GPIO chip path.
+            this->miniRoverGpio = new MiniRoverGpio(canInterface);
+        #endif
     #endif
 
     //Set up all the motors
@@ -36,6 +40,10 @@ TorqueHandler::TorqueHandler(const char* canInterface){
             #endif
             #ifdef USE_MyActuator
                 this->myMotors[i] = new MyActuatorMotor(this->myCan, MotorIDs[i], MotorDirs[i]);
+            #endif
+            #ifdef USE_MINIROVER_GPIO
+                // The mini rover pin map already accounts for physical wheel orientation.
+                this->myMotors[i] = new MiniRoverGpioMotor(this->miniRoverGpio, i, 1);
             #endif
         #endif
 
@@ -289,7 +297,9 @@ TorqueHandler::~TorqueHandler(){
         #ifdef USE_MyActuator
             delete this->myCan;
         #endif
+        #ifdef USE_MINIROVER_GPIO
+            // Wheel adapters are destroyed first, then their shared GPIO owner.
+            delete this->miniRoverGpio;
+        #endif
     #endif
 }
-
-
