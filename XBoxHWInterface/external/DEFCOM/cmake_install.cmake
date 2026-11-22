@@ -1,4 +1,4 @@
-# Install script for directory: /home/kaelan/Documents/RMIT/Rover/2026-2027/Projects/urc-arm-ik/XBoxHWInterface/external/DEFCOM
+# Install script for directory: /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/XBoxHWInterface/external/DEFCOM
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -49,7 +49,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libDEFCOM.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/kaelan/Documents/RMIT/Rover/2026-2027/Projects/urc-arm-ik/XBoxHWInterface/external/DEFCOM/libDEFCOM.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/XBoxHWInterface/external/DEFCOM/libDEFCOM.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libDEFCOM.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libDEFCOM.so")
     if(CMAKE_INSTALL_DO_STRIP)
@@ -62,6 +62,6 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/kaelan/Documents/RMIT/Rover/2026-2027/Projects/urc-arm-ik/XBoxHWInterface/external/DEFCOM/include/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/XBoxHWInterface/external/DEFCOM/include/")
 endif()
 

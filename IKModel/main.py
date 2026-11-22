@@ -115,6 +115,8 @@ class IKServer:
         self.feedbackChannel = ChannelLossyCast.LossyCastSubscriber("COMFILES/ArmState.defcom")
         self.planner = planner
 
+        self.planner.setJointOrigins([0,140+90,130,-14,14,1.5])
+
         self.fThread = threading.Thread(target=self._armStateListener, args=())
         self.fThread.start()
 
@@ -123,6 +125,7 @@ class IKServer:
         while True:
             msg = self.feedbackChannel.subscribe()
             pos = [msg.getFloat("jointPositions",i) for i in range(len(ArmJoints))]
+            print("Feedback",pos)
             self.planner.setJointOrigins(pos)
 
     def run(self):

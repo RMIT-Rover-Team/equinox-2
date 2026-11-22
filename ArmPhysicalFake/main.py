@@ -6,10 +6,16 @@
 from DEFCOM import ChannelLossyCast
 import time
 import threading
+import math
 
 class FakeArm:
     def __init__(self):
-        self.jointPositions = [0, 0, 0, 0, 0, 0]
+        # Startup positions
+            
+        self.jointPositions = [0,0,0,0,0,0]
+        for i,v in enumerate([0, -123, 123, -2.5, 14, 1.5]):
+            self.jointPositions[i] = math.radians(v)
+
         self.targetJointPositions = [0, 0, 0, 0, 0, 0]
         self.jointSpeeds = [0, 0, 0, 0, 0, 0]
         self.idleMoveSpeedDiv = 0.5
@@ -29,6 +35,8 @@ class FakeArm:
         while True:
             # Send a message to the output channel
             print("Joint Positions: ",self.jointPositions, "Joint Speeds: ", self.jointSpeeds)
+            for i in self.jointPositions:
+                print("-> ",math.degrees(i))
             message = self.outputChannel.getNewMessageObject()
 
             for i in range(6):

@@ -19,20 +19,20 @@ using std::cout;
 using std::endl;
 
 const double jointScales[6] = {
+    -1,
     1,
+    -1,
+    -1,
     1,
-    1,
-    1,
-    1,
-    1
+    -1
 };
 
 const double jointOffsets[6] = {
     0,
+    180,
     0,
-    0,
-    0,
-    0,
+    180,
+    90,
     0
 };
 
@@ -73,7 +73,7 @@ class ArmNode {
         }
 
         void telemThread(){
-            LossyCastPublisher telem("COMFILES/DriveStatus.defcom");
+            LossyCastPublisher telem("COMFILES/ArmState.defcom");
             std:cout << "Arm Telem Thread Started" << std::endl;
 
             while (true){
@@ -81,14 +81,18 @@ class ArmNode {
                 double readings[6] = {0};
     
                 MessageStructure msg = telem.getNewMessageObject();
-                for (int i = 0; i < 6; i++){
+                printf("Reading!\n");
+                //for (int i = 0; i < 6; i++){
+                for (int i = 0; i < 4; i++){
                     readings[i] = (myMotors[i]->getPosition() - jointOffsets[i])/jointScales[i];
+                    printf("Got %i %lf\n",i,readings[i]);
                     msg.setFloat("jointPositions", (readings[i]/180)*3.141592, i);
                 }
+                
 
                 telem.publish(msg);
 
-                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                std::this_thread::sleep_for(std::chrono::milliseconds(200));
             }
             
         }
@@ -109,9 +113,18 @@ class ArmNode {
 
                 //Get all the joint angles
                 for (int i = 0; i < 6; i++) {
-                    double angle = 180*(myMessage.getFloat("jointPositions",i)/3.141592);
-                    printf("Set J%i to %f\n", i, angle);
-                    myMotors[i]->setPosition((angle * jointScales[i]) + jointOffsets[i]);
+                    double angle = 180.0*(myMessage.getFloat("jointSetValues",i)/3.141592);
+                    printf("Set J%i to %lf Raw %lf\n", i, angle,myMessage.getFloat("jointSetValues",i));
+
+                    // Get the movement type
+                    char movementType = myMessage.getChar("movementType");
+                    //printf("Movement type %i\n",movementType);
+                    if (movementType == 'V'){
+                        myMotors[i]->setVelocity(angle);
+                    }
+                    else if (movementType == 'P'){
+                        myMotors[i]->setPosition((angle * jointScales[i]) + jointOffsets[i]);
+                    }
                 }
 
             }

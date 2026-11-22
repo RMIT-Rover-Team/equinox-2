@@ -68,7 +68,7 @@ double MyActuatorMotor::getPosition() {
 
     //Await response
     CANFrame recv;
-    while (true){
+    if (true){
         recv = myCan->readMSGFrom(myID + SingleMotorReplyIDOffset, MASK_ALL, 2000);
         
         //Check if we actually got a response
@@ -78,9 +78,9 @@ double MyActuatorMotor::getPosition() {
 
         //Check if the command matches
         // printf("Got %02x\n",(uint8_t)recv.data[0]);
-        if ((uint8_t)recv.data[0] == 0x92){
-            break;
-        } 
+        //if ((uint8_t)recv.data[0] == 0x92){
+         //   break;
+        //} 
     }
     
 

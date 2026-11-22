@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/XBoxHWInterface.dir/src/main.cpp.o CMakeFiles/XBoxHWInterface.dir/src/SimpleController.cpp.o -o XBoxHWInterface  -Wl,-rpath,/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/XBoxHWInterface/external/DEFCOM external/DEFCOM/libDEFCOM.so /usr/lib/x86_64-linux-gnu/libSDL2.so 

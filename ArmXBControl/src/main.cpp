@@ -17,9 +17,9 @@ const double angScale = 5;
 //The Raised Position in degrees
 const double jointRaised[6] = {
     0,
-    140+90,
-    130,
-    -14,
+    -123,
+    123,
+    -2.5,
     14,
     1.5
 };
@@ -27,12 +27,13 @@ const double jointRaised[6] = {
 // The Stowed Position in degrees
 const double jointStowed[6] = {
     0,
-    -180,
-    170,
-    95,
+    -178,
+    168,
+    65,
     0,
     8
 };
+
 
 //Input Scales
 const double jointScales[6] = {
@@ -104,7 +105,7 @@ void directControl(LossyCastPublisher* myPub, MessageStructure* myControl){
     myPub->publish(myMessage);
 }
 
-double ikpos[3] = {0};
+double ikpos[3] = {0.595088, -0.189627, 0.496208};
 double ikang[3] = {0};
 
 void ikControl(LossyCastPublisher* myPub, MessageStructure* myControl){
