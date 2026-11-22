@@ -90,7 +90,7 @@ class ExcavatorProcess(AbstractProcess):
                 self.PayloadWorking = 0
             else:
                 self.PayloadWorking = 1
-            
+
             lastLastSeenTime = lastSeenTime
 
             #print("MSG ID = ",self.latestID)
@@ -118,35 +118,29 @@ class ExcavatorProcess(AbstractProcess):
                 continue
 
             # Get the Stick Values
-            frameSpeed = msg.getFloat("L_Stick_Y") * 1
-            bucketSpeed = msg.getFloat("R_Stick_Y") * 1
-            outgoing.setFloat("FrameSpeed", frameSpeed)
-            outgoing.setFloat("BucketSpeed", bucketSpeed)
+            frameSpeed = msg.getFloat("L_Stick_Y") * 500
+            bucketSpeed = msg.getFloat("R_Stick_Y") * 500
+            outgoing.setInt("BoomVelocity", int(frameSpeed))
+            outgoing.setInt("RockBucketVelocity", int(bucketSpeed))
 
             # If the DPAD Up is pressed, we Teeth Out
             if msg.getChar("D_Pad_Up")[0] == 1:
-                outgoing.setFloat("TeethSpeed", 1)
+                outgoing.setInt("SandBucketVelocity", 1 * 500)
             # DPAD Down = Teeth In
             elif msg.getChar("D_Pad_Down")[0] == 1:
-                outgoing.setFloat("TeethSpeed", -1)
+                outgoing.setInt("SandBucketVelocity", -1 * 500)
             # Otherwise Stop
             else:
-                outgoing.setFloat("TeethSpeed", 0)
+                outgoing.setInt("SandBucketVelocity", 0)
 
-            
+
             # If Y is pressed, we switch magnet
             self.SelectedMagnet.update(msg.getChar("Y_Button")[0])
             outgoing.setChar("Magnet", self.SelectedMagnet.getValue().to_bytes(1))
-            
+
             # If X is pressed, we ESTOP
             self.SelectedESTOP.update(msg.getChar("X_Button"))
             outgoing.setChar("EStop", self.SelectedESTOP.getValue().to_bytes(1))
 
             # Send the message
             self.excavatorChannel.publish(outgoing)
-
-
-
-
-
-        
