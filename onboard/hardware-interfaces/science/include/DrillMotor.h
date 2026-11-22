@@ -1,3 +1,4 @@
+#pragma once
 #include <stdint.h>
 
 #include <common/CanAddress.h>
@@ -9,11 +10,11 @@ private:
   RoverCanMaster &m_;
   CanAddress addr_;
   bool status_;
-  int16_t rpm_;
+  int16_t rpm_ = 0;
 
 public:
   DrillMotor(CanAddress addr, RoverCanMaster &can_master);
 
   void set_rpm(int16_t rpm);
-  int16_t get_rpm();
+  int16_t get_rpm() const;
 };
