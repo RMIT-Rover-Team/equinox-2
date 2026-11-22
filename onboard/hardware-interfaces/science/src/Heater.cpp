@@ -4,26 +4,18 @@
  * set_temperature() stores the target temperature and sends it
  * to the heater device over the CAN bus as a float message.
  */
-#include "Heater.h"
+#include <Heater.h>
 
-Heater::Heater(const uint8_t device_id, RoverCanMaster& can_master)
-    : CanDevice(device_id, can_master)
-    , target_temperature(0)
-    , current_temperature(0) {}
+Heater::Heater(const CanAddress addr, RoverCanMaster& can_master)
+  : m_(can_master)
+  , addr_(addr) {}
 
-void Heater::set_target_temperature(const int16_t target) {
-    this->target_temperature = target;
-    CanDevice::set_target(target);
+void Heater::set_heater_status(bool status) {
+  this->status_ = status;
+  const int8_t msg[8] = {(int8_t)status, 0, 0, 0, 0, 0, 0, 0};
+  m_.tx_int8(addr_.group, addr_.device, msg);
 }
 
-int16_t Heater::get_current_temperature() const {
-    return current_temperature;
-}
-
-void Heater::update_current(const int16_t current) {
-    current_temperature = current;
-}
-
-int16_t Heater::get_target_temperature() const {
-    return target_temperature;
+bool Heater::get_heater_status() const {
+  return this->status_;
 }

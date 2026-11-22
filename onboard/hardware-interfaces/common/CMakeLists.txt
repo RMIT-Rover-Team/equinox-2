@@ -23,7 +23,9 @@ add_library(HardwareCommon STATIC
     src/common/VelocityActuator.cpp
     src/common/PositionActuator.cpp
     src/common/DualModeActuator.cpp
+    src/common/StepperActuator.cpp
 )
+
 add_library(Hardware::common ALIAS HardwareCommon)
 
 target_compile_features(HardwareCommon PUBLIC cxx_std_23)

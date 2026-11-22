@@ -1,44 +1,34 @@
-#include "Heater.h"
 #include <gtest/gtest.h>
 
-#include "SciencePayload.h"
+#include <Heater.h>
 #include "VcanTest.h"
 
-
-struct HeaterTest : public VcanTest, public Heater {
-    HeaterTest() : Heater(1, test_can_master()) {};
+struct HeaterTest : public VcanTest {
+    static constexpr CanAddress addr{GroupID::Payload, 0x04};
+    Heater heater{addr, test_can_master()};
 };
 
-TEST_F(HeaterTest, CurrentTemperatureInitialisesZero) {
-    EXPECT_EQ(0, get_current_temperature());
+TEST_F(HeaterTest, StatusInitialisesOff) {
+    EXPECT_FALSE(heater.get_heater_status());
 }
 
-TEST_F(HeaterTest, TargetTemperatureInitialisesZero) {
-    EXPECT_EQ(0, get_target_temperature());
+TEST_F(HeaterTest, SetStatusStoresValue) {
+    heater.set_heater_status(true);
+    EXPECT_TRUE(heater.get_heater_status());
+    heater.set_heater_status(false);
+    EXPECT_FALSE(heater.get_heater_status());
 }
 
-TEST_F(HeaterTest, SetTargetTemperatureWorks) {
-    set_target_temperature(100);
-    EXPECT_EQ(100, get_target_temperature());
-    set_target_temperature(50);
-    EXPECT_EQ(50, get_target_temperature());
+TEST_F(HeaterTest, TurningOnSendsTxInt8One) {
+    heater.set_heater_status(true);
+    const CANFrame frame = expect_frame(addr, CommandID::TxInt8);
+    ASSERT_EQ(8, frame.can_dlc) << "no TxInt8 frame sent to the heater";
+    EXPECT_EQ(1, frame.data[0]);
 }
 
-TEST_F(HeaterTest, SetTargetTemperatureRejectsNegative) {
-    set_target_temperature(-100);
-    EXPECT_GE(0, get_target_temperature());
-}
-
-TEST_F(HeaterTest, UpdateCurrentWorks) {
-    EXPECT_EQ(0, get_current_temperature());
-    update_current(100);
-    EXPECT_EQ(100, get_current_temperature());
-    update_current(50);
-    EXPECT_EQ(50, get_current_temperature());
-}
-
-TEST_F(HeaterTest, UpdateCurrentAcceptsNegative) {
-    EXPECT_EQ(0, get_current_temperature());
-    update_current(-100);
-    EXPECT_EQ(-100, get_current_temperature());
+TEST_F(HeaterTest, TurningOffSendsTxInt8Zero) {
+    heater.set_heater_status(false);
+    const CANFrame frame = expect_frame(addr, CommandID::TxInt8);
+    ASSERT_EQ(8, frame.can_dlc) << "no TxInt8 frame sent to the heater";
+    EXPECT_EQ(0, frame.data[0]);
 }

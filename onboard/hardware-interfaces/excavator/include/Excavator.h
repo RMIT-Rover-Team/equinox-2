@@ -4,9 +4,9 @@
 #include <cstdint>
 #include <span>
 
-#include "common/VelocityActuator.h"
-#include "PaverMagnet.h"
-#include "universalcan/RoverCanMaster.h"
+#include <common/VelocityActuator.h>
+#include <PaverMagnet.h>
+#include <universalcan/RoverCanMaster.h>
 
 class Excavator {
 private:

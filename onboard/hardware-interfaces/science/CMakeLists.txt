@@ -1,38 +1,37 @@
 cmake_minimum_required(VERSION 3.21)
 include(FetchContent)
 
-project(SciencePayload
-  VERSION 1.0
-  DESCRIPTION "Science payload hardware interface"
-  LANGUAGES CXX
+project(ScienceHardwareInterface
+    VERSION 1.0
+    DESCRIPTION "Science payload hardware interface"
+    LANGUAGES CXX
 )
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(UNIVERSALCAN_BUILD_UNICANMON OFF CACHE BOOL "" FORCE)
-if(NOT TARGET UniversalCAN::linux)  # build if not working
+# Shared actuator building blocks; also brings in UniversalCAN::linux.
+if(NOT TARGET Hardware::common)
     add_subdirectory(
-        ../lib-universal-canbus
-        ${CMAKE_CURRENT_BINARY_DIR}/universalcan
+        ../common
+        ${CMAKE_CURRENT_BINARY_DIR}/common
     )
 endif()
 
 add_library(ScienceHardwareInterface STATIC
     src/Heater.cpp
     src/Drill.cpp
+    src/DrillMotor.cpp
     src/Microscope.cpp
-    src/StepperMotor.cpp
-    src/GenericMotor.cpp
-    src/CanDevice.cpp
+    src/Science.cpp
 )
 
 target_compile_features(ScienceHardwareInterface PUBLIC cxx_std_23)
 target_compile_options(ScienceHardwareInterface PRIVATE -Wall -Wextra -Wpedantic)
 target_include_directories(ScienceHardwareInterface
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(ScienceHardwareInterface PUBLIC UniversalCAN::linux)
+target_link_libraries(ScienceHardwareInterface PUBLIC Hardware::common)
 
 
 if(PROJECT_IS_TOP_LEVEL)  # build if in-project, otherwise don't.
@@ -51,19 +50,17 @@ if(PROJECT_IS_TOP_LEVEL)  # build if in-project, otherwise don't.
         include(GoogleTest)
 
         add_executable(ScienceTests
+            tests/DrillMotorTests.cpp
             tests/DrillTests.cpp
-            tests/GenericMotorTests.cpp
             tests/HeaterTests.cpp
             tests/MicroscopeTests.cpp
-            tests/SciencePayloadTests.cpp
-            tests/StepperMotorTests.cpp
-            tests/CanDeviceTests.cpp
+            tests/ScienceTests.cpp
         )
         target_link_libraries(
             ScienceTests PRIVATE
-            SciencePayload
+            ScienceHardwareInterface
             GTest::gtest_main
         )
-        gtest_discover_tests(ScienceTests)
+        gtest_discover_tests(ScienceTests DISCOVERY_MODE PRE_TEST)
     endif()
 endif()
