@@ -1,14 +1,12 @@
 #include <iostream>
 
 //Include your channel type(s)
-#include <ChannelLossycast.hpp> 
-#include <Excavator.h>
+#include <ChannelLossycast.hpp>
+#include <ExcavatorNode.h>
 #include <universalcan/RoverCanMaster.h>
 #include <universalcan/SocketCAN.h>
-#include <thread>
 
-//#include <ChannelMulticast.hpp>
-//#include <ChannelTransactional.hpp>
+
 
 int main(int argc, char *argv[]) {
     // Check if Canbus interface is provided as argument
@@ -18,17 +16,16 @@ int main(int argc, char *argv[]) {
     }
 
     // Establish a CANBus
-    SocketCAN myBus(argv[1]);
+    SocketCAN can_bus(argv[1]);
     std::cout << "Attached to CAN Bus" << std::endl;
-    
+
     // Start the Can Master
-    RoverCanMaster can_master(myBus);
-    std::cout << "Started Master Lib" << std::endl;
+    RoverCanMaster can_master(can_bus);
+    std::cout << "Started CAN Master" << std::endl;
 
-    // Establish the Excavator Payload
-    Excavator excavator(can_master);
-    std::cout << "Started Excavator Payload" << std::endl;
 
-    std::cout << "Hello World" << std::endl;
+    ExcavatorNode node(can_master);
+    node.run();
+
     return 0;
 }

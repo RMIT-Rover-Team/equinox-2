@@ -1,5 +1,7 @@
-cmake_minimum_required(VERSION 3.16)
-project(MyNode LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.21)
+project(ExcavatorNode LANGUAGES CXX)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Add DEFCOM library from local folder
 add_subdirectory(external/DEFCOM)
@@ -15,6 +17,13 @@ endif()
 # Your executable
 add_executable(ExcavatorInterface
     src/main.cpp
+    src/ExcavatorNode.cpp
+)
+
+target_compile_options(ExcavatorInterface PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
 )
 
 # Link against DEFCOM
@@ -24,9 +33,10 @@ target_link_libraries(ExcavatorInterface
         DEFCOM
 )
 
-# Include DEFCOM headers
+# The node's own headers, plus DEFCOM's
 target_include_directories(ExcavatorInterface
     PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
         external/DEFCOM/include
 )
 
