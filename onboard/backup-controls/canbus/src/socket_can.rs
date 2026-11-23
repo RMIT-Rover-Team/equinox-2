@@ -1,14 +1,16 @@
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 
 use socketcan::{CanAddr, CanDataFrame, CanFrame, CanId, CanInterface, CanSocket, EmbeddedFrame, BlockingCan, Socket, addr::{CAN_RAW, PF_CAN}};
 
-use crate::can_v3::{CANHeader, CommandID, GroupID};
+use crate::{can_v3::{CANHeader, CommandID, GroupID}, packet::{CANPacketHandler, data_to_f32, data_to_i8, data_to_i16}};
 
 
 
 pub struct SocketCAN {
     inner: CanSocket,
     recv_buffer: VecDeque<socketcan::CanFrame>,
+
+    handlers: HashMap<CANHeader, CANPacketHandler>,
 
     pub handle_ping: Option<fn(CANHeader)>,
     pub handle_br_int8: Option<fn(CANHeader, &[i8; 8])>,
@@ -28,6 +30,8 @@ impl SocketCAN {
         return Ok(SocketCAN {
             inner: socket,
             recv_buffer: VecDeque::new(),
+
+            handlers: HashMap::new(),
 
             handle_ping: None,
             handle_br_int8: None,
@@ -173,4 +177,36 @@ impl SocketCAN {
             }
         }
     }
+
+
+    /// Registers a callback for a specific id and command pair
+    /// If callback already exists, then it is overridden
+    pub fn register_listener(&mut self, filter: CANHeader, callback: CANPacketHandler) -> Result<(), std::io::Error> {
+        if callback.command_id() != filter.get_command_id() {
+            return Err(std::io::Error::other("incorrect command id"));
+        }
+
+        self.handlers.insert(filter, callback);
+        Ok(())
+    }
+
+    pub fn read_msg(&mut self) -> Result<(), socketcan::Error> {
+        if let Ok(frame) = self.inner.read_raw_frame() {
+            let header = CANHeader::try_from(frame.can_id)
+                .map_err(|e| socketcan::Error::Io(e))?;
+
+            match self.handlers.get(&header) {
+                Some(CANPacketHandler::Ping(f)) => f(header),
+                Some(CANPacketHandler::BrInt8(f)) => f(header, *data_to_i8(&frame.data)?),
+                Some(CANPacketHandler::BrInt16(f)) => f(header, *data_to_i16(&frame.data)?),
+                Some(CANPacketHandler::BrFloat(f)) => f(header, *data_to_f32(&frame.data)?),
+                Some(CANPacketHandler::BrData(f)) => f(header, frame.data),
+                Some(CANPacketHandler::BrData2(f)) => f(header, frame.data),
+                _ => {}
+            }
+        }
+
+        Ok(())
+    }
 }
+

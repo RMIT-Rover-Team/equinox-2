@@ -7,7 +7,7 @@ use num_derive::{FromPrimitive, ToPrimitive};
 use num_traits::{FromPrimitive, ToPrimitive};
 
 
-
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct CANHeader {
     pub inner: u16,
 }
@@ -80,7 +80,7 @@ pub enum GroupID {
 
 
 #[repr(u8)]
-#[derive(Debug, FromPrimitive, ToPrimitive)]
+#[derive(Debug, PartialEq, Eq, FromPrimitive, ToPrimitive)]
 pub enum CommandID {
     Ping = 0x0,
 

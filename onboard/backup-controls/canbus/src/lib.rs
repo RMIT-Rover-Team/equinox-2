@@ -1,6 +1,7 @@
 
 pub mod socket_can;
 pub mod can_v3;
+pub mod packet;
 
 #[cfg(test)]
 mod tests {
