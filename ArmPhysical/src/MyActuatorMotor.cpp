@@ -73,7 +73,7 @@ double MyActuatorMotor::getPosition() {
         
         //Check if we actually got a response
         if (recv.can_dlc == 0) {
-            //return -1;
+            return 0;
         }
 
         //Check if the command matches
