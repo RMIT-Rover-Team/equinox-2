@@ -1,6 +1,6 @@
 
 
-use std::ops::Range;
+use std::{default, ops::Range};
 
 use intbits::Bits;
 use num_derive::{FromPrimitive, ToPrimitive};
@@ -9,7 +9,7 @@ use num_traits::{FromPrimitive, ToPrimitive};
 
 
 pub struct CANHeader {
-    pub inner: u16
+    pub inner: u16,
 }
 
 impl CANHeader {
@@ -30,7 +30,9 @@ impl CANHeader {
         inner.set_bits(Self::COMMAND_ID_BITS, CommandID::to_u16(&command_id)
             .ok_or(socketcan::Error::Io(std::io::Error::other("failed to create CAN header, failed to parse command id")))?);
         
-        return Ok(Self { inner: inner });
+        return Ok(Self {
+            inner: inner
+        });
     }
 
     pub fn get_group_id(&self) -> GroupID {
@@ -43,6 +45,26 @@ impl CANHeader {
 
     pub fn get_command_id(&self) -> CommandID {
         return CommandID::from_u16(self.inner.bits(Self::COMMAND_ID_BITS)).unwrap();
+    }
+}
+
+impl TryFrom<u16> for CANHeader {
+    type Error = std::io::Error;
+    fn try_from(value: u16) -> Result<Self, Self::Error> {
+        return match value.bit_width() {
+            0..=11 => Ok(Self { inner: value }),
+            _ => Err(std::io::Error::other("CAN header does not fit into 11 bits"))
+        };
+    }
+}
+
+impl TryFrom<u32> for CANHeader {
+    type Error = std::io::Error;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        return match value.bit_width() {
+            0..=11 => Ok(Self { inner: value as u16 }),
+            _ => Err(std::io::Error::other("CAN header does not fit into 11 bits"))
+        };
     }
 }
 
