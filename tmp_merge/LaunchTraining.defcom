@@ -1,0 +1,33 @@
+# Launch File - Specifies the order and delay after each node launch
+Nodes {
+    ArmDisplayWeb {
+        Order: 1
+        PostDelay: 0.1
+        Args: []
+    }
+    ArmXBControl {
+        Order: 2
+        PostDelay: 0.1
+        Args: []
+    }
+    ArmPhysicalFake {
+        Order: 3
+        PostDelay: 0.1
+        Args: []
+    }
+    XBoxHWInterface {
+        Order: 4
+        PostDelay: 0.1
+        Args: [2]
+    }
+    ArmControllerView {
+        Order: 5
+        PostDelay: 0.1
+        Args: []
+    }
+    IKModel {
+        Order: 0
+        PostDelay: 5
+        Args: []
+    }
+}

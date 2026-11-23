@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<robot name="simple_arm">
+
+  <!-- BASE Mount (Static) -->
+  <link name="BASE">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.05" radius="0.05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- JOINT 0: YAW -->
+  <joint name="rev_j0" type="revolute">
+    <parent link="BASE"/>
+    <child link="LOWER"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.14" upper="3.14" effort="10" velocity="5"/>
+  </joint>
+
+  <!-- LINK 1 -->
+  <link name="LOWER">
+    <visual>
+      <origin xyz="0.061 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder length="0.122" radius="0.03"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- JOINT 1: PITCH -->
+  <joint name="rev_j1" type="revolute">
+    <parent link="LOWER"/>
+    <child link="UPPER"/>
+    <origin xyz="0.122 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-3.14" upper="3.14" effort="10" velocity="5"/>
+  </joint>
+
+  <!-- LINK 2 -->
+  <link name="UPPER">
+    <visual>
+      <origin xyz="0.251 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder length="0.502" radius="0.03"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- JOINT 2: PITCH -->
+  <joint name="rev_j2" type="revolute">
+    <parent link="UPPER"/>
+    <child link="WR1"/>
+    <origin xyz="0.502 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-3.14" upper="3.14" effort="10" velocity="5"/>
+  </joint>
+
+  <!-- LINK 3 -->
+  <link name="WR1">
+    <visual>
+      <origin xyz="0.2415 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder length="0.483" radius="0.03"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- JOINT 3: PITCH -->
+  <joint name="rev_j3" type="revolute">
+    <parent link="WR1"/>
+    <child link="WR2"/>
+    <origin xyz="0.483 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-3.14" upper="3.14" effort="10" velocity="5"/>
+  </joint>
+
+  <!-- LINK 4 -->
+  <link name="WR2">
+    <visual>
+      <origin xyz="0.0295 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder length="0.059" radius="0.025"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- JOINT 4: YAW -->
+  <joint name="rev_j4" type="revolute">
+    <parent link="WR2"/>
+    <child link="WR3"/>
+    <origin xyz="0.059 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.14" upper="3.14" effort="10" velocity="5"/>
+  </joint>
+
+  <!-- LINK 5 -->
+  <link name="WR3">
+    <visual>
+      <origin xyz="0.0295 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder length="0.059" radius="0.025"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- JOINT 5: ROLL -->
+  <joint name="rev_j5" type="revolute">
+    <parent link="WR3"/>
+    <child link="WR4"/>
+    <origin xyz="0.059 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-3.14" upper="3.14" effort="10" velocity="5"/>
+  </joint>
+
+  <!-- END EFFECTOR -->
+  <link name="WR4">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.05" radius="0.03"/>
+      </geometry>
+    </visual>
+  </link>
+
+</robot>

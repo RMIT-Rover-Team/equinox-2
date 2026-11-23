@@ -1,0 +1,18 @@
+
+Name: ArmControl@localhost
+
+
+RequestFormat {
+    #Arm Joint positions/velocities in radians / rad/sec
+    jointSetValues: float[6]
+
+    # The message type, V is velocity and P is position
+    movementType: bytes[1]
+
+}
+
+
+# This is used for transactional communications in the same format as above
+ResponseFormat {
+
+}
