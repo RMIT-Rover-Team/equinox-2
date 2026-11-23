@@ -8,16 +8,8 @@ use crate::{can_v3::{CANHeader, CommandID, GroupID}, packet::{CANPacketHandler, 
 
 pub struct SocketCAN {
     inner: CanSocket,
-    recv_buffer: VecDeque<socketcan::CanFrame>,
 
     handlers: HashMap<CANHeader, CANPacketHandler>,
-
-    pub handle_ping: Option<fn(CANHeader)>,
-    pub handle_br_int8: Option<fn(CANHeader, &[i8; 8])>,
-    pub handle_br_int16: Option<fn(CANHeader, &[i16; 4])>,
-    pub handle_br_float: Option<fn(CANHeader, &[f32; 2])>,
-    pub handle_br_data: Option<fn(CANHeader, &[u8; 8])>,
-    pub handle_br_data2: Option<fn(CANHeader, &[u8; 8])>
 }
 
 impl SocketCAN {
@@ -29,16 +21,8 @@ impl SocketCAN {
 
         return Ok(SocketCAN {
             inner: socket,
-            recv_buffer: VecDeque::new(),
 
             handlers: HashMap::new(),
-
-            handle_ping: None,
-            handle_br_int8: None,
-            handle_br_int16: None,
-            handle_br_float: None,
-            handle_br_data: None,
-            handle_br_data2: None
         });
     }
 
@@ -119,64 +103,6 @@ impl SocketCAN {
 
 
 
-    pub fn poll(&mut self) {
-        if let Ok(frame) = self.inner.read_raw_frame() {
-            // TODO: proper err handling
-            let header: CANHeader = match frame.can_id.try_into() {
-                Ok(h) => h,
-                Err(e) => {
-                    eprintln!("{:?}", e);
-                    return;
-                }
-            };
-
-            match header.get_command_id() {
-                CommandID::Ping => {
-                    if let Some(f) = self.handle_ping {
-                        f(header);
-                    }
-                },
-                CommandID::BrInt8 => {
-                    if let Some(f) = self.handle_br_int8 {
-                        let data = frame.data.map(|x| x as i8);
-                        f(header, &data);
-                    }
-                },
-                CommandID::BrInt16 => {
-                    if let Some(f) = self.handle_br_int16 {
-                        let data = unsafe {
-                            // unchecked convert to 4 2 byte chunks
-                            <[[u8; 2]; 4]>::try_from(frame.data.as_chunks_unchecked::<2>()).unwrap()
-                        }.map(|x| i16::from_be_bytes(x));
-                        f(header, &data);
-                    }
-                },
-                CommandID::BrFloat => {
-                    if let Some(f) = self.handle_br_float {
-                        let data = unsafe {
-                            // unchecked convert to 2 4 byte chunks
-                            <[[u8; 4]; 2]>::try_from(frame.data.as_chunks_unchecked::<4>()).unwrap()
-                        }.map(|x| f32::from_be_bytes(x));
-                        f(header, &data);
-                    }
-                },
-                CommandID::BrData => {
-                    if let Some(f) = self.handle_br_data {
-                        f(header, &frame.data);
-                    }
-                },
-                CommandID::BrData2 => {
-                    if let Some(f) = self.handle_br_data2 {
-                        f(header, &frame.data);
-                    }
-                },
-                x => {
-                    eprintln!("Invalid command id recieved {:?}", x);
-                    return;
-                }
-            }
-        }
-    }
 
 
     /// Registers a callback for a specific id and command pair
