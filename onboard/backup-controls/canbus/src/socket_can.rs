@@ -1,14 +1,13 @@
-use std::collections::{HashMap, VecDeque};
+use std::collections::HashMap;
 
-use socketcan::{CanAddr, CanDataFrame, CanFrame, CanId, CanInterface, CanSocket, EmbeddedFrame, BlockingCan, Socket, addr::{CAN_RAW, PF_CAN}};
+use socketcan::{BlockingCan, CanDataFrame, CanFilter, CanFrame, CanSocket, EmbeddedFrame, NonBlockingCan, Socket, SocketOptions};
 
-use crate::{can_v3::{CANHeader, CommandID, GroupID}, packet::{CANPacketHandler, data_to_f32, data_to_i8, data_to_i16}};
+use crate::can_v3::{CANHeader, CommandID, GroupID, CANPacketHandler, data_to_f32, data_to_i8, data_to_i16};
 
 
 
 pub struct SocketCAN {
     inner: CanSocket,
-
     handlers: HashMap<CANHeader, CANPacketHandler>,
 }
 
@@ -16,12 +15,20 @@ impl SocketCAN {
     pub fn new(interface: &str) -> Result<Self, socketcan::Error> {
         let socket = CanSocket::open(interface)?;
 
-        // TODO: should we enable timestamping?
+        socket.set_nonblocking(true)?;
 
+        // loopback enables receiving msgs from other processes on this system
+        // but then we disable receiving msgs from this process
+        socket.set_loopback(true)?;
+        socket.set_recv_own_msgs(false)?;
+
+        // by default, ignore all incoming traffic
+        socket.set_filter_drop_all()?;
+
+        // TODO: should we enable timestamping?
 
         return Ok(SocketCAN {
             inner: socket,
-
             handlers: HashMap::new(),
         });
     }
@@ -40,8 +47,14 @@ impl SocketCAN {
             ).ok_or(socketcan::Error::Io(std::io::Error::other("failed to create CAN frame, data too long")))?
         );
         
-        // this blocks until the send buffer has space
-        self.inner.transmit(frame)?;
+        // try non-blocking transmit, otherwise do blocking transmit
+        match NonBlockingCan::transmit(&mut self.inner, frame) {
+            Ok(_) => {},
+            Err(nb::Error::Other(e)) => { return Err(e); }
+            Err(nb::Error::WouldBlock) => {
+                BlockingCan::transmit(&mut self.inner, frame)?;
+            }
+        };
 
         return Ok(());
     }
@@ -113,11 +126,24 @@ impl SocketCAN {
         }
 
         self.handlers.insert(filter, callback);
+
+        // add header to the list of CAN id filters
+        self.inner.set_filters(
+            &self.handlers.keys()
+            .map(|header| {
+                CanFilter::new(header.inner as u32, 0xFFFFFFFF_u32)
+            }).collect::<Vec<CanFilter>>()
+        )?;
         Ok(())
     }
 
-    pub fn read_msg(&mut self) -> Result<(), socketcan::Error> {
-        if let Ok(frame) = self.inner.read_raw_frame() {
+
+
+    pub fn read_msg(&mut self) -> Result<bool, socketcan::Error> {
+        let frame = self.inner.read_raw_frame();
+        let received_msg = frame.is_ok();
+
+        if let Ok(frame) = frame {
             let header = CANHeader::try_from(frame.can_id)
                 .map_err(|e| socketcan::Error::Io(e))?;
 
@@ -130,9 +156,11 @@ impl SocketCAN {
                 Some(CANPacketHandler::BrData2(f)) => f(header, frame.data),
                 _ => {}
             }
+        } else {
+            dbg!(&frame);
         }
 
-        Ok(())
+        return Ok(received_msg);
     }
 }
 

@@ -1,15 +1,14 @@
 
 pub mod socket_can;
 pub mod can_v3;
-pub mod packet;
 
 #[cfg(test)]
 mod tests {
     use std::time::Duration;
 
-use crate::socket_can::SocketCAN;
+    use crate::{can_v3::{CANHeader, CANPacketHandler}, socket_can::SocketCAN};
 
-use super::*;
+    use super::*;
 
     #[test]
     fn send_ping() {
@@ -31,17 +30,18 @@ use super::*;
     fn no_loopback() {
         let mut socket: SocketCAN = SocketCAN::new("vcan0").expect("failed to init canbus");
 
-        socket.handle_ping = Some(|header| {
-            panic!("recieved ping that we sent ourselves");
-        });
+        socket.register_listener(
+            CANHeader::new(can_v3::GroupID::Onboard, 0, can_v3::CommandID::Ping).expect("failed to create can header"),
+            CANPacketHandler::Ping(|_header| {
+                panic!("recieved ping that we sent ourselves");
+            })
+        ).expect("failed to register listener");
 
-        socket.send_ping(can_v3::GroupID::Onboard, 0b11111).expect("failed to send ping");
+        socket.send_ping(can_v3::GroupID::Onboard, 0).expect("failed to send ping");
         // should see empty packet sent with id (header) 0x1F0
 
         // check for recieved msgs
-        std::thread::sleep(Duration::from_millis(2000));
-        loop {
-            socket.poll();
-        }
+        std::thread::sleep(Duration::from_millis(1000));
+        socket.read_msg().unwrap();
     }
 }
