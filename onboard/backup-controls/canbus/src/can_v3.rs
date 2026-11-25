@@ -3,8 +3,6 @@
 use std::ops::Range;
 
 use intbits::Bits;
-use num_derive::{FromPrimitive, ToPrimitive};
-use num_traits::{FromPrimitive, ToPrimitive};
 
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -17,22 +15,16 @@ impl CANHeader {
     const DEVICE_ID_BITS: Range<u8> = 4..9;
     const GROUP_ID_BITS: Range<u8> = 9..11;
 
-    pub fn new(group_id: GroupID, device_id: u8, command_id: CommandID) -> Result<Self, socketcan::Error> {
-        if device_id > 2_u8.pow(5) {
-            return Err(socketcan::Error::Io(std::io::Error::other("failed to create CAN header, device id too large")));
-        }
-
+    pub fn new(group_id: GroupID, device_id: DeviceID, command_id: CommandID) -> Self {
         // the errors below should never happen
-        let mut inner: u16= 0;
-        inner.set_bits(Self::GROUP_ID_BITS, GroupID::to_u16(&group_id)
-            .ok_or(socketcan::Error::Io(std::io::Error::other("failed to create CAN header, failed to parse group id")))?);
-        inner.set_bits(Self::DEVICE_ID_BITS, device_id as u16);
-        inner.set_bits(Self::COMMAND_ID_BITS, CommandID::to_u16(&command_id)
-            .ok_or(socketcan::Error::Io(std::io::Error::other("failed to create CAN header, failed to parse command id")))?);
+        let mut inner: u16 = 0;
+        inner.set_bits(Self::GROUP_ID_BITS, group_id.discriminant() as u16);
+        inner.set_bits(Self::DEVICE_ID_BITS, device_id.inner as u16);
+        inner.set_bits(Self::COMMAND_ID_BITS, command_id.discriminant() as u16);
         
-        return Ok(Self {
+        return Self {
             inner: inner
-        });
+        };
     }
 
     pub fn get_group_id(&self) -> GroupID {
@@ -70,7 +62,7 @@ impl TryFrom<u32> for CANHeader {
 
 
 #[repr(u8)]
-#[derive(Debug, FromPrimitive, ToPrimitive)]
+#[derive(Debug)]
 pub enum GroupID {
     Onboard = 0x0,
     ReservedForMyActuator = 0x1,
@@ -78,9 +70,47 @@ pub enum GroupID {
     Unused = 0x3
 }
 
+impl GroupID {
+    pub fn discriminant(&self) -> u8 {
+        // SAFETY: Because `Self` is marked `repr(u8)`, its layout is a `repr(C)` `union`
+        // between `repr(C)` structs, each of which has the `u8` discriminant as its first
+        // field, so we can read the discriminant without offsetting the pointer.
+        unsafe { *<*const _>::from(self).cast::<u8>() }
+    }
+
+    pub fn from_u16(x: u16) -> Option<Self> {
+        match x {
+            0x0 => Some(Self::Onboard),
+            0x1 => Some(Self::ReservedForMyActuator),
+            0x2 => Some(Self::Payload),
+            0x3 => Some(Self::Unused),
+            _ => None
+        }
+    }
+}
+
+// 5 bit int
+pub struct DeviceID {
+    inner: u8
+}
+
+impl TryFrom<u8> for DeviceID {
+    type Error = std::io::Error;
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        if value.bit_width() <= 5 { return Ok(DeviceID { inner: value }); }
+        else { return Err(std::io::Error::other("device id too large (>5 bits)")); }
+    }
+}
+
+impl From<DeviceID> for u8 {
+    fn from(value: DeviceID) -> Self {
+        return value.inner;
+    }
+}
+
 
 #[repr(u8)]
-#[derive(Debug, PartialEq, Eq, FromPrimitive, ToPrimitive)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum CommandID {
     Ping = 0x0,
 
@@ -99,6 +129,49 @@ pub enum CommandID {
     BrData = 0xD,
     BrData2 = 0xE,
 }
+
+impl CommandID {
+    pub fn discriminant(&self) -> u8 {
+        // SAFETY: Because `Self` is marked `repr(u8)`, its layout is a `repr(C)` `union`
+        // between `repr(C)` structs, each of which has the `u8` discriminant as its first
+        // field, so we can read the discriminant without offsetting the pointer.
+        unsafe { *<*const _>::from(self).cast::<u8>() }
+    }
+
+    pub fn from_u16(x: u16) -> Option<Self> {
+        match x {
+            0x0 => Some(Self::Ping),
+
+            0x1 => Some(Self::EStop),
+            0x2 => Some(Self::TxInt8),
+            0x3 => Some(Self::TxInt16),
+            0x4 => Some(Self::TxFloat),
+            0x5 => Some(Self::TxData),
+            0x6 => Some(Self::TxData2),
+
+            0xA => Some(Self::TxInt8),
+            0xB => Some(Self::TxInt16),
+            0xC => Some(Self::TxFloat),
+            0xD => Some(Self::TxData),
+            0xE => Some(Self::TxData2),
+            _ => None
+        }
+    }
+}
+
+
+
+
+pub enum SendCANCommand {
+    Ping,
+    EStop,
+    TxInt8([i8; 8]),
+    TxInt16([i16; 4]),
+    TxFloat([f32; 2]),
+    TxData([u8; 8]),
+    TxData2([u8; 8]),
+}
+
 
 
 

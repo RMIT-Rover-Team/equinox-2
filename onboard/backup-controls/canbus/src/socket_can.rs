@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use socketcan::{BlockingCan, CanDataFrame, CanFilter, CanFrame, CanSocket, EmbeddedFrame, NonBlockingCan, Socket, SocketOptions};
 
-use crate::can_v3::{CANHeader, CommandID, GroupID, CANPacketHandler, data_to_f32, data_to_i8, data_to_i16};
+use crate::{can_v3::{CANHeader, CANPacketHandler, DeviceID, GroupID, data_to_f32, data_to_i8, data_to_i16}, packets::OutboundCANPacketV3};
 
 
 
@@ -33,92 +33,10 @@ impl SocketCAN {
         });
     }
 
-    // shouldnt fail:
-    // data is always 8 bytes
-    // and header should not be malformed (TODO: enforce this)
-    // can fail:
-    // sending buffer is full, so this packet is discarded
-    fn send(&mut self, header: CANHeader, data: &[u8; 8]) -> Result<(), socketcan::Error> {
-        let frame = &CanFrame::Data(
-            CanDataFrame::new(
-                socketcan::Id::Standard(socketcan::StandardId::new(header.inner)
-                    .ok_or(socketcan::Error::Io(std::io::Error::other("invalid CAN header, more than 11 bits used")))?),
-                data
-            ).ok_or(socketcan::Error::Io(std::io::Error::other("failed to create CAN frame, data too long")))?
-        );
-        
-        // try non-blocking transmit, otherwise do blocking transmit
-        match NonBlockingCan::transmit(&mut self.inner, frame) {
-            Ok(_) => {},
-            Err(nb::Error::Other(e)) => { return Err(e); }
-            Err(nb::Error::WouldBlock) => {
-                BlockingCan::transmit(&mut self.inner, frame)?;
-            }
-        };
-
-        return Ok(());
-    }
-
-
-    // send
-    pub fn send_ping(&mut self, group: GroupID, id: u8) -> Result<(), socketcan::Error> {
-        let header = CANHeader::new(group, id, CommandID::Ping)?;
-        return self.send(header, &[0; 8]);
-    }
-
-    pub fn send_estop(&mut self, group: GroupID, id: u8) -> Result<(), socketcan::Error> {
-        let header = CANHeader::new(group, id, CommandID::EStop)?;
-        return self.send(header, &[0; 8]);
-    }
-
-    pub fn send_txint8(&mut self, group: GroupID, id: u8, data: &[i8; 8]) -> Result<(), socketcan::Error> {
-        let header = CANHeader::new(group, id, CommandID::TxInt8)?;
-
-        let mut bytes: [u8; 8] = [0; 8];
-        for i in 0..8 {
-            [bytes[i]] = data[i].to_be_bytes();
-        }
-
-        return self.send(header, &bytes);
-    }
-
-    pub fn send_txint16(&mut self, group: GroupID, id: u8, data: &[i16; 4]) -> Result<(), socketcan::Error> {
-        let header = CANHeader::new(group, id, CommandID::TxInt8)?;
-
-        let mut bytes: [u8; 8] = [0; 8];
-        for i in 0..4 {
-            [bytes[2*i], bytes[2*i+1]] = data[i].to_be_bytes();
-        }
-
-        return self.send(header, &bytes);
-    }
-
-    pub fn send_txfloat(&mut self, group: GroupID, id: u8, data: &[f32; 2]) -> Result<(), socketcan::Error> {
-        let header = CANHeader::new(group, id, CommandID::TxInt8)?;
-
-        let mut bytes: [u8; 8] = [0; 8];
-        for i in 0..2 {
-            [bytes[4*i], bytes[4*i+1], bytes[4*i+2], bytes[4*i+3]] = data[i].to_be_bytes();
-        }
-
-        return self.send(header, &bytes);
-    }
-
-    pub fn send_txdata(&mut self, group: GroupID, id: u8, data: &[u8; 8]) -> Result<(), socketcan::Error> {
-        let header = CANHeader::new(group, id, CommandID::TxInt8)?;
-        return self.send(header, data);
-    }
-
-    pub fn send_txdata2(&mut self, group: GroupID, id: u8, data: &[u8; 8]) -> Result<(), socketcan::Error> {
-        let header = CANHeader::new(group, id, CommandID::TxInt8)?;
-        return self.send(header, data);
-    }
-
-
-
 
 
     /// Registers a callback for a specific id and command pair
+    /// 
     /// If callback already exists, then it is overridden
     pub fn register_listener(&mut self, filter: CANHeader, callback: CANPacketHandler) -> Result<(), std::io::Error> {
         if callback.command_id() != filter.get_command_id() {
@@ -139,6 +57,37 @@ impl SocketCAN {
 
 
 
+    /// Will try to transmit non-blocking. If that fails, try again in blocking mode
+    pub fn send<P>(&mut self, group_id: GroupID, device_id: DeviceID, packet: &P) -> Result<(), socketcan::Error> where P: OutboundCANPacketV3 {
+        let header = CANHeader::new(group_id, device_id, P::COMMAND_ID).inner;
+        let data = packet.encode();
+
+        let frame = &CanFrame::Data(
+            CanDataFrame::new(
+                socketcan::Id::Standard(socketcan::StandardId::new(header)
+                    .ok_or(socketcan::Error::Io(std::io::Error::other("invalid CAN header, more than 11 bits used")))?),
+                &data
+            ).ok_or(socketcan::Error::Io(std::io::Error::other("failed to create CAN frame, data too long")))?
+        );
+        
+        // try non-blocking transmit, otherwise do blocking transmit
+        match NonBlockingCan::transmit(&mut self.inner, frame) {
+            Ok(_) => {},
+            Err(nb::Error::WouldBlock) => {
+                eprintln!("warning: sending message in blocking mode");
+                BlockingCan::transmit(&mut self.inner, frame)?;
+            },
+            Err(nb::Error::Other(e)) => { return Err(e); }
+        };
+
+        return Ok(());
+    }
+
+
+
+    /// If `Ok(true)`, we successfully received and handled a message
+    /// 
+    /// If `Ok(false)`, we did not receive a message
     pub fn read_msg(&mut self) -> Result<bool, socketcan::Error> {
         let frame = self.inner.read_raw_frame();
         let received_msg = frame.is_ok();
