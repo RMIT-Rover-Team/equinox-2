@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical
+CMAKE_SOURCE_DIR = /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical
+CMAKE_BINARY_DIR = /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical
 
 # Include any dependencies generated for this target.
 include CMakeFiles/ArmPhysical.dir/depend.make
@@ -72,44 +72,44 @@ include CMakeFiles/ArmPhysical.dir/flags.make
 CMakeFiles/ArmPhysical.dir/src/main.cpp.o: CMakeFiles/ArmPhysical.dir/flags.make
 CMakeFiles/ArmPhysical.dir/src/main.cpp.o: src/main.cpp
 CMakeFiles/ArmPhysical.dir/src/main.cpp.o: CMakeFiles/ArmPhysical.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ArmPhysical.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ArmPhysical.dir/src/main.cpp.o -MF CMakeFiles/ArmPhysical.dir/src/main.cpp.o.d -o CMakeFiles/ArmPhysical.dir/src/main.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ArmPhysical.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ArmPhysical.dir/src/main.cpp.o -MF CMakeFiles/ArmPhysical.dir/src/main.cpp.o.d -o CMakeFiles/ArmPhysical.dir/src/main.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/main.cpp
 
 CMakeFiles/ArmPhysical.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ArmPhysical.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/main.cpp > CMakeFiles/ArmPhysical.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/main.cpp > CMakeFiles/ArmPhysical.dir/src/main.cpp.i
 
 CMakeFiles/ArmPhysical.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ArmPhysical.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/main.cpp -o CMakeFiles/ArmPhysical.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/main.cpp -o CMakeFiles/ArmPhysical.dir/src/main.cpp.s
 
 CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o: CMakeFiles/ArmPhysical.dir/flags.make
 CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o: src/MyActuatorMotor.cpp
 CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o: CMakeFiles/ArmPhysical.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o -MF CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o.d -o CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/MyActuatorMotor.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o -MF CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o.d -o CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/MyActuatorMotor.cpp
 
 CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/MyActuatorMotor.cpp > CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/MyActuatorMotor.cpp > CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.i
 
 CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/MyActuatorMotor.cpp -o CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/MyActuatorMotor.cpp -o CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.s
 
 CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o: CMakeFiles/ArmPhysical.dir/flags.make
 CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o: src/SocketCanWrapper.cpp
 CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o: CMakeFiles/ArmPhysical.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o -MF CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o.d -o CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/SocketCanWrapper.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o -MF CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o.d -o CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/SocketCanWrapper.cpp
 
 CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/SocketCanWrapper.cpp > CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/SocketCanWrapper.cpp > CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.i
 
 CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/SocketCanWrapper.cpp -o CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/SocketCanWrapper.cpp -o CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.s
 
 # Object files for target ArmPhysical
 ArmPhysical_OBJECTS = \
@@ -126,7 +126,7 @@ ArmPhysical: CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o
 ArmPhysical: CMakeFiles/ArmPhysical.dir/build.make
 ArmPhysical: external/DEFCOM/libDEFCOM.so
 ArmPhysical: CMakeFiles/ArmPhysical.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable ArmPhysical"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable ArmPhysical"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ArmPhysical.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -138,6 +138,6 @@ CMakeFiles/ArmPhysical.dir/clean:
 .PHONY : CMakeFiles/ArmPhysical.dir/clean
 
 CMakeFiles/ArmPhysical.dir/depend:
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles/ArmPhysical.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles/ArmPhysical.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/ArmPhysical.dir/depend
 

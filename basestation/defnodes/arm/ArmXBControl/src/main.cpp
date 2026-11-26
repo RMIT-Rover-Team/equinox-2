@@ -71,7 +71,7 @@ void directControl(LossyCastPublisher* myPub, MessageStructure* myControl){
     // Base Up Down
     myMessage.setFloat("jointSetValues",toRadians(myControl->getFloat("L_Stick_Y")) * jointScales[1],1);
     // Elbow
-    myMessage.setFloat("jointSetValues",toRadians(myControl->getFloat("R_Stick_Y")) * jointScales[2],2);
+    myMessage.setFloat("jointSetValues",toRadians(myControl->getFloat("R_Stick_Y")) * jointScales[2] * -1,2);
     // Spin
     myMessage.setFloat("jointSetValues",toRadians(myControl->getFloat("R_Stick_X")) * jointScales[4],5);
 

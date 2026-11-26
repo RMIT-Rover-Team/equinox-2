@@ -6,7 +6,7 @@
 #define SingleMotorMsgIDOffset 0x140
 #define SingleMotorReplyIDOffset 0x240
 #define MaxTorque 255
-#define SpeedLimit 100
+#define SpeedLimit 20
 
 enum DriveMode {
     VelocityMode,

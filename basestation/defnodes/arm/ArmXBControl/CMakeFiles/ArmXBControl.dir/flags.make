@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmXBControl/external/DEFCOM/include -I/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmXBControl/include
+CXX_INCLUDES = -I/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/basestation/defnodes/arm/ArmXBControl/external/DEFCOM/include -I/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/basestation/defnodes/arm/ArmXBControl/include
 
 CXX_FLAGS = 
 

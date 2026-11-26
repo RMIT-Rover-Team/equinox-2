@@ -10,9 +10,11 @@
 
 #include "SocketCanWrapper.h"
 
+#define SANITY_MOVE_ANGLE 15
 
 #include <thread>
 #include <chrono>
+#include <math.h>
 //#include <ChannelMulticast.hpp>
 //#include <ChannelTransactional.hpp>
 using std::cout;
@@ -31,8 +33,8 @@ const double jointOffsets[6] = {
     0,
     180,
     0,
-    180,
-    90,
+    0,
+    0,
     0
 };
 
@@ -41,6 +43,8 @@ class ArmNode {
         //Create a canbus
         WrappedCANBus* myCan = nullptr;
         GenericMotor* myMotors[6];
+
+        double lastEstimates[6];
 
     public:
         ArmNode(char* interfaceName){
@@ -59,6 +63,11 @@ class ArmNode {
 
             for (int i = 0; i < 6; i++){
                 myMotors[i]->calibrate();
+            }
+
+            for (int i = 0; i < 6; i++){
+                this->lastEstimates[i] = (myMotors[i]->getPosition() - jointOffsets[i])/jointScales[i];
+                printf("Initial Estimate: %lf %i\n",this->lastEstimates[i],i);
             }
 
             printf("Ready!\n");
@@ -83,9 +92,19 @@ class ArmNode {
                 MessageStructure msg = telem.getNewMessageObject();
                 printf("Reading!\n");
                 //for (int i = 0; i < 6; i++){
-                for (int i = 0; i < 4; i++){
+                for (int i = 0; i < 6; i++){
                     readings[i] = (myMotors[i]->getPosition() - jointOffsets[i])/jointScales[i];
-                    printf("Got %i %lf\n",i,readings[i]);
+
+                    // Check if it is sane
+                    if (fabs(readings[i] - this->lastEstimates[i]) > SANITY_MOVE_ANGLE){
+                        printf("Reject %i %lf\n",i,readings[i]);
+                        readings[i] = this->lastEstimates[i];
+                        
+                    }
+                    else {
+                        this->lastEstimates[i] = readings[i];
+                        printf("Got %i %lf\n",i,readings[i]);
+                    }
                     msg.setFloat("jointPositions", (readings[i]/180)*3.141592, i);
                 }
                 
