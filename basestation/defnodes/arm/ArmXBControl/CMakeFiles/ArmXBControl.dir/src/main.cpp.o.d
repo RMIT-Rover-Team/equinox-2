@@ -1,5 +1,5 @@
 CMakeFiles/ArmXBControl.dir/src/main.cpp.o: \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmXBControl/src/main.cpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/basestation/defnodes/arm/ArmXBControl/src/main.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/13/iostream \
  /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
@@ -160,8 +160,8 @@ CMakeFiles/ArmXBControl.dir/src/main.cpp.o: \
  /usr/include/c++/13/bits/std_thread.h \
  /usr/include/c++/13/bits/unique_ptr.h \
  /usr/include/c++/13/bits/this_thread_sleep.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmXBControl/external/DEFCOM/include/ChannelLossycast.hpp \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmXBControl/external/DEFCOM/include/comms/Multicast.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/basestation/defnodes/arm/ArmXBControl/external/DEFCOM/include/ChannelLossycast.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/basestation/defnodes/arm/ArmXBControl/external/DEFCOM/include/comms/Multicast.hpp \
  /usr/include/c++/13/vector /usr/include/c++/13/bits/stl_uninitialized.h \
  /usr/include/c++/13/bits/stl_vector.h \
  /usr/include/c++/13/bits/stl_bvector.h \
@@ -192,8 +192,8 @@ CMakeFiles/ArmXBControl.dir/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
  /usr/include/linux/close_range.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmXBControl/external/DEFCOM/include/DefComParser.hpp \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmXBControl/external/DEFCOM/include/FlexibleMessageStructure.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/basestation/defnodes/arm/ArmXBControl/external/DEFCOM/include/DefComParser.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/basestation/defnodes/arm/ArmXBControl/external/DEFCOM/include/FlexibleMessageStructure.hpp \
  /usr/include/c++/13/map /usr/include/c++/13/bits/stl_tree.h \
  /usr/include/c++/13/ext/aligned_buffer.h \
  /usr/include/c++/13/bits/node_handle.h \
