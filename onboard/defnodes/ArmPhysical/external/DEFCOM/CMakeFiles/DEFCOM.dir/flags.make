@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DDEFCOM_EXPORTS
 
-CXX_INCLUDES = -I/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/include
+CXX_INCLUDES = -I/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/include
 
 CXX_FLAGS = -fPIC
 

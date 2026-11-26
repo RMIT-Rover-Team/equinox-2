@@ -1,7 +1,7 @@
 CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o: \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/SocketCanWrapper.cpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/SocketCanWrapper.cpp \
  /usr/include/stdc-predef.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/include/SocketCanWrapper.h \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/include/SocketCanWrapper.h \
  /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -134,7 +134,7 @@ CMakeFiles/ArmPhysical.dir/src/SocketCanWrapper.cpp.o: \
  /usr/include/linux/types.h /usr/include/x86_64-linux-gnu/asm/types.h \
  /usr/include/asm-generic/types.h /usr/include/asm-generic/int-ll64.h \
  /usr/include/linux/socket.h /usr/include/linux/can/raw.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/include/GenericCan.h \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/include/GenericCan.h \
  /usr/include/fcntl.h /usr/include/x86_64-linux-gnu/bits/fcntl.h \
  /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
  /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \

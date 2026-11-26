@@ -1,8 +1,8 @@
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o: \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/ChannelLossycast.cpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/ChannelLossycast.cpp \
  /usr/include/stdc-predef.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/include/ChannelLossycast.hpp \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/include/comms/Multicast.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/include/ChannelLossycast.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/include/comms/Multicast.hpp \
  /usr/include/c++/13/string /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -151,8 +151,8 @@ external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
  /usr/include/linux/close_range.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/include/DefComParser.hpp \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/include/FlexibleMessageStructure.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/include/DefComParser.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/include/FlexibleMessageStructure.hpp \
  /usr/include/c++/13/iostream /usr/include/c++/13/ostream \
  /usr/include/c++/13/ios /usr/include/c++/13/bits/ios_base.h \
  /usr/include/c++/13/ext/atomicity.h \

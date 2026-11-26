@@ -1,9 +1,9 @@
 CMakeFiles/ArmPhysical.dir/src/MyActuatorMotor.cpp.o: \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/MyActuatorMotor.cpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/MyActuatorMotor.cpp \
  /usr/include/stdc-predef.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/include/GenericMotor.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/include/MyActuatorMotor.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/include/GenericCan.h \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/include/GenericMotor.h \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/include/MyActuatorMotor.h \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/include/GenericCan.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \

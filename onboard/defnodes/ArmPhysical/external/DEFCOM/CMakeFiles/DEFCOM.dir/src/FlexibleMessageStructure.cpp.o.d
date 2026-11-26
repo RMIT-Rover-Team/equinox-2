@@ -1,7 +1,7 @@
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o: \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/FlexibleMessageStructure.cpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/FlexibleMessageStructure.cpp \
  /usr/include/stdc-predef.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/include/FlexibleMessageStructure.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/include/FlexibleMessageStructure.hpp \
  /usr/include/c++/13/iostream /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \

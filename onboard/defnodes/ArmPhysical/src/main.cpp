@@ -31,8 +31,8 @@ const double jointOffsets[6] = {
     0,
     180,
     0,
-    180,
-    90,
+    0,
+    0,
     0
 };
 
@@ -83,7 +83,7 @@ class ArmNode {
                 MessageStructure msg = telem.getNewMessageObject();
                 printf("Reading!\n");
                 //for (int i = 0; i < 6; i++){
-                for (int i = 0; i < 4; i++){
+                for (int i = 0; i < 6; i++){
                     readings[i] = (myMotors[i]->getPosition() - jointOffsets[i])/jointScales[i];
                     printf("Got %i %lf\n",i,readings[i]);
                     msg.setFloat("jointPositions", (readings[i]/180)*3.141592, i);

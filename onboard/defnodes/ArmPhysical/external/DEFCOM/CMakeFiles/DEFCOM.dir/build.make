@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical
+CMAKE_SOURCE_DIR = /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical
+CMAKE_BINARY_DIR = /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical
 
 # Include any dependencies generated for this target.
 include external/DEFCOM/CMakeFiles/DEFCOM.dir/depend.make
@@ -72,128 +72,128 @@ include external/DEFCOM/CMakeFiles/DEFCOM.dir/flags.make
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/flags.make
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o: external/DEFCOM/src/ChannelLossycast.cpp
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o -MF CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/ChannelLossycast.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o -MF CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/ChannelLossycast.cpp
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.i"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/ChannelLossycast.cpp > CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.i
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/ChannelLossycast.cpp > CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.i
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.s"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/ChannelLossycast.cpp -o CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.s
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/ChannelLossycast.cpp -o CMakeFiles/DEFCOM.dir/src/ChannelLossycast.cpp.s
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/flags.make
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.o: external/DEFCOM/src/ChannelMulticast.cpp
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.o"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.o -MF CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/ChannelMulticast.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.o"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.o -MF CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/ChannelMulticast.cpp
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.i"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/ChannelMulticast.cpp > CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.i
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/ChannelMulticast.cpp > CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.i
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.s"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/ChannelMulticast.cpp -o CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.s
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/ChannelMulticast.cpp -o CMakeFiles/DEFCOM.dir/src/ChannelMulticast.cpp.s
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/flags.make
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.o: external/DEFCOM/src/ChannelTransactional.cpp
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.o"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.o -MF CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/ChannelTransactional.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.o"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.o -MF CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/ChannelTransactional.cpp
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.i"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/ChannelTransactional.cpp > CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.i
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/ChannelTransactional.cpp > CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.i
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.s"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/ChannelTransactional.cpp -o CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.s
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/ChannelTransactional.cpp -o CMakeFiles/DEFCOM.dir/src/ChannelTransactional.cpp.s
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/flags.make
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.o: external/DEFCOM/src/DefComParser.cpp
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.o"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.o -MF CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/DefComParser.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.o"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.o -MF CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/DefComParser.cpp
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.i"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/DefComParser.cpp > CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.i
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/DefComParser.cpp > CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.i
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.s"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/DefComParser.cpp -o CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.s
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/DefComParser.cpp -o CMakeFiles/DEFCOM.dir/src/DefComParser.cpp.s
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/flags.make
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o: external/DEFCOM/src/FlexibleMessageStructure.cpp
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o -MF CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/FlexibleMessageStructure.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o -MF CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/FlexibleMessageStructure.cpp
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.i"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/FlexibleMessageStructure.cpp > CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.i
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/FlexibleMessageStructure.cpp > CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.i
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.s"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/FlexibleMessageStructure.cpp -o CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.s
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/FlexibleMessageStructure.cpp -o CMakeFiles/DEFCOM.dir/src/FlexibleMessageStructure.cpp.s
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/flags.make
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.o: external/DEFCOM/src/GenericNetWrapper.cpp
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.o"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.o -MF CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/GenericNetWrapper.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.o"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.o -MF CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/GenericNetWrapper.cpp
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.i"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/GenericNetWrapper.cpp > CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.i
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/GenericNetWrapper.cpp > CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.i
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.s"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/GenericNetWrapper.cpp -o CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.s
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/GenericNetWrapper.cpp -o CMakeFiles/DEFCOM.dir/src/GenericNetWrapper.cpp.s
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/Multicast.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/flags.make
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/Multicast.cpp.o: external/DEFCOM/src/Multicast.cpp
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/Multicast.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/Multicast.cpp.o"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/Multicast.cpp.o -MF CMakeFiles/DEFCOM.dir/src/Multicast.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/Multicast.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/Multicast.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/Multicast.cpp.o"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/Multicast.cpp.o -MF CMakeFiles/DEFCOM.dir/src/Multicast.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/Multicast.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/Multicast.cpp
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/Multicast.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/DEFCOM.dir/src/Multicast.cpp.i"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/Multicast.cpp > CMakeFiles/DEFCOM.dir/src/Multicast.cpp.i
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/Multicast.cpp > CMakeFiles/DEFCOM.dir/src/Multicast.cpp.i
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/Multicast.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/DEFCOM.dir/src/Multicast.cpp.s"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/Multicast.cpp -o CMakeFiles/DEFCOM.dir/src/Multicast.cpp.s
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/Multicast.cpp -o CMakeFiles/DEFCOM.dir/src/Multicast.cpp.s
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/flags.make
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.o: external/DEFCOM/src/TCPWrapper.cpp
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.o"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.o -MF CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/TCPWrapper.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.o"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.o -MF CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/TCPWrapper.cpp
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.i"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/TCPWrapper.cpp > CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.i
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/TCPWrapper.cpp > CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.i
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.s"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/TCPWrapper.cpp -o CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.s
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/TCPWrapper.cpp -o CMakeFiles/DEFCOM.dir/src/TCPWrapper.cpp.s
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/flags.make
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o: external/DEFCOM/src/UnixWrapper.cpp
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o: external/DEFCOM/CMakeFiles/DEFCOM.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o -MF CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/UnixWrapper.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object external/DEFCOM/CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/DEFCOM/CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o -MF CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o.d -o CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o -c /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/UnixWrapper.cpp
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.i"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/UnixWrapper.cpp > CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.i
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/UnixWrapper.cpp > CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.i
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.s"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/src/UnixWrapper.cpp -o CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.s
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/src/UnixWrapper.cpp -o CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.s
 
 # Object files for target DEFCOM
 DEFCOM_OBJECTS = \
@@ -221,18 +221,18 @@ external/DEFCOM/libDEFCOM.so: external/DEFCOM/CMakeFiles/DEFCOM.dir/src/TCPWrapp
 external/DEFCOM/libDEFCOM.so: external/DEFCOM/CMakeFiles/DEFCOM.dir/src/UnixWrapper.cpp.o
 external/DEFCOM/libDEFCOM.so: external/DEFCOM/CMakeFiles/DEFCOM.dir/build.make
 external/DEFCOM/libDEFCOM.so: external/DEFCOM/CMakeFiles/DEFCOM.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX shared library libDEFCOM.so"
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/DEFCOM.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX shared library libDEFCOM.so"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/DEFCOM.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 external/DEFCOM/CMakeFiles/DEFCOM.dir/build: external/DEFCOM/libDEFCOM.so
 .PHONY : external/DEFCOM/CMakeFiles/DEFCOM.dir/build
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/clean:
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM && $(CMAKE_COMMAND) -P CMakeFiles/DEFCOM.dir/cmake_clean.cmake
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM && $(CMAKE_COMMAND) -P CMakeFiles/DEFCOM.dir/cmake_clean.cmake
 .PHONY : external/DEFCOM/CMakeFiles/DEFCOM.dir/clean
 
 external/DEFCOM/CMakeFiles/DEFCOM.dir/depend:
-	cd /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/CMakeFiles/DEFCOM.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/CMakeFiles/DEFCOM.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : external/DEFCOM/CMakeFiles/DEFCOM.dir/depend
 

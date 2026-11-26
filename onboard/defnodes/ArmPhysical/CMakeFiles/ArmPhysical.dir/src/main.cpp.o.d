@@ -1,5 +1,5 @@
 CMakeFiles/ArmPhysical.dir/src/main.cpp.o: \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/src/main.cpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/src/main.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/13/iostream \
  /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
@@ -150,8 +150,8 @@ CMakeFiles/ArmPhysical.dir/src/main.cpp.o: \
  /usr/include/c++/13/bits/basic_ios.tcc \
  /usr/include/c++/13/bits/ostream.tcc /usr/include/c++/13/istream \
  /usr/include/c++/13/bits/istream.tcc \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/include/ChannelLossycast.hpp \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/include/comms/Multicast.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/include/ChannelLossycast.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/include/comms/Multicast.hpp \
  /usr/include/c++/13/vector /usr/include/c++/13/bits/stl_uninitialized.h \
  /usr/include/c++/13/bits/stl_vector.h \
  /usr/include/c++/13/bits/stl_bvector.h \
@@ -183,8 +183,8 @@ CMakeFiles/ArmPhysical.dir/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
  /usr/include/linux/close_range.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/include/DefComParser.hpp \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/external/DEFCOM/include/FlexibleMessageStructure.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/include/DefComParser.hpp \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/external/DEFCOM/include/FlexibleMessageStructure.hpp \
  /usr/include/c++/13/map /usr/include/c++/13/bits/stl_tree.h \
  /usr/include/c++/13/ext/aligned_buffer.h \
  /usr/include/c++/13/bits/node_handle.h \
@@ -193,10 +193,10 @@ CMakeFiles/ArmPhysical.dir/src/main.cpp.o: \
  /usr/include/c++/13/bits/erase_if.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/include/GenericMotor.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/include/MyActuatorMotor.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/include/GenericCan.h \
- /home/kaelan/Documents/Rover/2026-2027/Projects/urc-arm-ik/ArmPhysical/include/SocketCanWrapper.h \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/include/GenericMotor.h \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/include/MyActuatorMotor.h \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/include/GenericCan.h \
+ /home/kaelan/Documents/Rover/2026-2027/Projects/equinox-2/onboard/defnodes/ArmPhysical/include/SocketCanWrapper.h \
  /usr/include/c++/13/stdlib.h /usr/include/c++/13/deque \
  /usr/include/c++/13/bits/stl_deque.h /usr/include/c++/13/bits/deque.tcc \
  /usr/include/net/if.h /usr/include/x86_64-linux-gnu/sys/ioctl.h \
