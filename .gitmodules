@@ -8,3 +8,6 @@
 [submodule "onboard/hardware-interfaces/drive"]
 	path = onboard/hardware-interfaces/drive
 	url = https://github.com/RMIT-Rover-Team/rmit-rover-hardware-interface.git
+[submodule "minirover-onboard/hardware-interfaces/minidrive"]
+	path = minirover-onboard/hardware-interfaces/minidrive
+	url = https://github.com/RMIT-Rover-Team/rmit-rover-hardware-interface.git
