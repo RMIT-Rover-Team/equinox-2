@@ -5,5 +5,5 @@ edition = "2024"
 
 [dependencies]
 intbits = "0.2.0"
-nb = "1.1.0"
-socketcan = { version = "4.0.0", features = [] }
+libc = "0.2.191"
+socket2 = { version = "0.6.5", features = ["all"] }

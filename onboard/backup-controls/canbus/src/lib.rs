@@ -42,7 +42,7 @@ mod tests {
         // should see empty packet sent with id (header) 0x000
 
         // check for recieved msgs
-        std::thread::sleep(Duration::from_millis(1000));
+        std::thread::sleep(Duration::from_millis(2000));
         assert_eq!(socket.read_msg().unwrap(), false);
     }
 }
