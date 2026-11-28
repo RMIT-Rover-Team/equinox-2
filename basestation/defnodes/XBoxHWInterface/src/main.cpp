@@ -7,6 +7,15 @@
 #include <ChannelLossycast.hpp> 
 #include "SimpleController.h"
 
+// Handler to terminate on ctrl+c
+#include <csignal>
+volatile sig_atomic_t running = 1;
+
+void sigint_handler(int)
+{
+    running = 0;
+}
+
 // Stick Drift Reject Value
 const double stickDriftReject = 0.05;
 
@@ -23,6 +32,8 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
+    signal(SIGINT, sigint_handler);
+
     int channel = std::stoi(argv[1]);
 
     // Set Up Controller
@@ -35,7 +46,7 @@ int main(int argc, char *argv[]) {
 
     double convSpeed;
     int IKMode = 0;
-    while (true){
+    while (running){
         myControl.tick();
 
         // Make a new message

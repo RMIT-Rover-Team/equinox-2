@@ -1,0 +1,18 @@
+
+Name: ArmIKControl@localhost
+
+
+RequestFormat {
+    #The end effector position (X,Y,Z)
+    endPosition: float[3]
+
+    #The end effector orientation
+    endOrientation: float[3]
+
+}
+
+
+# This is used for transactional communications in the same format as above
+ResponseFormat {
+
+}

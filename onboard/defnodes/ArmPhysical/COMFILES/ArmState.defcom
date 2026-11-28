@@ -1,0 +1,15 @@
+
+Name: ArmPosState@localhost
+
+
+RequestFormat {
+    #Arm Joint positions in radians
+    jointPositions: float[6]
+
+}
+
+
+# This is used for transactional communications in the same format as above
+ResponseFormat {
+
+}

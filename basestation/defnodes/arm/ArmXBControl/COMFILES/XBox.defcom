@@ -1,0 +1,70 @@
+# Example of a config file for communications
+
+# Define the service name. This is either a port number (numeric) or text name that will be hashed to a port number
+# followed by the @ symbol and the Fully Qualified Domain Name of the service: EG: System Hostname, localhost or an IP address
+# For example, my computer is called Odysseus in the hosts file and I want a port number to be generated from the service Test
+# Therefore
+#   Name: Test@Odysseus
+# If I wanted to use an IP
+#   Name: Test@192.168.1.38
+# Or if I wanted to use a port number
+#   Name: 1234@localhost
+
+Name: XBox@localhost
+
+# This is the message format for requests in transactional communications or the boardcast message in multicast
+# Format is a collection of key value pairs in the form of VarName: Type
+# Legal types are:
+#   int
+#   char
+#   string[maxLength] # String Arrays are not supported
+#   bytes[size]
+#   float
+#   long
+# Single Dimensional Arrays can be defined as:
+#   int[30]
+
+RequestFormat {
+    # The Channel ID
+    Channel_ID: int
+
+    # The Sticks
+    L_Stick_X: float
+    L_Stick_Y: float
+    R_Stick_X: float
+    R_Stick_Y: float
+
+    # The Buttons
+    A_Button: char
+    B_Button: char
+    X_Button: char
+    Y_Button: char
+    
+    # The Triggers
+    L_Trigger: float
+    R_Trigger: float
+
+    # The D-Pad
+    D_Pad_Up: char
+    D_Pad_Down: char
+    D_Pad_Left: char
+    D_Pad_Right: char
+
+    # Select and Start
+    Select_Button: char
+    Start_Button: char
+
+    # Stick Buttons
+    L_Stick_Button: char
+    R_Stick_Button: char
+
+    # Bumpers
+    L_Bumper: char
+    R_Bumper: char
+}
+
+
+# This is used for transactional communications in the same format as above
+ResponseFormat {
+
+}
