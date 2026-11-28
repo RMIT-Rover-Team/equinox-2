@@ -40,21 +40,21 @@ const double jointOffsets[6] = {
 };
 
 const double jointMinimums[6] = {
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    -90,
+    -180,
+    -150,
+    -15,
+    -90,
+    -90
 };
 
 const double jointMaximums[6] = {
-    180,
-    180,
-    180,
-    180,
-    180,
-    180
+    90,
+    0,
+    165,
+    90,
+    90,
+    90
 };
 
 double monotonic_ms()
@@ -179,6 +179,12 @@ class ArmNode {
                         myMotors[i]->setVelocity(angle);
                     }
                     else if (movementType == 'P'){
+                        if (angle < jointMinimums[i]){
+                            angle = jointMinimums[i];
+                        }
+                        else if (angle > jointMaximums[i]){
+                            angle = jointMaximums[i];
+                        }
                         myMotors[i]->setPosition((angle * jointScales[i]) + jointOffsets[i]);
                     }
                 }

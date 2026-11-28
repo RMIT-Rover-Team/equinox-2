@@ -257,7 +257,7 @@ int main(int argc, char *argv[]) {
             for (int i = 0; i < 6; i++){
                 myMessage.setFloat("jointSetValues",0,i);
             }
-            myMessage.setBytes("movementType", 'V');
+            myMessage.setBytes("movementType", (uint8_t*)"V");
             myCast.publish(myMessage);
 
         }
