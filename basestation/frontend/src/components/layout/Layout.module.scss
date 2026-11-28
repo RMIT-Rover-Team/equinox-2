@@ -1,0 +1,11 @@
+.layout {
+	display: grid;
+	grid-template-rows: auto auto 1fr;
+	height: 100svh;
+}
+
+// Fills the remaining 1fr row; min-height: 0 lets views scroll instead of overflowing the page.
+.content {
+	min-height: 0;
+	overflow: auto;
+}

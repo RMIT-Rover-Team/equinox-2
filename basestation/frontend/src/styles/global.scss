@@ -1,0 +1,65 @@
+// Edit the values in :root to restyle the whole app.
+// Components use these with var(--name), so avoid hardcoding values in them.
+:root {
+	// Colours
+	--color-bg: #101216;
+	--color-surface: #1a1d23;
+	--color-surface-raised: #252932;
+	--color-border: #343946;
+	--color-text: #e8eaee;
+	--color-text-muted: #9aa1ae;
+	--color-accent: #4f9cf9;
+	--color-danger: #d92d20;
+	--color-danger-hover: #b42318;
+	--color-on-danger: #fff;
+
+	// Text
+	--font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+	--font-mono: ui-monospace, Consolas, monospace;
+	--font-size-sm: 0.75rem;
+	--font-size-md: 1rem;
+	--font-size-lg: 1.25rem;
+	--font-size-xl: 1.75rem;
+
+	// Spacing and corners
+	--space-xs: 4px;
+	--space-sm: 8px;
+	--space-md: 16px;
+	--space-lg: 24px;
+	--radius: 6px;
+
+	// Layout
+	--banner-min-height: 88px;
+	--camera-width: 60%;
+
+	color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: var(--color-bg);
+	color: var(--color-text);
+	font-family: var(--font-sans);
+	font-size: var(--font-size-md);
+}
+
+h1,
+p {
+	margin: 0;
+}
+
+button {
+	font: inherit;
+	cursor: pointer;
+}
+
+:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+}

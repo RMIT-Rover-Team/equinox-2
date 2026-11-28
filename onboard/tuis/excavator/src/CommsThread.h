@@ -1,13 +1,11 @@
 #pragma once
 #include <thread>
-#include <chrono>
 #include <mutex>
 #include <atomic>
-#include <queue>
 #include <condition_variable>
-#include "ExcavatorPayload.h"
-#include "RoverCanMaster.h"
-#include "SocketCanWrapper.h"
+#include <Excavator.h>
+#include <universalcan/RoverCanMaster.h>
+#include <universalcan/SocketCAN.h>
 
 
 enum ThreadCommand {
@@ -38,9 +36,9 @@ private:
 
     std::mutex m_excavator;
 
-    WrappedCANBus can_bus;
+    SocketCAN can_bus;
     RoverCanMaster can_master;
-    ExcavatorPayload excavator;
+    Excavator excavator;
 
     void run();
 public:

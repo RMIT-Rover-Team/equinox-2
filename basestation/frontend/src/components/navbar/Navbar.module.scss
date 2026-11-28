@@ -1,0 +1,19 @@
+.navbar {
+	display: flex;
+	gap: var(--space-sm);
+	padding: var(--space-sm) var(--space-md);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.button {
+	padding: var(--space-xs) var(--space-md);
+	background: var(--color-surface);
+	color: var(--color-text-muted);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius);
+
+	&[aria-current='page'] {
+		color: var(--color-text);
+		border-color: var(--color-accent);
+	}
+}

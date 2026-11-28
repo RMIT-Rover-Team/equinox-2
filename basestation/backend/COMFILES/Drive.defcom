@@ -1,0 +1,44 @@
+# Example of a config file for communications
+
+# Define the service name. This is either a port number (numeric) or text name that will be hashed to a port number
+# followed by the @ symbol and the Fully Qualified Domain Name of the service: EG: System Hostname, localhost or an IP address
+# For example, my computer is called Odysseus in the hosts file and I want a port number to be generated from the service Test
+# Therefore
+#   Name: Test@Odysseus
+# If I wanted to use an IP
+#   Name: Test@192.168.1.38
+# Or if I wanted to use a port number
+#   Name: 1234@localhost
+
+Name: Drive@192.168.40.193
+
+# This is the message format for requests in transactional communications or the boardcast message in multicast
+# Format is a collection of key value pairs in the form of VarName: Type
+# Legal types are:
+#   int
+#   char
+#   string[maxLength] # String Arrays are not supported
+#   bytes[size]
+#   float
+#   long
+# Single Dimensional Arrays can be defined as:
+#   int[30]
+
+RequestFormat {
+    LeftSpeed: float
+    RightSpeed: float
+
+    # The mode of the drive - 0 = Unlocked, 2 = Locked
+    DriveMode: char
+
+    # Flags for each 0/1
+    EStop: char
+    Enable: char
+    Calibrate: char
+}
+
+
+# This is used for transactional communications in the same format as above
+ResponseFormat {
+
+}

@@ -2,3 +2,12 @@
 	path = onboard/hardware-interfaces/lib-universal-canbus
 	url = git@github.com:RMIT-Rover-Team/rmit-lib-universal-canbus.git
 	branch = feat/implement-canbus-v3
+[submodule "onboard/onboard/hardware-interfaces/drive"]
+	path = onboard/onboard/hardware-interfaces/drive
+	url = https://github.com/RMIT-Rover-Team/rmit-rover-hardware-interface.git
+[submodule "onboard/hardware-interfaces/drive"]
+	path = onboard/hardware-interfaces/drive
+	url = https://github.com/RMIT-Rover-Team/rmit-rover-hardware-interface.git
+[submodule "minirover-onboard/hardware-interfaces/minidrive"]
+	path = minirover-onboard/hardware-interfaces/minidrive
+	url = https://github.com/RMIT-Rover-Team/rmit-rover-hardware-interface.git

@@ -2,48 +2,46 @@
 #include <gtest/gtest.h>
 
 #include "SciencePayload.h"
-#include "SocketCanWrapper.h"
+#include "VcanTest.h"
 
-auto* drill_test_can_bus = new WrappedCANBus(CAN_BUS_NAME);
-auto* drill_test_can_master = new RoverCanMaster(*drill_test_can_bus, 1);
 
-struct DrillTest : ::testing::Test, public Drill {
-    DrillTest() : Drill(1, *drill_test_can_master) {};
+struct DrillTest : public VcanTest, public Drill {
+    DrillTest() : Drill(1, test_can_master()) {};
 };
 
 TEST_F(DrillTest, CurrentRpmInitialisesZero) {
-    EXPECT_EQ(0, getCurrentRpm());
+    EXPECT_EQ(0, get_current_rpm());
 }
 
 TEST_F(DrillTest, CurrentHeightInitialisesZero) {
-    EXPECT_EQ(0, getCurrentHeight());
+    EXPECT_EQ(0, get_current_height());
 }
 
 TEST_F(DrillTest, TargetHeightInitialisesZero) {
-    EXPECT_EQ(0, getTargetHeight());
+    EXPECT_EQ(0, get_target_height());
 };
 
 TEST_F(DrillTest, CanSetTargetHeight) {
-    setHeight(100);
-    EXPECT_EQ(100, getTargetHeight());
-    setHeight(-100);
-    EXPECT_EQ(-100, getTargetHeight());
+    set_height(100);
+    EXPECT_EQ(100, get_target_height());
+    set_height(-100);
+    EXPECT_EQ(-100, get_target_height());
 }
 
 TEST_F(DrillTest, TargetRpmInitialisesZero) {
-    EXPECT_EQ(0, getTargetRpm());
+    EXPECT_EQ(0, get_target_rpm());
 }
 
 TEST_F(DrillTest, CanSetTargetRpm) {
     start(100);
-    EXPECT_EQ(100, getTargetRpm());
+    EXPECT_EQ(100, get_target_rpm());
     start();
-    EXPECT_EQ(DRILL_RUNNING_RPM, getTargetRpm());
+    EXPECT_EQ(DRILL_RUNNING_RPM, get_target_rpm());
 }
 
 TEST_F(DrillTest, CanStopDrill) {
     start(100);
-    EXPECT_NE(0, getTargetRpm());
+    EXPECT_NE(0, get_target_rpm());
     stop();
-    EXPECT_EQ(0, getTargetRpm());
+    EXPECT_EQ(0, get_target_rpm());
 }

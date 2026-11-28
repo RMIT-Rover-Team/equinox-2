@@ -1,40 +1,27 @@
 cmake_minimum_required(VERSION 3.16)
 project(MyNode LANGUAGES CXX)
 
-# External libraries
 add_subdirectory(external/DEFCOM)
-add_subdirectory(external/hardware-interface)
 
-
-# Collect all source files except main.cpp
-file(GLOB_RECURSE DRIVE_SOURCES
-    src/*.cpp
+add_subdirectory(
+    ../../hardware-interfaces/drive
+    hardwareInterface_build
 )
-list(REMOVE_ITEM DRIVE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
-# Build the DriveInterface library
-add_library(DriveInterfaceLib SHARED ${DRIVE_SOURCES})
+add_executable(DriveInterface
+    src/main.cpp
+)
 
-target_link_libraries(DriveInterfaceLib
-    PUBLIC
+target_link_libraries(DriveInterface
+    PRIVATE
         DEFCOM
         hardwareInterface
 )
 
-target_include_directories(DriveInterfaceLib
-    PUBLIC
+target_include_directories(DriveInterface
+    PRIVATE
         external/DEFCOM/include
-        external/hardware-interface/include
         include
 )
 
-# Build the executable
-add_executable(DriveInterface src/main.cpp)
-
-target_link_libraries(DriveInterface
-    PRIVATE
-        DriveInterfaceLib
-)
-
 target_compile_features(DriveInterface PUBLIC cxx_std_17)
-

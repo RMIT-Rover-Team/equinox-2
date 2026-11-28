@@ -2,45 +2,43 @@
 #include <gtest/gtest.h>
 
 #include "SciencePayload.h"
-#include "SocketCanWrapper.h"
+#include "VcanTest.h"
 
-auto* can_device_test_can_bus = new WrappedCANBus(CAN_BUS_NAME);
-auto* can_device_test_can_master = new RoverCanMaster(*can_device_test_can_bus, 1);
 
-struct CanDeviceTest : public ::testing::Test, public CanDevice {
-    CanDeviceTest() : CanDevice(1, *can_device_test_can_master) {};
+struct CanDeviceTest : public VcanTest, public CanDevice {
+    CanDeviceTest() : CanDevice(1, test_can_master()) {};
 protected:
-    void updateCurrent(int16_t current) override {};
+    void update_current(int16_t current) override {};
 };
 
 TEST_F(CanDeviceTest, IsAliveInitialisesTrue) {
-    EXPECT_TRUE(isAlive());
+    EXPECT_TRUE(is_alive());
 }
 
 TEST_F(CanDeviceTest, TargetInitialisesZero) {
-    EXPECT_EQ(0, getCanTarget());
+    EXPECT_EQ(0, get_can_target());
 }
 
 TEST_F(CanDeviceTest, CurrentInitialisesZero) {
-    EXPECT_EQ(0, getCanCurrent());
+    EXPECT_EQ(0, get_can_current());
 }
 
 TEST_F(CanDeviceTest, SetTargetWorks) {
-    EXPECT_EQ(0, getCanTarget());
-    setTarget(100);
-    EXPECT_EQ(100, getCanTarget());
+    EXPECT_EQ(0, get_can_target());
+    set_target(100);
+    EXPECT_EQ(100, get_can_target());
 }
 
 TEST_F(CanDeviceTest, TargetChangedGoesTrue) {
-    EXPECT_FALSE(getCanTargetChanged());
-    setTarget(100);
-    EXPECT_TRUE(getCanTargetChanged());
+    EXPECT_FALSE(get_can_target_changed());
+    set_target(100);
+    EXPECT_TRUE(get_can_target_changed());
 }
 
 TEST_F(CanDeviceTest, TargetChangedResetsToFalse) {
-    EXPECT_FALSE(getCanTargetChanged());
-    setTarget(100);
-    EXPECT_TRUE(getCanTargetChanged());
+    EXPECT_FALSE(get_can_target_changed());
+    set_target(100);
+    EXPECT_TRUE(get_can_target_changed());
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    EXPECT_FALSE(getCanTargetChanged());
+    EXPECT_FALSE(get_can_target_changed());
 }

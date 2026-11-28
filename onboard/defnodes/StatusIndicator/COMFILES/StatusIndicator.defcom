@@ -1,0 +1,14 @@
+
+Name: StatusIndicator@localhost
+
+RequestFormat {
+    R: char
+    G: char
+    B: char
+}
+
+
+# This is used for transactional communications in the same format as above
+ResponseFormat {
+
+}
