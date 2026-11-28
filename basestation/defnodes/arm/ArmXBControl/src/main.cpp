@@ -219,6 +219,7 @@ int main(int argc, char *argv[]) {
             continue; // Skip everything else
         }
 
+
         //If X Button, then switch to IK
         if (controlMessage.getChar("X_Button")){
             printf("Enter IK Mode\n");
@@ -237,14 +238,28 @@ int main(int argc, char *argv[]) {
             mode = ArmMode::PresetControl;
         }
 
-        if (mode == ArmMode::IKControl){
-            ikControl(&myIKCast, &controlMessage);
+        // Check if the Inhibit buttons are pressed,
+        if (controlMessage.getChar("L_Bumper") || controlMessage.getChar("R_Bumper")){
+
+            if (mode == ArmMode::IKControl){
+                ikControl(&myIKCast, &controlMessage);
+            }
+            else if (mode == ArmMode::PresetControl) {
+                presetControl(&myCast, &controlMessage);
+            }
+            else {
+                directControl(&myCast, &controlMessage);
+            }
         }
-        else if (mode == ArmMode::PresetControl) {
-            presetControl(&myCast, &controlMessage);
-        }
+        // Otherwise Stop the arm
         else {
-            directControl(&myCast, &controlMessage);
+            MessageStructure myMessage = myCast.getNewMessageObject();
+            for (int i = 0; i < 6; i++){
+                myMessage.setFloat("jointSetValues",0,i);
+            }
+            myMessage.setBytes("movementType", 'V');
+            myCast.publish(myMessage);
+
         }
 
         

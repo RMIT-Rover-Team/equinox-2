@@ -39,6 +39,24 @@ const double jointOffsets[6] = {
     0
 };
 
+const double jointMinimums[6] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+};
+
+const double jointMaximums[6] = {
+    180,
+    180,
+    180,
+    180,
+    180,
+    180
+};
+
 double monotonic_ms()
 {
     using namespace std::chrono;
