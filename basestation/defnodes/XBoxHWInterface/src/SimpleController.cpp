@@ -33,7 +33,7 @@ SimpleController::SimpleController(int buttonCount, int axisCount){
 
     //Open the first available game controller
     controller = nullptr;
-    for (int i = 0; i < SDL_NumJoysticks(); ++i) {
+    /*for (int i = 0; i < SDL_NumJoysticks(); ++i) {
         if (SDL_IsGameController(i)) {
             controller = SDL_GameControllerOpen(i);
             if (controller) {
@@ -43,6 +43,38 @@ SimpleController::SimpleController(int buttonCount, int axisCount){
                 std::cerr << "Could not open gamecontroller " << i << ": " << SDL_GetError() << std::endl;
             }
         }
+    }*/
+
+    int count = SDL_NumJoysticks();
+    if (count == 0) {
+        std::cerr << "No game controllers found." << std::endl;
+        SDL_Quit();
+    }
+
+    std::cout << "Available Controllers:\n";
+
+    for (int i = 0; i < count; i++) {
+        if (SDL_IsGameController(i)) {
+            std::cout
+                << "[" << i << "] "
+                << SDL_GameControllerNameForIndex(i)
+                << std::endl;
+        }
+    }
+
+    int selection;
+
+    if (count == 1){
+        selection = 0;
+        std::cout << "Selecting Controller " << selection << std::endl;
+    }
+    else {
+        std::cout << "\nSelect controller: ";
+        std::cin >> selection;
+    }
+
+    if (SDL_IsGameController(selection)) {
+        controller = SDL_GameControllerOpen(selection);
     }
 
     //Make sure it opens
