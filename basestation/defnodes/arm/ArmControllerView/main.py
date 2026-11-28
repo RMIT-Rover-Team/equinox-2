@@ -45,7 +45,9 @@ Mappings = {
         'D_Pad_Left':'Wrist Left',
         'D_Pad_Right':'Wrist Right',
         'X_Button':'To IK Mode',
-        'B_Button':'To Preset'
+        'B_Button':'To Preset',
+        'L_Bumper': 'Inhibit',
+        'R_Bumper': 'Inhibit'
         
     },
     1:{
@@ -54,13 +56,17 @@ Mappings = {
         'L_Stick_Y':'Z Value',
         'Y_Button':'To Joint Mode',
         'B_Button':'To Preset',
-        'L_Trigger':'Hold (Angle)'
+        'L_Trigger':'Hold (Angle)',
+        'L_Bumper': 'Inhibit',
+        'R_Bumper': 'Inhibit'
     },
     2:{
         'X_Button':'To IK Mode',
         'Y_Button':'To Joint Mode',
         'D_Pad_Up':'Raised',
-        'D_Pad_Down':'Stowed'
+        'D_Pad_Down':'Stowed',
+        'L_Bumper': 'Inhibit',
+        'R_Bumper': 'Inhibit'
     }
 }
 
