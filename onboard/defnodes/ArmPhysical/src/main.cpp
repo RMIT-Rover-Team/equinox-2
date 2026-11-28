@@ -11,6 +11,7 @@
 #include "SocketCanWrapper.h"
 
 #define SANITY_MOVE_ANGLE 15
+#define SANITY_DECAY_TIME 10
 
 #include <thread>
 #include <chrono>
@@ -38,6 +39,15 @@ const double jointOffsets[6] = {
     0
 };
 
+double monotonic_ms()
+{
+    using namespace std::chrono;
+
+    return duration<double, std::milli>(
+        steady_clock::now().time_since_epoch()
+    ).count();
+}
+
 class ArmNode {
     private:
         //Create a canbus
@@ -45,6 +55,7 @@ class ArmNode {
         GenericMotor* myMotors[6];
 
         double lastEstimates[6];
+        double lastEstimateTimes[6];
 
     public:
         ArmNode(char* interfaceName){
@@ -63,6 +74,7 @@ class ArmNode {
 
             for (int i = 0; i < 6; i++){
                 myMotors[i]->calibrate();
+                lastEstimateTimes[i] = monotonic_ms();
             }
 
             for (int i = 0; i < 6; i++){
@@ -95,8 +107,14 @@ class ArmNode {
                 for (int i = 0; i < 6; i++){
                     readings[i] = (myMotors[i]->getPosition() - jointOffsets[i])/jointScales[i];
 
-                    // Check if it is sane
-                    if (fabs(readings[i] - this->lastEstimates[i]) > SANITY_MOVE_ANGLE){
+                    // Check if the decay time has passed
+                    if (monotonic_ms() - lastEstimateTimes[i] > SANITY_DECAY_TIME){
+                        printf("Decay %i %lf\n",i,readings[i]);
+                        this->lastEstimates[i] = readings[i];
+                        this->lastEstimateTimes[i] = monotonic_ms();
+                    }
+                    // otherwise check if it is sane
+                    else if (fabs(readings[i] - this->lastEstimates[i]) > SANITY_MOVE_ANGLE){
                         printf("Reject %i %lf\n",i,readings[i]);
                         readings[i] = this->lastEstimates[i];
                         
@@ -104,6 +122,7 @@ class ArmNode {
                     else {
                         this->lastEstimates[i] = readings[i];
                         printf("Got %i %lf\n",i,readings[i]);
+                        this->lastEstimateTimes[i] = monotonic_ms();
                     }
                     msg.setFloat("jointPositions", (readings[i]/180)*3.141592, i);
                 }
